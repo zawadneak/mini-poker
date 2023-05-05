@@ -1,12 +1,26 @@
 import styled from "styled-components/native";
 import Container from "../components/Container";
 import Button from "../components/Button";
+import { useRouter } from "expo-router";
+import useGame from "../store/game";
 
 export default function App() {
+  const router = useRouter();
+  const { actions } = useGame();
+
+  const handleInitGame = () => {
+    console.log("init game");
+
+    actions.shuffleDeck();
+
+    // expo router push
+    router.push("/game");
+  };
+
   return (
     <Container justifyContent="center" alignItems="center">
       <Title>MiniPoker</Title>
-      <Button linkTo="/game">Play</Button>
+      <Button onPress={handleInitGame}>Play</Button>
     </Container>
   );
 }
