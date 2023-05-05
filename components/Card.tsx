@@ -8,7 +8,8 @@ type Props = {
 };
 
 const Card = ({ card }: Props) => {
-  const getCardColor = (suit: Suits) => {
+  const getCardColor = (suit?: Suits | string) => {
+    if (!suit) return "black";
     if (suit === "hearts" || suit === "diamonds") {
       return "red";
     }
@@ -16,13 +17,12 @@ const Card = ({ card }: Props) => {
     return "black";
   };
 
-  const cardColor = useMemo(() => getCardColor(card.suit), [card.suit]);
+  const cardColor = useMemo(() => getCardColor(card?.suit), [card?.suit]);
 
   if (!card) return <View></View>;
   return (
     <CardWrapper>
-      <CardText color={cardColor}>{card.suit}</CardText>
-      <CardText color={cardColor}>{card.value}</CardText>
+      <CardText color={cardColor}>{card.rank}</CardText>
       <CardText color={cardColor}>{card.suit}</CardText>
     </CardWrapper>
   );

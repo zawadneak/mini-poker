@@ -26,6 +26,27 @@ type Deck = Card[];
 // { id: "4H", suit: "hearts", rank: "4", value: 4 },
 
 interface GameStore {
+  gameStarted: boolean;
+
+  setGameStarted: (gameStarted: boolean) => void;
+
   shuffledDeck: Deck;
+  playerHand: Deck;
+  dealerHand: Deck;
+  table: Deck;
+
   setShuffledDeck: (deck: Deck) => void;
+  setPlayerHand: (deck: Deck) => void;
+  setDealerHand: (deck: Deck) => void;
+  setTable: (deck: Deck) => void;
+
+  result: Result | null;
+  setResult: (result: Result) => void;
 }
+
+type Result = {
+  winner: "Jogador" | "Dealer" | "Tie";
+  play: string;
+};
+
+type Plays = "StraightFlush" | "F";
