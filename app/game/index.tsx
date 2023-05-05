@@ -3,12 +3,12 @@ import React from "react";
 
 type Props = {};
 
-const index = (props: Props) => {
+const Game = (props: Props) => {
   return (
     <View>
-      <Text>index</Text>
+      <Text>Game</Text>
     </View>
   );
 };
 
-export default index;
+export default Game;
