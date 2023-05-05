@@ -5,7 +5,7 @@ export default function useGameActions() {
   const { setShuffledDeck } = useGameStore();
 
   const shuffleDeck = () => {
-    // complex shuffle algorithm
+    // Fisher-Yates shuffle
     const shuffledDeck = (): Deck => {
       let deck = [...BASE_DECK];
 

@@ -1,4 +1,4 @@
-import useGameActions from "./actionts";
+import useGameActions from "./actions";
 import useGameStore from "./store";
 
 export default function useGame() {
