@@ -43,7 +43,7 @@ const Game = (props: Props) => {
         </View>
       </Modal>
       <Container alignItems="center">
-        <Button linkTo="/" style={{ marginBottom: 10 }}>
+        <Button onPress={() => router.push("/")} style={{ marginBottom: 10 }}>
           Back
         </Button>
         <Button
