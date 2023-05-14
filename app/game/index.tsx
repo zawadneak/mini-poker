@@ -7,6 +7,7 @@ import Container from "../../components/Container";
 
 import styled from "styled-components/native";
 import { useRouter } from "expo-router";
+import useRounds from "../../store/rounds";
 
 type Props = {};
 
@@ -14,6 +15,10 @@ const Game = (props: Props) => {
   const router = useRouter();
 
   const { store, actions } = useGame();
+  const { store: roundStore, actions: roundActions } = useRounds();
+
+  const { gameRound } = roundStore;
+  const { nextGameRound, resetRound } = roundActions;
 
   const { dealCards, getWinner, shuffleDeck } = actions;
   const { playerHand, dealerHand, table, result, gameStarted, shuffledDeck } =
@@ -21,9 +26,23 @@ const Game = (props: Props) => {
 
   const [showWinner, setShowWinner] = React.useState(false);
 
+  const getTableCardsShowPerRound = (): number => {
+    if (gameRound === 1) return 3;
+    if (gameRound === 2) return 4;
+    if (gameRound === 3) return 5;
+    return 0;
+  };
+
+  const handleNextGameRound = () => {
+    if (!gameStarted) return handleStartGame();
+    if (gameRound < 3) return nextGameRound();
+    handleShowWinner();
+  };
+
   const handleStartGame = () => {
     if (!shuffledDeck[0]) return router.replace("/");
     dealCards();
+    resetRound();
   };
 
   const handleShowWinner = () => {
@@ -46,12 +65,6 @@ const Game = (props: Props) => {
         <Button onPress={() => router.push("/")} style={{ marginBottom: 10 }}>
           Back
         </Button>
-        <Button
-          onPress={gameStarted ? handleShowWinner : handleStartGame}
-          style={{ marginBottom: 10 }}
-        >
-          {gameStarted ? "Show Winner" : "Start Game"}
-        </Button>
 
         <DealerHand>
           {dealerHand?.map((card: Card) => (
@@ -60,9 +73,12 @@ const Game = (props: Props) => {
         </DealerHand>
 
         <Table>
-          {table?.map((card: Card) => (
-            <Card card={card} key={card?.id} />
-          ))}
+          {table?.map(
+            (card: Card, i: number) =>
+              i < getTableCardsShowPerRound() && (
+                <Card card={card} key={card?.id} />
+              )
+          )}
         </Table>
 
         <PlayerHand>
@@ -70,6 +86,17 @@ const Game = (props: Props) => {
             <Card card={card} key={card?.id} />
           ))}
         </PlayerHand>
+
+        <Button
+          style={{
+            position: "absolute",
+            bottom: 10,
+            right: 10,
+          }}
+          onPress={handleNextGameRound}
+        >
+          {gameStarted ? "Next Round" : "Start Game"}
+        </Button>
       </Container>
     </>
   );

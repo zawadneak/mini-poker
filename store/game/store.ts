@@ -2,7 +2,6 @@ import { create } from "zustand";
 
 const gameStore = create<GameStore>((set) => ({
   gameStarted: false,
-
   setGameStarted: (gameStarted) => set({ gameStarted }),
 
   shuffledDeck: [],
