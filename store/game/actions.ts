@@ -1,3 +1,4 @@
+import useRoundStore from "../rounds/store";
 import BASE_DECK from "./constants";
 import useGameStore from "./store";
 
@@ -16,6 +17,9 @@ export default function useGameActions() {
     dealerHand,
     table,
   } = useGameStore();
+
+  const { setPlayerMoney, setCpuMoney, pot, playerMoney, cpuMoney } =
+    useRoundStore();
 
   const resetGame = () => {
     setGameStarted(false);
@@ -209,15 +213,24 @@ export default function useGameActions() {
     console.log(playerPlay, dealerPlay);
 
     if (playerPlay.value > dealerPlay.value) {
+      setPlayerMoney(playerMoney + pot);
+      setCpuMoney(100);
       setResult({ winner: "Jogador", play: playerPlay.name });
     } else if (playerPlay.value < dealerPlay.value) {
+      setPlayerMoney(100);
+      setCpuMoney(pot + cpuMoney);
       setResult({ winner: "Dealer", play: dealerPlay.name });
     } else {
+      setPlayerMoney(playerMoney + pot / 2);
+      setCpuMoney(cpuMoney + pot / 2);
       setResult({ winner: "Tie", play: playerPlay.name });
     }
+
+    setGameStarted(false);
   };
 
   return {
+    resetGame,
     shuffleDeck,
     dealCards,
     getWinner,

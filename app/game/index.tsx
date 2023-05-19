@@ -8,6 +8,8 @@ import Container from "../../components/Container";
 import styled from "styled-components/native";
 import { useRouter } from "expo-router";
 import useRounds from "../../store/rounds";
+import BettingMenu from "./BettingMenu";
+import GameStatus from "./GameStatus";
 
 type Props = {};
 
@@ -35,8 +37,6 @@ const Game = (props: Props) => {
 
   const handleNextGameRound = () => {
     if (!gameStarted) return handleStartGame();
-    if (gameRound < 3) return nextGameRound();
-    handleShowWinner();
   };
 
   const handleStartGame = () => {
@@ -49,6 +49,12 @@ const Game = (props: Props) => {
     getWinner();
     setShowWinner(true);
   };
+
+  React.useEffect(() => {
+    if (!!result) {
+      setShowWinner(true);
+    }
+  }, [result]);
 
   return (
     <>
@@ -65,6 +71,8 @@ const Game = (props: Props) => {
         <Button onPress={() => router.push("/")} style={{ marginBottom: 10 }}>
           Back
         </Button>
+
+        <GameStatus />
 
         <DealerHand>
           {dealerHand?.map((card: Card) => (
@@ -87,16 +95,20 @@ const Game = (props: Props) => {
           ))}
         </PlayerHand>
 
-        <Button
-          style={{
-            position: "absolute",
-            bottom: 10,
-            right: 10,
-          }}
-          onPress={handleNextGameRound}
-        >
-          {gameStarted ? "Next Round" : "Start Game"}
-        </Button>
+        <BettingMenu handleNextRound={handleNextGameRound} />
+
+        {!gameStarted && (
+          <Button
+            style={{
+              position: "absolute",
+              bottom: 10,
+              right: 10,
+            }}
+            onPress={handleNextGameRound}
+          >
+            {gameStarted ? "Next Round" : "Start Game"}
+          </Button>
+        )}
       </Container>
     </>
   );

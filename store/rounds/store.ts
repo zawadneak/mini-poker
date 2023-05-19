@@ -13,6 +13,15 @@ const roundStore = create<RoundStore>((set) => ({
 
   bettingRound: 0,
   setBettingRound: (bettingRound) => set({ bettingRound }),
+
+  bettingOrder: 0,
+  setBettingOrder: (bettingOrder) => set({ bettingOrder }),
+
+  playerMoney: 100,
+  setPlayerMoney: (playerMoney) => set({ playerMoney }),
+
+  cpuMoney: 100,
+  setCpuMoney: (cpuMoney) => set({ cpuMoney }),
 }));
 
 const useRoundStore = (): RoundStore => roundStore((state) => state);
