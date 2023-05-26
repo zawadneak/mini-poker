@@ -1,4 +1,6 @@
 import useGame from "../game";
+import { BLUFF_CHANCE, PAIR, TWO_PAIR } from "../poker/constants";
+import getHandStrength from "../poker/handCheck";
 import useRoundStore from "./store";
 
 export default function useRoundActions() {
@@ -18,7 +20,9 @@ export default function useRoundActions() {
     setPlayerMoney,
     setCpuMoney,
   } = useRoundStore();
-  const { actions } = useGame();
+  const { actions, store } = useGame();
+
+  const { dealerHand, table } = store;
 
   const { shuffleDeck, resetGame, getWinner } = actions;
   function resetRound() {
@@ -38,19 +42,30 @@ export default function useRoundActions() {
     }
   }
 
-  function willCPUMatchBet() {
-    return Math.random() > 0.5;
-  }
+  // TODO: raise bet
+  function willCPUMatchBet(betToMatch: number) {
+    const tableHandByRound = table.slice(0, gameRound + 1);
 
-  function willCPURaise(): number | false {
-    const raise = Math.random() > 0.5;
+    const hand = [...dealerHand, ...tableHandByRound];
 
-    const raiseAmmount = [5, 10, 50];
-    if (raise) {
-      return raiseAmmount[Math.floor(Math.random() * raiseAmmount.length)];
+    const { value } = getHandStrength(hand);
+
+    const bluff = Math.random() > BLUFF_CHANCE;
+
+    if (bluff) return true;
+
+    switch (gameRound) {
+      case 0:
+        return betToMatch <= 5 || value >= PAIR;
+      case 1:
+        return betToMatch < 10 && value >= PAIR;
+      case 2:
+        return betToMatch < 50 && value >= PAIR;
+      case 3:
+        return value >= TWO_PAIR;
+      default:
+        return false;
     }
-
-    return false;
   }
 
   function handlePlayerBet(ammount: number) {
@@ -58,7 +73,6 @@ export default function useRoundActions() {
       alert("You don't have enough money");
       return;
     }
-    console.log("handlePlayerBet", ammount);
 
     setBettingOrder(bettingOrder + 1);
     setPot(pot + ammount);
@@ -77,7 +91,7 @@ export default function useRoundActions() {
 
       return nextGameRound();
     }
-    if (willCPUMatchBet()) {
+    if (willCPUMatchBet(ammount)) {
       alert("CPU MATCH");
       setPot(pot + ammount + ammount);
       setCpuMoney(cpuMoney - ammount);

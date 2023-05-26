@@ -7,17 +7,17 @@ import styled from "styled-components/native";
 
 export default function ResultModal({
   visible,
-  setVisible,
+  onClose,
 }: {
   visible: boolean;
-  setVisible: (visible: boolean) => void;
+  onClose: () => void;
 }) {
   const { store } = useGame();
 
   const { result } = store;
 
   const handleClose = () => {
-    setVisible(false);
+    onClose();
   };
 
   return (
@@ -25,10 +25,16 @@ export default function ResultModal({
       <Background>
         <ModalView>
           <Text>Winner</Text>
-          <Text>
+          <Text
+            style={{
+              fontWeight: "bold",
+              fontSize: 32,
+              margin: 10,
+            }}
+          >
             {result?.winner} | {result?.play}
           </Text>
-          <Button onPress={handleClose}>Close</Button>
+          <Button onPress={handleClose}>End game</Button>
         </ModalView>
       </Background>
     </Modal>

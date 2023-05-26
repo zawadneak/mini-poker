@@ -53,4 +53,31 @@ const BASE_DECK = [
   { id: "KC", suit: "clubs", rank: "K", value: 13 },
 ];
 
+const HIGH_CARD = 1;
+const PAIR = 100;
+const TWO_PAIR = 200;
+const THREE_OF_A_KIND = 300;
+const STRAIGHT = 400;
+const FLUSH = 500;
+const FULL_HOUSE = 600;
+const FOUR_OF_A_KIND = 700;
+const STRAIGHT_FLUSH = 800;
+const ROYAL_FLUSH = 900;
+
+const BLUFF_CHANCE = 0.5;
+
+export {
+  HIGH_CARD,
+  PAIR,
+  TWO_PAIR,
+  THREE_OF_A_KIND,
+  STRAIGHT,
+  FLUSH,
+  FULL_HOUSE,
+  FOUR_OF_A_KIND,
+  STRAIGHT_FLUSH,
+  ROYAL_FLUSH,
+  BLUFF_CHANCE,
+};
+
 export default BASE_DECK;

@@ -23,7 +23,7 @@ const Game = (props: Props) => {
   const { gameRound } = roundStore;
   const { nextGameRound, resetRound } = roundActions;
 
-  const { dealCards, getWinner, shuffleDeck } = actions;
+  const { dealCards, getWinner, shuffleDeck, resetGame } = actions;
   const { playerHand, dealerHand, table, result, gameStarted, shuffledDeck } =
     store;
 
@@ -57,9 +57,15 @@ const Game = (props: Props) => {
     }
   }, [result]);
 
+  const handleEndGame = () => {
+    resetGame();
+    setShowWinner(false);
+    router.replace("/");
+  };
+
   return (
     <>
-      <ResultModal visible={showWinner} setVisible={setShowWinner} />
+      <ResultModal visible={showWinner} onClose={handleEndGame} />
       <Container alignItems="center">
         <Button onPress={() => router.push("/")} style={{ marginBottom: 10 }}>
           Back
