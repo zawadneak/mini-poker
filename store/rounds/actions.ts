@@ -58,9 +58,9 @@ export default function useRoundActions() {
       case 0:
         return betToMatch <= 5 || value >= PAIR;
       case 1:
-        return betToMatch < 10 && value >= PAIR;
+        return (betToMatch < 5 && value <= PAIR) || value >= PAIR;
       case 2:
-        return betToMatch < 50 && value >= PAIR;
+        return (betToMatch < 50 && value < TWO_PAIR) || value >= TWO_PAIR;
       case 3:
         return value >= TWO_PAIR;
       default:
