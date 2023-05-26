@@ -10,6 +10,7 @@ import { useRouter } from "expo-router";
 import useRounds from "../../store/rounds";
 import BettingMenu from "./BettingMenu";
 import GameStatus from "./GameStatus";
+import ResultModal from "./ResultModal";
 
 type Props = {};
 
@@ -58,15 +59,7 @@ const Game = (props: Props) => {
 
   return (
     <>
-      <Modal visible={showWinner}>
-        <View>
-          <Text>Winner</Text>
-          <Text>
-            {result?.winner} | {result?.play}
-          </Text>
-          <Button onPress={() => setShowWinner(false)}>Close</Button>
-        </View>
-      </Modal>
+      <ResultModal visible={showWinner} setVisible={setShowWinner} />
       <Container alignItems="center">
         <Button onPress={() => router.push("/")} style={{ marginBottom: 10 }}>
           Back
