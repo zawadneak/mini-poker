@@ -1,5 +1,11 @@
 import useGame from "../game";
-import { BLUFF_CHANCE, PAIR, RAISE_AMOUNT, TWO_PAIR } from "../poker/constants";
+import {
+  BLUFF_CHANCE,
+  PAIR,
+  RAISE_AMOUNT,
+  THREE_OF_A_KIND,
+  TWO_PAIR,
+} from "../poker/constants";
 import getHandStrength from "../poker/handCheck";
 import useRoundStore from "./store";
 
@@ -14,11 +20,11 @@ export default function useRoundActions() {
     currentBet,
     setBettingOrder,
     pot,
-    bettingRound,
     playerMoney,
     cpuMoney,
     setPlayerMoney,
     setCpuMoney,
+    setRaiseToMatch,
   } = useRoundStore();
   const { actions, store } = useGame();
 
@@ -43,62 +49,42 @@ export default function useRoundActions() {
     }
   }
 
-  function willCPUMatchBet(betToMatch: number) {
+  function getCPUResponseToBet(betToMatch: number) {
     const tableHandByRound = table.slice(0, gameRound + 1);
     const hand = [...dealerHand, ...tableHandByRound];
     const { value } = getHandStrength(hand);
 
     const bluff = Math.random() > BLUFF_CHANCE;
 
-    if (bluff) {
+    const bluffRaise = Math.random() > BLUFF_CHANCE;
+
+    const randomRaise =
+      RAISE_AMOUNT[Math.floor(Math.random() * RAISE_AMOUNT.length)] +
+      betToMatch;
+
+    if (bluff)
       return {
         match: true,
-        raise: 0,
+        raise: bluffRaise ? randomRaise + betToMatch : 0,
       };
-    }
 
-    switch (gameRound) {
-      case 0:
-        if (betToMatch <= 5 || value >= PAIR) {
-          return {
-            match: true,
-            raise: 0,
-          };
-        }
-        break;
-      case 1:
-        if ((betToMatch < 5 && value <= PAIR) || value >= PAIR) {
-          return {
-            match: true,
-            raise: 0,
-          };
-        }
-        break;
-      case 2:
-        if ((betToMatch < 50 && value < TWO_PAIR) || value >= TWO_PAIR) {
-          const raiseAmount =
-            RAISE_AMOUNT[Math.floor(Math.random() * RAISE_AMOUNT.length)];
-          return {
-            match: true,
-            raise: raiseAmount,
-          };
-        }
-        break;
-      case 3:
-        if (value >= TWO_PAIR) {
-          const raiseAmount =
-            RAISE_AMOUNT[Math.floor(Math.random() * RAISE_AMOUNT.length)];
-          return {
-            match: true,
-            raise: raiseAmount,
-          };
-        }
-        break;
-    }
+    const matchByGameRound = {
+      0: betToMatch <= 5,
+      1: betToMatch < 5 && value <= PAIR,
+      2: betToMatch < 50 && value < TWO_PAIR,
+      3: betToMatch < 10 && value >= TWO_PAIR,
+    };
+
+    const raiseByGameRound = {
+      0: value >= PAIR,
+      1: value >= TWO_PAIR,
+      2: value >= TWO_PAIR,
+      3: value >= THREE_OF_A_KIND,
+    };
 
     return {
-      match: false,
-      raise: 0,
+      match: matchByGameRound[gameRound] || false,
+      raise: raiseByGameRound[gameRound] ? randomRaise : 0,
     };
   }
 
@@ -112,19 +98,19 @@ export default function useRoundActions() {
     setPot(pot + ammount);
     setCurrentBet(ammount);
 
-    const cpuResponse = willCPUMatchBet(ammount);
+    const cpuResponse = getCPUResponseToBet(ammount);
 
     if (cpuResponse.match) {
       alert("CPU MATCH");
-      setPot(pot + ammount + cpuResponse.raise);
-      setCpuMoney(cpuMoney - ammount - cpuResponse.raise);
+      setPot(pot + ammount);
+      setCpuMoney(cpuMoney - ammount);
       setPlayerMoney(playerMoney - ammount);
       nextGameRound();
     } else if (cpuResponse.raise !== 0) {
       alert("CPU RAISE " + cpuResponse.raise);
       setPot(pot + ammount + cpuResponse.raise);
       setCpuMoney(cpuMoney - ammount - cpuResponse.raise);
-      setPlayerMoney(playerMoney - ammount);
+      setPlayerMoney(playerMoney - ammount - cpuResponse.raise);
       nextGameRound();
     } else {
       alert("CPU FOLD");

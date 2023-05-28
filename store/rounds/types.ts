@@ -23,4 +23,7 @@ export interface RoundStore {
 
   cpuMoney: number;
   setCpuMoney: (cpuMoney: number) => void;
+
+  raiseToMatch: number;
+  setRaiseToMatch: (raiseToMatch: number) => void;
 }

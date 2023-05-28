@@ -11,6 +11,9 @@ const roundStore = create<RoundStore>((set) => ({
   currentBet: 0,
   setCurrentBet: (currentBet) => set({ currentBet }),
 
+  raiseToMatch: 0,
+  setRaiseToMatch: (raiseToMatch) => set({ raiseToMatch }),
+
   bettingRound: 0,
   setBettingRound: (bettingRound) => set({ bettingRound }),
 
