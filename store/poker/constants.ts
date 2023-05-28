@@ -66,6 +66,7 @@ const ROYAL_FLUSH = 900;
 
 const BLUFF_CHANCE = 0.5;
 
+const RAISE_AMOUNT = [5, 10, 50];
 export {
   HIGH_CARD,
   PAIR,
@@ -78,6 +79,7 @@ export {
   STRAIGHT_FLUSH,
   ROYAL_FLUSH,
   BLUFF_CHANCE,
+  RAISE_AMOUNT,
 };
 
 export default BASE_DECK;

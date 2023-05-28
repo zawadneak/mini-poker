@@ -69,8 +69,6 @@ export default function useGameActions() {
     const playerPlay = getHandStrength(playerCards);
     const dealerPlay = getHandStrength(dealerCards);
 
-    console.log(playerPlay, dealerPlay);
-
     if (playerPlay.value > dealerPlay.value) {
       setPlayerMoney(playerMoney + pot);
       setResult({ winner: "Jogador", play: playerPlay.name });

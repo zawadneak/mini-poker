@@ -47,11 +47,6 @@ const Game = (props: Props) => {
     resetRound();
   };
 
-  const handleShowWinner = () => {
-    getWinner();
-    setShowWinner(true);
-  };
-
   React.useEffect(() => {
     if (!!result) {
       setShowWinner(true);
@@ -75,6 +70,7 @@ const Game = (props: Props) => {
             position: "absolute",
             top: 10,
             left: 10,
+            zIndex: 2,
           }}
         ></IconButton>
 
@@ -104,16 +100,20 @@ const Game = (props: Props) => {
         {gameStarted && <BettingMenu handleNextRound={handleNextGameRound} />}
 
         {!gameStarted && (
-          <Button
+          <View
             style={{
               position: "absolute",
-              bottom: 10,
-              right: 10,
+              top: 0,
+              left: 0,
+              bottom: 0,
+              right: 0,
+
+              justifyContent: "center",
+              alignItems: "center",
             }}
-            onPress={handleNextGameRound}
           >
-            {gameStarted ? "Next Round" : "Start Game"}
-          </Button>
+            <Button onPress={handleNextGameRound}>Start Game</Button>
+          </View>
         )}
       </Container>
     </>

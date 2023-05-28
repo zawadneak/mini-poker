@@ -37,7 +37,7 @@ const Card = ({ card, hidden = false }: Props) => {
         <>
           <CardText color={cardColor}>{card.rank}</CardText>
           <CardText color={cardColor}>
-            {cardIcon[card.suit] || "Error"} {card.suit}
+            {cardIcon[card.suit] || "Error"}
           </CardText>
         </>
       )}
@@ -60,4 +60,5 @@ const CardWrapper = styled.View`
 
 const CardText = styled.Text<{ color: "red" | "black" }>`
   color: ${({ color }) => color};
+  font-size: 21px;
 `;
