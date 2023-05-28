@@ -11,6 +11,7 @@ import useRounds from "../../store/rounds";
 import BettingMenu from "./BettingMenu";
 import GameStatus from "./GameStatus";
 import ResultModal from "./ResultModal";
+import IconButton from "../../components/IconButton";
 
 type Props = {};
 
@@ -65,10 +66,17 @@ const Game = (props: Props) => {
   return (
     <>
       <ResultModal visible={showWinner} onClose={handleEndGame} />
-      <Container alignItems="center">
-        <Button onPress={() => router.push("/")} style={{ marginBottom: 10 }}>
-          Back
-        </Button>
+      <Container alignItems="center" justifyContent="center">
+        <IconButton
+          size={20}
+          icon="arrow-left"
+          linkTo="/"
+          style={{
+            position: "absolute",
+            top: 10,
+            left: 10,
+          }}
+        ></IconButton>
 
         <GameStatus />
 
@@ -93,7 +101,7 @@ const Game = (props: Props) => {
           ))}
         </PlayerHand>
 
-        <BettingMenu handleNextRound={handleNextGameRound} />
+        {gameStarted && <BettingMenu handleNextRound={handleNextGameRound} />}
 
         {!gameStarted && (
           <Button
@@ -122,21 +130,17 @@ const CardWrapper = styled.View`
   align-items: center;
   gap: 10px;
 
-  position: absolute;
+  flex: 1;
 `;
 
-const PlayerHand = styled(CardWrapper)`
-  bottom: 10px;
-`;
+const PlayerHand = styled(CardWrapper)``;
 
 const DealerHand = styled(CardWrapper)`
-  top: 120px;
-
   /* transform: rotate(180deg); */
 `;
 
 const Table = styled(CardWrapper)`
-  top: 40%;
   width: 100%;
   flex-wrap: wrap;
+  flex: 2;
 `;

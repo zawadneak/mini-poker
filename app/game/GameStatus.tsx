@@ -11,7 +11,6 @@ export default function GameStatus() {
   return (
     <Container>
       <Text>Round: {gameRound}</Text>
-      <Text>Betting Round: {bettingRound}</Text>
       <Text>Pot: ${pot}</Text>
       <Text>Money: ${playerMoney}</Text>
       <Text>CPU Money: ${cpuMoney}</Text>
@@ -25,4 +24,10 @@ const Container = styled.View`
 
   gap: 5px;
   margin: 5px;
+
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-end;
+  width: 100%;
+  padding: 10px;
 `;

@@ -20,7 +20,9 @@ export default function App() {
   return (
     <Container justifyContent="center" alignItems="center">
       <Title>MiniPoker</Title>
-      <Button onPress={handleInitGame}>Play</Button>
+      <Button onPress={handleInitGame} icon="cards">
+        Play
+      </Button>
     </Container>
   );
 }

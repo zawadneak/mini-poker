@@ -26,9 +26,9 @@ export default function BettingMenu() {
       ) : (
         <>
           <Button onPress={() => handleBet(0)}>Check</Button>
-          <Button onPress={() => handleBet(5)}>Raise $5</Button>
-          <Button onPress={() => handleBet(10)}>Raise $10</Button>
-          <Button onPress={() => handleBet(50)}>Raise $50</Button>
+          <Button onPress={() => handleBet(5)}>$5</Button>
+          <Button onPress={() => handleBet(10)}>$10</Button>
+          <Button onPress={() => handleBet(50)}>$50</Button>
         </>
       )}
     </Container>
@@ -42,4 +42,13 @@ const Container = styled.View`
 
   gap: 5px;
   margin: 5px;
+
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+
+  & > * {
+    flex: 1;
+  }
 `;

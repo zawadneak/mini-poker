@@ -20,6 +20,7 @@ export default function ResultModal({
 
   const handleClose = () => {
     onClose();
+    setSeeTable(false);
   };
 
   return (
