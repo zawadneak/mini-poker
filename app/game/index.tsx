@@ -21,9 +21,9 @@ const Game = (props: Props) => {
   const { store: roundStore, actions: roundActions } = useRounds();
 
   const { gameRound } = roundStore;
-  const { nextGameRound, resetRound } = roundActions;
+  const { resetRound } = roundActions;
 
-  const { dealCards, getWinner, shuffleDeck, resetGame } = actions;
+  const { dealCards, getWinner, startNewGameRound } = actions;
   const { playerHand, dealerHand, table, result, gameStarted, shuffledDeck } =
     store;
 
@@ -58,9 +58,8 @@ const Game = (props: Props) => {
   }, [result]);
 
   const handleEndGame = () => {
-    resetGame();
+    startNewGameRound();
     setShowWinner(false);
-    router.replace("/");
   };
 
   return (
@@ -75,7 +74,7 @@ const Game = (props: Props) => {
 
         <DealerHand>
           {dealerHand?.map((card: Card) => (
-            <Card card={card} key={card?.id} />
+            <Card card={card} key={card?.id} hidden />
           ))}
         </DealerHand>
 

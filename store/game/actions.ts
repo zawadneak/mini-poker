@@ -73,10 +73,8 @@ export default function useGameActions() {
 
     if (playerPlay.value > dealerPlay.value) {
       setPlayerMoney(playerMoney + pot);
-      setCpuMoney(100);
       setResult({ winner: "Jogador", play: playerPlay.name });
     } else if (playerPlay.value < dealerPlay.value) {
-      setPlayerMoney(100);
       setCpuMoney(pot + cpuMoney);
       setResult({ winner: "Dealer", play: dealerPlay.name });
     } else {
@@ -88,10 +86,20 @@ export default function useGameActions() {
     setGameStarted(false);
   };
 
+  const startNewGameRound = () => {
+    setPlayerHand([]);
+    setDealerHand([]);
+    setTable([]);
+    setResult(null);
+
+    shuffleDeck();
+  };
+
   return {
     resetGame,
     shuffleDeck,
     dealCards,
     getWinner,
+    startNewGameRound,
   };
 }

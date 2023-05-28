@@ -5,9 +5,10 @@ import styled from "styled-components/native";
 
 type Props = {
   card: Card;
+  hidden?: boolean;
 };
 
-const Card = ({ card }: Props) => {
+const Card = ({ card, hidden = false }: Props) => {
   const getCardColor = (suit?: Suits | string) => {
     if (!suit) return "black";
     if (suit === "hearts" || suit === "diamonds") {
@@ -22,8 +23,14 @@ const Card = ({ card }: Props) => {
   if (!card) return <View></View>;
   return (
     <CardWrapper>
-      <CardText color={cardColor}>{card.rank}</CardText>
-      <CardText color={cardColor}>{card.suit}</CardText>
+      {hidden ? (
+        <View />
+      ) : (
+        <>
+          <CardText color={cardColor}>{card.rank}</CardText>
+          <CardText color={cardColor}>{card.suit}</CardText>
+        </>
+      )}
     </CardWrapper>
   );
 };
