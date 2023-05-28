@@ -33,12 +33,13 @@ export default function useRoundActions() {
   }
 
   function nextGameRound() {
-    setGameRound(gameRound + 1);
     setBettingRound(0);
     setCurrentBet(0);
 
     if (gameRound === 3) {
       getWinner();
+    } else {
+      setGameRound(gameRound + 1);
     }
   }
 

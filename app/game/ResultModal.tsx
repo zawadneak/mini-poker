@@ -1,5 +1,5 @@
 import { View, Text } from "react-native";
-import React from "react";
+import React, { useState } from "react";
 import Button from "../../components/Button";
 import { Modal } from "react-native";
 import useGame from "../../store/game";
@@ -14,6 +14,8 @@ export default function ResultModal({
 }) {
   const { store } = useGame();
 
+  const [seeTable, setSeeTable] = useState(false);
+
   const { result } = store;
 
   const handleClose = () => {
@@ -22,21 +24,27 @@ export default function ResultModal({
 
   return (
     <Modal visible={visible} transparent>
-      <Background>
-        <ModalView>
-          <Text>Winner</Text>
-          <Text
-            style={{
-              fontWeight: "bold",
-              fontSize: 32,
-              margin: 10,
-            }}
-          >
-            {result?.winner} | {result?.play}
-          </Text>
-          <Button onPress={handleClose}>End game</Button>
-        </ModalView>
-      </Background>
+      {seeTable ? (
+        <Button onPress={handleClose}>End round</Button>
+      ) : (
+        <Background>
+          <ModalView>
+            <Text>Winner</Text>
+            <Text
+              style={{
+                fontWeight: "bold",
+                fontSize: 32,
+                margin: 10,
+              }}
+            >
+              {result?.winner} | {result?.play}
+            </Text>
+            <Button onPress={handleClose}>End round</Button>
+
+            <Button onPress={() => setSeeTable(true)}>See table</Button>
+          </ModalView>
+        </Background>
+      )}
     </Modal>
   );
 }
