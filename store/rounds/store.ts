@@ -25,6 +25,9 @@ const roundStore = create<RoundStore>((set) => ({
 
   cpuMoney: 100,
   setCpuMoney: (cpuMoney) => set({ cpuMoney }),
+
+  cpuResponse: "WAITING",
+  setCpuResponse: (cpuResponse) => set({ cpuResponse }),
 }));
 
 const useRoundStore = (): RoundStore => roundStore((state) => state);

@@ -26,4 +26,7 @@ export interface RoundStore {
 
   raiseToMatch: number;
   setRaiseToMatch: (raiseToMatch: number) => void;
+
+  cpuResponse: "WAITING" | "FOLD" | "MATCH" | "RAISE";
+  setCpuResponse: (cpuResponse: "WAITING" | "FOLD" | "MATCH" | "RAISE") => void;
 }

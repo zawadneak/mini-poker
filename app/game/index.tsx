@@ -12,6 +12,7 @@ import BettingMenu from "./BettingMenu";
 import GameStatus from "./GameStatus";
 import ResultModal from "./ResultModal";
 import IconButton from "../../components/IconButton";
+import CpuResponseModal from "./CpuResponseModal";
 
 type Props = {};
 
@@ -21,7 +22,7 @@ const Game = (props: Props) => {
   const { store, actions } = useGame();
   const { store: roundStore, actions: roundActions } = useRounds();
 
-  const { gameRound } = roundStore;
+  const { gameRound, cpuResponse } = roundStore;
   const { resetRound } = roundActions;
 
   const { dealCards, getWinner, startNewGameRound } = actions;
@@ -61,6 +62,7 @@ const Game = (props: Props) => {
   return (
     <>
       <ResultModal visible={showWinner} onClose={handleEndGame} />
+      {cpuResponse !== "WAITING" && <CpuResponseModal />}
       <Container alignItems="center" justifyContent="center">
         <IconButton
           size={20}

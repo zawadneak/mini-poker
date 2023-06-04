@@ -25,6 +25,7 @@ export default function useRoundActions() {
     setPlayerMoney,
     setCpuMoney,
     setRaiseToMatch,
+    setCpuResponse,
   } = useRoundStore();
   const { actions, store } = useGame();
 
@@ -101,19 +102,20 @@ export default function useRoundActions() {
     const cpuResponse = getCPUResponseToBet(ammount);
 
     if (cpuResponse.match) {
-      alert("CPU MATCH");
+      setCpuResponse("WAITING");
       setPot(pot + ammount);
       setCpuMoney(cpuMoney - ammount);
       setPlayerMoney(playerMoney - ammount);
       nextGameRound();
     } else if (cpuResponse.raise !== 0) {
-      alert("CPU RAISE " + cpuResponse.raise);
+      setCpuResponse("RAISE");
+      setCurrentBet(cpuResponse.raise);
       setPot(pot + ammount + cpuResponse.raise);
       setCpuMoney(cpuMoney - ammount - cpuResponse.raise);
       setPlayerMoney(playerMoney - ammount - cpuResponse.raise);
       nextGameRound();
     } else {
-      alert("CPU FOLD");
+      setCpuResponse("FOLD");
       setPlayerMoney(playerMoney + pot);
       resetGame();
     }
@@ -122,12 +124,15 @@ export default function useRoundActions() {
   function handlePlayerMatch() {
     setPot(pot + currentBet);
     setCurrentBet(0);
+    setCpuResponse("WAITING");
     nextGameRound();
   }
 
   function handlePlayerFold() {
     alert("PLAYER FOLD");
     resetGame();
+    setCpuResponse("WAITING");
+    actions.startNewGameRound();
   }
 
   return {
