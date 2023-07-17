@@ -64,9 +64,12 @@ const FOUR_OF_A_KIND = 700;
 const STRAIGHT_FLUSH = 800;
 const ROYAL_FLUSH = 900;
 
-const BLUFF_CHANCE = 0.5;
+const BLUFF_CHANCE = 0.25;
 
-const RAISE_AMOUNT = [5, 10, 50];
+// 1 2 3
+const DIFFICULTY = 3;
+
+const RAISE_AMOUNT = [5, 10, 20, 50];
 export {
   HIGH_CARD,
   PAIR,
@@ -80,6 +83,7 @@ export {
   ROYAL_FLUSH,
   BLUFF_CHANCE,
   RAISE_AMOUNT,
+  DIFFICULTY,
 };
 
 export default BASE_DECK;

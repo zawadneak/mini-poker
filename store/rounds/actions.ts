@@ -1,6 +1,7 @@
 import useGame from "../game";
 import {
   BLUFF_CHANCE,
+  DIFFICULTY,
   PAIR,
   RAISE_AMOUNT,
   STRAIGHT,
@@ -56,34 +57,33 @@ export default function useRoundActions() {
     const hand = [...dealerHand, ...tableHandByRound];
     const { value } = getHandStrength(hand);
 
-    const bluff = Math.random() > BLUFF_CHANCE;
+    const bluff = Math.random() > BLUFF_CHANCE * DIFFICULTY;
     const raise = RAISE_AMOUNT[Math.floor(Math.random() * RAISE_AMOUNT.length)];
 
-    if (bluff) {
-      const bluffRaise = Math.random() > BLUFF_CHANCE;
+    if (betToMatch === 0 && DIFFICULTY === 3) {
       return {
-        match: true,
-        raise: bluffRaise ? raise + betToMatch : 0,
+        match: false,
+        raise: raise,
       };
     }
 
     const matchByGameRound = [
       betToMatch <= 5,
       betToMatch < 10 && value >= PAIR,
-      betToMatch < 20 && value >= TWO_PAIR,
+      betToMatch < 50 && value >= TWO_PAIR,
       betToMatch < 50 && value >= THREE_OF_A_KIND,
     ];
 
     const raiseByGameRound = [
-      value >= PAIR && raise + betToMatch <= 100,
-      value >= TWO_PAIR && raise + betToMatch <= 200,
-      value >= THREE_OF_A_KIND && raise + betToMatch <= 500,
-      value >= STRAIGHT && raise + betToMatch <= 1000,
+      value >= PAIR,
+      value >= TWO_PAIR,
+      value >= THREE_OF_A_KIND,
+      value >= STRAIGHT,
     ];
 
     return {
-      match: matchByGameRound[gameRound] || false,
-      raise: raiseByGameRound[gameRound] ? raise + betToMatch : 0,
+      match: matchByGameRound[gameRound] || betToMatch === 0,
+      raise: raiseByGameRound[gameRound] || bluff ? raise + betToMatch : 0,
     };
   }
 
@@ -109,8 +109,6 @@ export default function useRoundActions() {
       setCurrentBet(cpuResponse.raise);
       setPot(pot + ammount + cpuResponse.raise);
       setCpuMoney(cpuMoney - ammount - cpuResponse.raise);
-      setPlayerMoney(playerMoney - ammount - cpuResponse.raise);
-      nextGameRound();
     } else {
       setCpuResponse("FOLD");
       setPlayerMoney(playerMoney + pot);

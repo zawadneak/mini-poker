@@ -59,7 +59,7 @@ export default function Hand({
             fontFamily: "Ubuntu",
           }}
         >
-          CPU ${money}
+          <Text>CPU ${money}</Text>
         </View>
       )}
       {cards?.map((card: Card) => (

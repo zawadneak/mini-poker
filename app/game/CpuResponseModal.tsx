@@ -18,6 +18,7 @@ export default function CpuResponseModal({}: Props) {
       <View
         style={{
           gap: 10,
+          textAlign: "center",
         }}
       >
         <Text>CPU RESPONSE:</Text>
@@ -30,6 +31,16 @@ export default function CpuResponseModal({}: Props) {
         >
           {store.cpuResponse}
         </Text>
+        {store.cpuResponse === "RAISE" && (
+          <Text
+            style={{
+              fontSize: 20,
+              fontFamily: "Ubuntu-Bold",
+            }}
+          >
+            ${store.currentBet}
+          </Text>
+        )}
 
         {!isFolding && store.cpuResponse !== "MATCH" ? (
           <Button onPress={actions.handlePlayerMatch}>
