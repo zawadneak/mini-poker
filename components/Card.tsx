@@ -66,4 +66,5 @@ const CardWrapper = styled.View`
 const CardText = styled.Text<{ color: "red" | "black" }>`
   color: ${({ color }) => color};
   font-size: 21px;
+  font-family: "Ubuntu";
 `;

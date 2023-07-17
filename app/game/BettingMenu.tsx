@@ -28,8 +28,8 @@ export default function BettingMenu() {
           <Text
             style={{
               fontSize: 20,
-              fontWeight: "bold",
               marginRight: 10,
+              fontFamily: "Ubuntu-Bold",
             }}
           >
             ${store.playerMoney}
@@ -73,4 +73,5 @@ const BetButton = styled.TouchableOpacity`
   text-align: center;
 
   color: #fff;
+  font-family: "Ubuntu-Medium";
 `;

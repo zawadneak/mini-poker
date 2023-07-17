@@ -10,8 +10,20 @@ export default function GameStatus() {
   return (
     <Container>
       <View>
-        <Text>Round: {gameRound}</Text>
-        <Text>Pot: ${pot}</Text>
+        <Text
+          style={{
+            fontFamily: "Ubuntu",
+          }}
+        >
+          Round: {gameRound}
+        </Text>
+        <Text
+          style={{
+            fontFamily: "Ubuntu",
+          }}
+        >
+          Pot: ${pot}
+        </Text>
       </View>
     </Container>
   );

@@ -21,7 +21,7 @@ const Button = ({
   const content = (
     <ButtonWrapper backgroundColor={backgroundColor} color={color} {...props}>
       {icon && <Icon name={icon} size={24} color={color} />}
-      <Text style={{ color: color || "white", fontWeight: "bold" }}>
+      <Text style={{ color: color || "white", fontFamily: "Ubuntu-Bold" }}>
         {props.children}
       </Text>
     </ButtonWrapper>

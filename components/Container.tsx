@@ -6,11 +6,20 @@ type Props = {
   children: React.ReactNode;
   justifyContent?: string;
   alignItems?: string;
-};
+} & React.ComponentProps<typeof View>;
 
-const Container = ({ children, justifyContent, alignItems }: Props) => {
+const Container = ({
+  children,
+  justifyContent,
+  alignItems,
+  ...props
+}: Props) => {
   return (
-    <ContainerView justifyContent={justifyContent} alignItems={alignItems}>
+    <ContainerView
+      justifyContent={justifyContent}
+      alignItems={alignItems}
+      {...props}
+    >
       {children}
     </ContainerView>
   );

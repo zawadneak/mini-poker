@@ -56,6 +56,7 @@ export default function Hand({
           style={{
             position: "absolute",
             bottom: 80,
+            fontFamily: "Ubuntu",
           }}
         >
           CPU ${money}
