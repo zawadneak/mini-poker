@@ -34,12 +34,17 @@ const Card = ({ card, hidden = false }: Props) => {
       {hidden ? (
         <View />
       ) : (
-        <>
-          <CardText color={cardColor}>{card.rank}</CardText>
+        <View
+          style={{
+            flexDirection: "row",
+            gap: 10,
+          }}
+        >
           <CardText color={cardColor}>
             {cardIcon[card.suit] || "Error"}
           </CardText>
-        </>
+          <CardText color={cardColor}>{card.rank}</CardText>
+        </View>
       )}
     </CardWrapper>
   );
@@ -48,8 +53,8 @@ const Card = ({ card, hidden = false }: Props) => {
 export default Card;
 
 const CardWrapper = styled.View`
-  width: 100px;
-  height: 150px;
+  width: 5em;
+  height: 8em;
 
   border: 1px solid black;
   border-radius: 10px;

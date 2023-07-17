@@ -30,5 +30,5 @@ const ContainerView = styled.View<{
 
   height: 100%;
   width: 100%;
-  padding: 20px;
+  overflow: hidden;
 `;

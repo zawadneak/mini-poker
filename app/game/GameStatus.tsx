@@ -6,14 +6,13 @@ import useRounds from "../../store/rounds";
 export default function GameStatus() {
   const { store } = useRounds();
 
-  const { pot, currentBet, gameRound, bettingRound, playerMoney, cpuMoney } =
-    store;
+  const { pot, gameRound } = store;
   return (
     <Container>
-      <Text>Round: {gameRound}</Text>
-      <Text>Pot: ${pot}</Text>
-      <Text>Money: ${playerMoney}</Text>
-      <Text>CPU Money: ${cpuMoney}</Text>
+      <View>
+        <Text>Round: {gameRound}</Text>
+        <Text>Pot: ${pot}</Text>
+      </View>
     </Container>
   );
 }
@@ -23,11 +22,12 @@ const Container = styled.View`
   right: 0;
 
   gap: 5px;
-  margin: 5px;
+
+  background-color: #f0f0f0;
 
   flex-direction: row;
   align-items: center;
   justify-content: flex-end;
-  width: 100%;
   padding: 10px;
+  border-bottom-left-radius: 10px;
 `;

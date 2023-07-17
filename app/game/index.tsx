@@ -13,6 +13,7 @@ import GameStatus from "./GameStatus";
 import ResultModal from "./ResultModal";
 import IconButton from "../../components/IconButton";
 import CpuResponseModal from "./CpuResponseModal";
+import Hand from "../../components/Hand";
 
 type Props = {};
 
@@ -78,11 +79,12 @@ const Game = (props: Props) => {
 
         <GameStatus />
 
-        <DealerHand>
-          {dealerHand?.map((card: Card) => (
-            <Card card={card} key={card?.id} hidden />
-          ))}
-        </DealerHand>
+        <Hand
+          cards={dealerHand}
+          position="top"
+          money={roundStore.cpuMoney}
+          hidden
+        ></Hand>
 
         <Table>
           {table?.map(
@@ -93,11 +95,11 @@ const Game = (props: Props) => {
           )}
         </Table>
 
-        <PlayerHand>
-          {playerHand?.map((card: Card) => (
-            <Card card={card} key={card?.id} />
-          ))}
-        </PlayerHand>
+        <Hand
+          position="bottom"
+          cards={playerHand}
+          money={roundStore.playerMoney}
+        />
 
         {gameStarted && <BettingMenu handleNextRound={handleNextGameRound} />}
 
@@ -114,7 +116,7 @@ const Game = (props: Props) => {
               alignItems: "center",
             }}
           >
-            <Button onPress={handleNextGameRound}>Start Game</Button>
+            <Button onPress={handleNextGameRound}>Start Round</Button>
           </View>
         )}
       </Container>
@@ -135,14 +137,8 @@ const CardWrapper = styled.View`
   flex: 1;
 `;
 
-const PlayerHand = styled(CardWrapper)``;
-
-const DealerHand = styled(CardWrapper)`
-  /* transform: rotate(180deg); */
-`;
-
 const Table = styled(CardWrapper)`
   width: 100%;
   flex-wrap: wrap;
-  flex: 2;
+  flex: 1;
 `;

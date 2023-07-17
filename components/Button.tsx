@@ -44,6 +44,7 @@ const ButtonWrapper = styled.TouchableOpacity<{
   padding: 10px 30px;
   border-radius: 5px;
   color: ${({ color }) => color || "white"};
+  width: auto;
 
   align-items: center;
   justify-content: center;

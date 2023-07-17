@@ -3,6 +3,7 @@ import {
   BLUFF_CHANCE,
   PAIR,
   RAISE_AMOUNT,
+  STRAIGHT,
   THREE_OF_A_KIND,
   TWO_PAIR,
 } from "../poker/constants";
@@ -68,16 +69,16 @@ export default function useRoundActions() {
 
     const matchByGameRound = [
       betToMatch <= 5,
-      betToMatch < 5 && value <= PAIR,
-      betToMatch < 50 && value < TWO_PAIR,
-      betToMatch < 10 && value >= TWO_PAIR,
+      betToMatch < 10 && value >= PAIR,
+      betToMatch < 20 && value >= TWO_PAIR,
+      betToMatch < 50 && value >= THREE_OF_A_KIND,
     ];
 
     const raiseByGameRound = [
-      value >= PAIR,
-      value >= TWO_PAIR,
-      value >= TWO_PAIR,
-      value >= THREE_OF_A_KIND,
+      value >= PAIR && raise + betToMatch <= 100,
+      value >= TWO_PAIR && raise + betToMatch <= 200,
+      value >= THREE_OF_A_KIND && raise + betToMatch <= 500,
+      value >= STRAIGHT && raise + betToMatch <= 1000,
     ];
 
     return {

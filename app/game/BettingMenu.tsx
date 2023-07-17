@@ -1,4 +1,4 @@
-import { View, Text } from "react-native";
+import { View, Text, TouchableOpacity } from "react-native";
 import React, { useMemo } from "react";
 import styled from "styled-components/native";
 import Button from "../../components/Button";
@@ -25,10 +25,19 @@ export default function BettingMenu() {
         <Button onPress={() => handlePlayerMatch()}>Match ${currentBet}</Button>
       ) : (
         <>
-          <Button onPress={() => handleBet(0)}>Check</Button>
-          <Button onPress={() => handleBet(5)}>$5</Button>
-          <Button onPress={() => handleBet(10)}>$10</Button>
-          <Button onPress={() => handleBet(50)}>$50</Button>
+          <Text
+            style={{
+              fontSize: 20,
+              fontWeight: "bold",
+              marginRight: 10,
+            }}
+          >
+            ${store.playerMoney}
+          </Text>
+          <BetButton onPress={() => handleBet(0)}>$0</BetButton>
+          <BetButton onPress={() => handleBet(5)}>$5</BetButton>
+          <BetButton onPress={() => handleBet(10)}>$10</BetButton>
+          <BetButton onPress={() => handleBet(50)}>$50</BetButton>
         </>
       )}
     </Container>
@@ -40,8 +49,11 @@ const Container = styled.View`
   bottom: 0;
   left: 0;
 
-  gap: 5px;
-  margin: 5px;
+  background-color: #f0f0f0;
+  border-top: 1px solid #ccc;
+  padding: 5px;
+
+  gap: 10px;
 
   flex-direction: row;
   align-items: center;
@@ -51,4 +63,14 @@ const Container = styled.View`
   & > * {
     flex: 1;
   }
+`;
+
+const BetButton = styled.TouchableOpacity`
+  background-color: #333;
+  padding: 5px;
+  border-radius: 10px;
+  width: 3em;
+  text-align: center;
+
+  color: #fff;
 `;
