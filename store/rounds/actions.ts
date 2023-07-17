@@ -56,36 +56,33 @@ export default function useRoundActions() {
     const { value } = getHandStrength(hand);
 
     const bluff = Math.random() > BLUFF_CHANCE;
+    const raise = RAISE_AMOUNT[Math.floor(Math.random() * RAISE_AMOUNT.length)];
 
-    const bluffRaise = Math.random() > BLUFF_CHANCE;
-
-    const randomRaise =
-      RAISE_AMOUNT[Math.floor(Math.random() * RAISE_AMOUNT.length)] +
-      betToMatch;
-
-    if (bluff)
+    if (bluff) {
+      const bluffRaise = Math.random() > BLUFF_CHANCE;
       return {
         match: true,
-        raise: bluffRaise ? randomRaise + betToMatch : 0,
+        raise: bluffRaise ? raise + betToMatch : 0,
       };
+    }
 
-    const matchByGameRound = {
-      0: betToMatch <= 5,
-      1: betToMatch < 5 && value <= PAIR,
-      2: betToMatch < 50 && value < TWO_PAIR,
-      3: betToMatch < 10 && value >= TWO_PAIR,
-    };
+    const matchByGameRound = [
+      betToMatch <= 5,
+      betToMatch < 5 && value <= PAIR,
+      betToMatch < 50 && value < TWO_PAIR,
+      betToMatch < 10 && value >= TWO_PAIR,
+    ];
 
-    const raiseByGameRound = {
-      0: value >= PAIR,
-      1: value >= TWO_PAIR,
-      2: value >= TWO_PAIR,
-      3: value >= THREE_OF_A_KIND,
-    };
+    const raiseByGameRound = [
+      value >= PAIR,
+      value >= TWO_PAIR,
+      value >= TWO_PAIR,
+      value >= THREE_OF_A_KIND,
+    ];
 
     return {
       match: matchByGameRound[gameRound] || false,
-      raise: raiseByGameRound[gameRound] ? randomRaise : 0,
+      raise: raiseByGameRound[gameRound] ? raise + betToMatch : 0,
     };
   }
 
@@ -96,14 +93,13 @@ export default function useRoundActions() {
     }
 
     setBettingOrder(bettingOrder + 1);
-    setPot(pot + ammount);
     setCurrentBet(ammount);
 
     const cpuResponse = getCPUResponseToBet(ammount);
 
     if (cpuResponse.match) {
-      setCpuResponse("WAITING");
-      setPot(pot + ammount);
+      setCpuResponse("MATCH");
+      setPot(pot + 2 * ammount);
       setCpuMoney(cpuMoney - ammount);
       setPlayerMoney(playerMoney - ammount);
       nextGameRound();
@@ -121,15 +117,20 @@ export default function useRoundActions() {
     }
   }
 
+  function handlePlayerContinue() {
+    setCpuResponse("WAITING");
+  }
+
   function handlePlayerMatch() {
     setPot(pot + currentBet);
+    setPlayerMoney(playerMoney - currentBet);
     setCurrentBet(0);
     setCpuResponse("WAITING");
     nextGameRound();
   }
 
   function handlePlayerFold() {
-    alert("PLAYER FOLD");
+    setCpuMoney(cpuMoney + pot);
     resetGame();
     setCpuResponse("WAITING");
     actions.startNewGameRound();
@@ -142,5 +143,6 @@ export default function useRoundActions() {
     handlePlayerBet,
     handlePlayerMatch,
     handlePlayerFold,
+    handlePlayerContinue,
   };
 }

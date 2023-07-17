@@ -15,12 +15,29 @@ export default function CpuResponseModal({}: Props) {
 
   return (
     <PokerModal>
-      <View>
-        <Text>{store.cpuResponse}</Text>
+      <View
+        style={{
+          gap: 10,
+        }}
+      >
+        <Text>CPU RESPONSE:</Text>
+        <Text
+          style={{
+            fontSize: 20,
+            fontWeight: "bold",
+            textAlign: "center",
+          }}
+        >
+          {store.cpuResponse}
+        </Text>
 
-        {!isFolding && (
+        {!isFolding && store.cpuResponse !== "MATCH" ? (
           <Button onPress={actions.handlePlayerMatch}>
             <Text>Match</Text>
+          </Button>
+        ) : (
+          <Button onPress={actions.handlePlayerContinue}>
+            <Text>Continue</Text>
           </Button>
         )}
         <Button onPress={actions.handlePlayerFold}>

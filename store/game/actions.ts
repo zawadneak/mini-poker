@@ -40,21 +40,18 @@ export default function useGameActions() {
   const shuffleDeck = () => {
     resetGame();
 
-    // Fisher-Yates shuffle
-    const shuffledDeck = (): Deck => {
-      let deck = [...BASE_DECK];
+    let deck = [...BASE_DECK];
 
-      for (let i = BASE_DECK.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [deck[i], deck[j]] = [deck[j], deck[i]];
-      }
-      return deck;
-    };
+    for (let i = BASE_DECK.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [deck[i], deck[j]] = [deck[j], deck[i]];
+    }
 
-    setShuffledDeck(shuffledDeck());
+    setShuffledDeck(deck);
   };
 
   const dealCards = () => {
+    shuffleDeck();
     setGameStarted(true);
     setPlayerHand([shuffledDeck[0], shuffledDeck[2]]);
     setDealerHand([shuffledDeck[1], shuffledDeck[3]]);

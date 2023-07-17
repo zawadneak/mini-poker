@@ -26,7 +26,7 @@ const Background = styled.View`
 `;
 
 const ModalView = styled.View`
-  background-color: white;
+  background: rgba(255, 255, 255, 0.8);
   padding: 20px;
   border-radius: 10px;
   width: 80%;
