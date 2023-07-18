@@ -11,16 +11,20 @@ export default function GameStatus() {
     <Container>
       <View>
         <Text
-          style={{
-            fontFamily: "Ubuntu",
-          }}
+          style={
+            {
+              // sfontFamily: "Ubuntu",
+            }
+          }
         >
           Round: {gameRound}
         </Text>
         <Text
-          style={{
-            fontFamily: "Ubuntu",
-          }}
+          style={
+            {
+              // fontFamily: "Ubuntu",
+            }
+          }
         >
           Pot: ${pot}
         </Text>

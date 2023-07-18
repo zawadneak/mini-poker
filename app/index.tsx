@@ -41,13 +41,24 @@ export default function App() {
     }
   }, [fontsLoaded]);
 
+  const headerHeight = 60;
+
   return (
     <Container
       justifyContent="center"
       alignItems="center"
       onLayout={onLayoutRootView}
+      style={{ paddingTop: headerHeight }}
     >
-      <Title>MiniPoker</Title>
+      <Title
+        style={
+          {
+            // fontFamily: "Ubuntu-Bold",
+          }
+        }
+      >
+        MiniPoker
+      </Title>
       <Button onPress={handleInitGame} icon="cards">
         New Game
       </Button>
@@ -56,7 +67,6 @@ export default function App() {
 }
 
 const Title = styled.Text`
-  font-family: "Ubuntu-Bold";
-  margin-bottom: 20;
+  margin-bottom: 20px;
   font-size: 24px;
 `;

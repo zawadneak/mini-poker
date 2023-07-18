@@ -53,8 +53,8 @@ const Card = ({ card, hidden = false }: Props) => {
 export default Card;
 
 const CardWrapper = styled.View`
-  width: 5em;
-  height: 8em;
+  width: 20%;
+  height: 30%;
 
   border: 1px solid black;
   border-radius: 10px;

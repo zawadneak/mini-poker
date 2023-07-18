@@ -3,6 +3,7 @@ import React, { useMemo } from "react";
 import styled from "styled-components/native";
 import Button from "../../components/Button";
 import useRounds from "../../store/rounds";
+import { RAISE_AMOUNT } from "../../store/poker/constants";
 
 export default function BettingMenu() {
   const { actions, store } = useRounds();
@@ -24,21 +25,46 @@ export default function BettingMenu() {
       {didCPURaise ? (
         <Button onPress={() => handlePlayerMatch()}>Match ${currentBet}</Button>
       ) : (
-        <>
+        <View
+          style={{
+            flexDirection: "row",
+            alignItems: "center",
+            justifyContent: "center",
+            gap: 10,
+          }}
+        >
           <Text
             style={{
               fontSize: 20,
               marginRight: 10,
-              fontFamily: "Ubuntu-Bold",
+              // fontFamily: "Ubuntu-Bold",
             }}
           >
             ${store.playerMoney}
           </Text>
-          <BetButton onPress={() => handleBet(0)}>$0</BetButton>
-          <BetButton onPress={() => handleBet(5)}>$5</BetButton>
-          <BetButton onPress={() => handleBet(10)}>$10</BetButton>
-          <BetButton onPress={() => handleBet(50)}>$50</BetButton>
-        </>
+
+          <BetButton onPress={() => handleBet(0)}>
+            <Text
+              style={{
+                color: "#fff",
+              }}
+            >
+              $0
+            </Text>
+          </BetButton>
+
+          {RAISE_AMOUNT.map((bet: number) => (
+            <BetButton onPress={() => handleBet(bet)} key={bet}>
+              <Text
+                style={{
+                  color: "#fff",
+                }}
+              >
+                ${bet}
+              </Text>
+            </BetButton>
+          ))}
+        </View>
       )}
     </Container>
   );
@@ -59,19 +85,14 @@ const Container = styled.View`
   align-items: center;
   justify-content: center;
   width: 100%;
-
-  & > * {
-    flex: 1;
-  }
 `;
 
 const BetButton = styled.TouchableOpacity`
   background-color: #333;
   padding: 5px;
   border-radius: 10px;
-  width: 3em;
+  width: 50px;
   text-align: center;
-
-  color: #fff;
-  font-family: "Ubuntu-Medium";
+  align-items: center;
+  justify-content: center;
 `;

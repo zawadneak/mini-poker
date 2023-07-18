@@ -71,8 +71,8 @@ const Game = (props: Props) => {
           linkTo="/"
           style={{
             position: "absolute",
-            top: 10,
-            left: 10,
+            top: 0,
+            left: 0,
             zIndex: 2,
           }}
         ></IconButton>

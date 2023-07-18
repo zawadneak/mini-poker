@@ -98,6 +98,13 @@ export default function useRoundActions() {
 
     const cpuResponse = getCPUResponseToBet(ammount);
 
+    if (cpuMoney < ammount) {
+      setCpuResponse("FOLD");
+      setPlayerMoney(playerMoney + pot);
+      resetGame();
+      return;
+    }
+
     if (cpuResponse.match) {
       setCpuResponse("MATCH");
       setPot(pot + 2 * ammount);
@@ -105,6 +112,10 @@ export default function useRoundActions() {
       setPlayerMoney(playerMoney - ammount);
       nextGameRound();
     } else if (cpuResponse.raise !== 0) {
+      if (cpuResponse.raise > cpuMoney) {
+        cpuResponse.raise = cpuMoney;
+      }
+
       setCpuResponse("RAISE");
       setCurrentBet(cpuResponse.raise);
       setPot(pot + ammount + cpuResponse.raise);
@@ -121,6 +132,10 @@ export default function useRoundActions() {
   }
 
   function handlePlayerMatch() {
+    if (playerMoney < currentBet) {
+      return alert("You don't have enough money");
+    }
+
     setPot(pot + currentBet);
     setPlayerMoney(playerMoney - currentBet);
     setCurrentBet(0);

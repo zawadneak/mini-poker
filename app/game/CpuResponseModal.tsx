@@ -35,7 +35,7 @@ export default function CpuResponseModal({}: Props) {
           <Text
             style={{
               fontSize: 20,
-              fontFamily: "Ubuntu-Bold",
+              // fontFamily: "Ubuntu-Bold",
             }}
           >
             ${store.currentBet}

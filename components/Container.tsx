@@ -27,7 +27,7 @@ const Container = ({
 
 export default Container;
 
-const ContainerView = styled.View<{
+const ContainerView = styled.SafeAreaView<{
   justifyContent?: string;
   alignItems?: string;
 }>`
