@@ -106,6 +106,13 @@ export default function useRoundActions() {
     }
 
     if (cpuResponse.match) {
+      if (cpuMoney < ammount) {
+        setCpuResponse("FOLD");
+        setPlayerMoney(playerMoney + pot);
+        resetGame();
+        return;
+      }
+
       setCpuResponse("MATCH");
       setPot(pot + 2 * ammount);
       setCpuMoney(cpuMoney - ammount);
