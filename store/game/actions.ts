@@ -35,6 +35,12 @@ export default function useGameActions() {
     setDealerHand([]);
     setTable([]);
     setResult(null);
+
+    if (playerMoney === 0 || cpuMoney === 0) {
+      alert("Game Over");
+      setPlayerMoney(100);
+      setCpuMoney(100);
+    }
   };
 
   const shuffleDeck = () => {
