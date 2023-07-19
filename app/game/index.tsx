@@ -26,7 +26,7 @@ const Game = (props: Props) => {
   const { gameRound, cpuResponse } = roundStore;
   const { resetRound } = roundActions;
 
-  const { dealCards, getWinner, startNewGameRound } = actions;
+  const { dealCards, startNewGameRound, resetGame } = actions;
   const { playerHand, dealerHand, table, result, gameStarted, shuffledDeck } =
     store;
 
@@ -55,6 +55,11 @@ const Game = (props: Props) => {
     }
   }, [result]);
 
+  const handleCloseGame = () => {
+    resetGame();
+    router.replace("/");
+  };
+
   const handleEndGame = () => {
     startNewGameRound();
     setShowWinner(false);
@@ -68,7 +73,7 @@ const Game = (props: Props) => {
         <IconButton
           size={20}
           icon="arrow-left"
-          linkTo="/"
+          onPress={handleCloseGame}
           style={{
             position: "absolute",
             top: 0,

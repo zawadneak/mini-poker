@@ -55,6 +55,7 @@ export default Card;
 const CardWrapper = styled.View`
   width: 20%;
   height: 30%;
+  max-width: 100px;
 
   border: 1px solid black;
   border-radius: 10px;

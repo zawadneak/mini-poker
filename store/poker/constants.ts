@@ -70,6 +70,9 @@ const BLUFF_CHANCE = 0.25;
 const DIFFICULTY = 3;
 
 const RAISE_AMOUNT = [5, 10, 20, 50];
+
+const STARTING_MONEY = 100;
+
 export {
   HIGH_CARD,
   PAIR,
@@ -84,6 +87,7 @@ export {
   BLUFF_CHANCE,
   RAISE_AMOUNT,
   DIFFICULTY,
+  STARTING_MONEY,
 };
 
 export default BASE_DECK;

@@ -4,6 +4,7 @@ import {
   DIFFICULTY,
   PAIR,
   RAISE_AMOUNT,
+  STARTING_MONEY,
   STRAIGHT,
   THREE_OF_A_KIND,
   TWO_PAIR,
@@ -33,7 +34,14 @@ export default function useRoundActions() {
 
   const { dealerHand, table } = store;
 
-  const { shuffleDeck, resetGame, getWinner } = actions;
+  const { resetGame, getWinner } = actions;
+
+  function resetGameMoney() {
+    setPot(0);
+    setPlayerMoney(STARTING_MONEY);
+    setCpuMoney(STARTING_MONEY);
+  }
+
   function resetRound() {
     setBettingRound(0);
     setGameRound(0);

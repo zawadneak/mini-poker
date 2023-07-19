@@ -1,4 +1,4 @@
-import BASE_DECK from "../poker/constants";
+import BASE_DECK, { STARTING_MONEY } from "../poker/constants";
 import getHandStrength, {
   isFlush,
   isFourOfAKind,
@@ -38,8 +38,8 @@ export default function useGameActions() {
 
     if (playerMoney === 0 || cpuMoney === 0) {
       alert("Game Over");
-      setPlayerMoney(100);
-      setCpuMoney(100);
+      setPlayerMoney(STARTING_MONEY);
+      setCpuMoney(STARTING_MONEY);
     }
   };
 

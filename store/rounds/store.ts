@@ -1,5 +1,6 @@
 import { create } from "zustand";
 import { RoundStore } from "./types";
+import { STARTING_MONEY } from "../poker/constants";
 
 const roundStore = create<RoundStore>((set) => ({
   gameRound: 0,
@@ -20,10 +21,10 @@ const roundStore = create<RoundStore>((set) => ({
   bettingOrder: 0,
   setBettingOrder: (bettingOrder) => set({ bettingOrder }),
 
-  playerMoney: 100,
+  playerMoney: STARTING_MONEY,
   setPlayerMoney: (playerMoney) => set({ playerMoney }),
 
-  cpuMoney: 100,
+  cpuMoney: STARTING_MONEY,
   setCpuMoney: (cpuMoney) => set({ cpuMoney }),
 
   cpuResponse: "WAITING",
