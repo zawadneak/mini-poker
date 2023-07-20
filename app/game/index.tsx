@@ -24,7 +24,7 @@ const Game = (props: Props) => {
   const { store: roundStore, actions: roundActions } = useRounds();
 
   const { gameRound, cpuResponse } = roundStore;
-  const { resetRound } = roundActions;
+  const { resetRound, resetGameMoney } = roundActions;
 
   const { dealCards, startNewGameRound, resetGame } = actions;
   const { playerHand, dealerHand, table, result, gameStarted, shuffledDeck } =
@@ -57,7 +57,8 @@ const Game = (props: Props) => {
 
   const handleCloseGame = () => {
     resetGame();
-    router.replace("/");
+    resetGameMoney();
+    router.push("/");
   };
 
   const handleEndGame = () => {

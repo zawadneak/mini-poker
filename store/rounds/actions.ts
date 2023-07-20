@@ -178,5 +178,6 @@ export default function useRoundActions() {
     handlePlayerMatch,
     handlePlayerFold,
     handlePlayerContinue,
+    resetGameMoney,
   };
 }
