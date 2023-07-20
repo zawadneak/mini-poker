@@ -50,11 +50,11 @@ export default function Hand({
         <View
           style={{
             position: "absolute",
-            bottom: position === "top" ? -10 : 150,
+            bottom: position === "top" ? 5 : 120,
           }}
         >
           <Text>
-            CPU ${player.money} {player.name}
+            {player.name} ${player.money}
           </Text>
         </View>
       )}
