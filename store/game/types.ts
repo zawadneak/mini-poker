@@ -45,7 +45,7 @@ interface GameStore {
 }
 
 type Result = {
-  winner: "Jogador" | "Dealer" | "Tie";
+  winner: "Jogador" | string | "Tie";
   play: string;
 };
 

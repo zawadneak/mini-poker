@@ -56,6 +56,8 @@ const CardWrapper = styled.View`
   width: 20%;
   height: 30%;
   max-width: 100px;
+  min-height: 80px;
+  min-width: 50px;
 
   border: 1px solid black;
   border-radius: 10px;
@@ -66,6 +68,6 @@ const CardWrapper = styled.View`
 
 const CardText = styled.Text<{ color: "red" | "black" }>`
   color: ${({ color }) => color};
-  font-size: 21px;
+  font-size: 16px;
   font-family: "Ubuntu";
 `;

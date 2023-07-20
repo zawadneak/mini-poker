@@ -1,3 +1,5 @@
+import { produce } from "immer";
+import usePlayerStore from "../players/store";
 import BASE_DECK, { STARTING_MONEY } from "../poker/constants";
 import getHandStrength, {
   isFlush,
@@ -9,6 +11,8 @@ import getHandStrength, {
 } from "../poker/handCheck";
 import useRoundStore from "../rounds/store";
 import useGameStore from "./store";
+import usePlayerActions from "../players/actions";
+import { Player } from "../players/types";
 
 export default function useGameActions() {
   const {
@@ -16,9 +20,7 @@ export default function useGameActions() {
     setGameStarted,
     shuffledDeck,
     setShuffledDeck,
-    setPlayerHand,
     setTable,
-    setDealerHand,
     setResult,
 
     playerHand,
@@ -26,21 +28,23 @@ export default function useGameActions() {
     table,
   } = useGameStore();
 
-  const { setPlayerMoney, setCpuMoney, pot, playerMoney, cpuMoney } =
-    useRoundStore();
+  const { mainPlayer, cpus, setPlayer, setCpus } = usePlayerStore();
+
+  const { assignCardsToPlayers, initPlayers } = usePlayerActions();
+
+  const { pot } = useRoundStore();
 
   const resetGame = () => {
+    initPlayers();
     setGameStarted(false);
-    setPlayerHand([]);
-    setDealerHand([]);
     setTable([]);
     setResult(null);
 
-    if (playerMoney === 0 || cpuMoney === 0) {
-      alert("Game Over");
-      setPlayerMoney(STARTING_MONEY);
-      setCpuMoney(STARTING_MONEY);
-    }
+    // if (playerMoney === 0 || cpuMoney === 0) {
+    //   alert("Game Over");
+    //   setPlayerMoney(STARTING_MONEY);
+    //   setCpuMoney(STARTING_MONEY);
+    // }
   };
 
   const shuffleDeck = () => {
@@ -59,37 +63,69 @@ export default function useGameActions() {
   const dealCards = () => {
     shuffleDeck();
     setGameStarted(true);
-    setPlayerHand([shuffledDeck[0], shuffledDeck[2]]);
-    setDealerHand([shuffledDeck[1], shuffledDeck[3]]);
-    setTable(shuffledDeck.slice(4, 9));
+
+    const tableCards = assignCardsToPlayers(shuffledDeck);
+    setTable(tableCards.splice(0, 5));
   };
 
   const getWinner = () => {
     if (!gameStarted) return;
-    const playerCards = playerHand.concat(table);
-    const dealerCards = dealerHand.concat(table);
+    const playerHandStrength = {
+      ...mainPlayer,
+      hand: mainPlayer.hand.concat(table),
+      handStrength: getHandStrength(mainPlayer.hand.concat(table)),
+    };
+    const cpuHandStrength: Player[] = produce(cpus, (draft) => {
+      draft.forEach((cpu: Player) => {
+        cpu.hand = cpu.hand.concat(table);
+        cpu.handStrength = getHandStrength(cpu.hand);
+      });
+    });
 
-    const playerPlay = getHandStrength(playerCards);
-    const dealerPlay = getHandStrength(dealerCards);
+    const playerIsWinner = cpuHandStrength.every(
+      (cpuPlay: Player) =>
+        playerHandStrength.handStrength >= cpuPlay.handStrength
+    );
 
-    if (playerPlay.value > dealerPlay.value) {
-      setPlayerMoney(playerMoney + pot);
-      setResult({ winner: "Jogador", play: playerPlay.name });
-    } else if (playerPlay.value < dealerPlay.value) {
-      setCpuMoney(pot + cpuMoney);
-      setResult({ winner: "Dealer", play: dealerPlay.name });
-    } else {
-      setPlayerMoney(playerMoney + pot / 2);
-      setCpuMoney(cpuMoney + pot / 2);
-      setResult({ winner: "Tie", play: playerPlay.name });
+    const playerIsLoser = cpuHandStrength.every(
+      (cpuPlay) => playerHandStrength.handStrength < cpuPlay.handStrength
+    );
+
+    const playerIsTied =
+      playerIsWinner &&
+      cpuHandStrength.some(
+        (cpuPlay) => playerHandStrength.handStrength === cpuPlay.handStrength
+      );
+
+    if (playerIsWinner) {
+      setResult({
+        winner: mainPlayer.id,
+        play: playerHandStrength.handStrength.name,
+      });
+    } else if (playerIsLoser) {
+      const cpuWithHighestPlay = cpuHandStrength.reduce((acc, cpuPlay) => {
+        if (cpuPlay.handStrength.value > acc.handStrength.value) {
+          return cpuPlay;
+        }
+        return acc;
+      }, cpuHandStrength[0]);
+
+      setResult({
+        winner: cpuWithHighestPlay.id,
+        play: cpuWithHighestPlay.handStrength.name,
+      });
+    } else if (playerIsTied) {
+      setResult({
+        winner: "Tie",
+        play: playerHandStrength.handStrength.name,
+      });
+
+      setGameStarted(false);
     }
-
-    setGameStarted(false);
   };
 
   const startNewGameRound = () => {
-    setPlayerHand([]);
-    setDealerHand([]);
+    initPlayers();
     setTable([]);
     setResult(null);
 

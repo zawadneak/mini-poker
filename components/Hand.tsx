@@ -2,18 +2,17 @@ import React from "react";
 import Card from "./Card";
 import styled from "styled-components/native";
 import { Text, View } from "react-native";
+import { Player } from "../store/players/types";
 
 type Props = {
   position: "bottom" | "right" | "left" | "top";
-  cards: Card[];
-  money: number;
+  player: Player;
   hidden?: boolean;
 };
 
 export default function Hand({
   position = "top",
-  cards,
-  money,
+  player,
   hidden = false,
 }: Props) {
   const getStyleByPosition = (
@@ -22,27 +21,23 @@ export default function Hand({
     const coordinates = {
       bottom: {
         bottom: 0,
-        marginBottom: -100,
-        left: 0,
-        right: 0,
+        marginBottom: 0,
       },
       right: {
-        top: 0,
-        bottom: 0,
         right: 0,
-        marginRight: -150,
+        // backgroundColor: "red",s
+        transform: [{ rotate: "-90deg" }],
+        marginRight: -100,
       },
       left: {
-        top: 0,
-        bottom: 0,
         left: 0,
-        marginLeft: -150,
+        marginLeft: -100,
+        transform: [{ rotate: "90deg" }],
+        // backgroundColor: "yellow",
       },
       top: {
         top: 0,
-        marginTop: -150,
-        left: 0,
-        right: 0,
+        marginTop: -30,
       },
     };
 
@@ -51,17 +46,19 @@ export default function Hand({
 
   return (
     <HandWrapper style={getStyleByPosition(position)}>
-      {hidden && (
+      {player.id !== "mainPlayer" && (
         <View
           style={{
             position: "absolute",
-            bottom: 80,
+            bottom: position === "top" ? -10 : 150,
           }}
         >
-          <Text>CPU ${money}</Text>
+          <Text>
+            CPU ${player.money} {player.name}
+          </Text>
         </View>
       )}
-      {cards?.map((card: Card) => (
+      {player.hand?.map((card: Card) => (
         <Card card={card} key={card?.id} hidden={hidden} />
       ))}
     </HandWrapper>
@@ -69,13 +66,10 @@ export default function Hand({
 }
 
 const HandWrapper = styled.View`
-  width: 100%;
-  position: relative;
-
   flex-direction: row;
   justify-content: center;
   align-items: center;
   gap: 10px;
-
-  flex: 1;
+  position: absolute;
+  min-height: 150px;
 `;

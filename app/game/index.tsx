@@ -14,6 +14,7 @@ import ResultModal from "./ResultModal";
 import IconButton from "../../components/IconButton";
 import CpuResponseModal from "./CpuResponseModal";
 import Hand from "../../components/Hand";
+import usePlayers from "../../store/players";
 
 type Props = {};
 
@@ -22,13 +23,15 @@ const Game = (props: Props) => {
 
   const { store, actions } = useGame();
   const { store: roundStore, actions: roundActions } = useRounds();
+  const { store: playerStore, actions: playerActions } = usePlayers();
 
   const { gameRound, cpuResponse } = roundStore;
   const { resetRound, resetGameMoney } = roundActions;
 
   const { dealCards, startNewGameRound, resetGame } = actions;
-  const { playerHand, dealerHand, table, result, gameStarted, shuffledDeck } =
-    store;
+  const { table, result, gameStarted, shuffledDeck } = store;
+
+  const { mainPlayer, cpus } = playerStore;
 
   const [showWinner, setShowWinner] = React.useState(false);
 
@@ -66,6 +69,8 @@ const Game = (props: Props) => {
     setShowWinner(false);
   };
 
+  const positions = ["top", "left", "right"];
+
   return (
     <>
       <ResultModal visible={showWinner} onClose={handleEndGame} />
@@ -77,7 +82,7 @@ const Game = (props: Props) => {
           onPress={handleCloseGame}
           style={{
             position: "absolute",
-            top: 0,
+            top: 50,
             left: 0,
             zIndex: 2,
           }}
@@ -85,12 +90,14 @@ const Game = (props: Props) => {
 
         <GameStatus />
 
-        <Hand
-          cards={dealerHand}
-          position="top"
-          money={roundStore.cpuMoney}
-          hidden
-        ></Hand>
+        {cpus.map((cpu, i) => (
+          <Hand
+            position={positions[i]}
+            player={cpu}
+            key={cpu.id}
+            hidden={cpuResponse === "WAITING"}
+          ></Hand>
+        ))}
 
         <Table>
           {table?.map(
@@ -101,11 +108,7 @@ const Game = (props: Props) => {
           )}
         </Table>
 
-        <Hand
-          position="bottom"
-          cards={playerHand}
-          money={roundStore.playerMoney}
-        />
+        <Hand position="bottom" player={mainPlayer} />
 
         {gameStarted && <BettingMenu handleNextRound={handleNextGameRound} />}
 
