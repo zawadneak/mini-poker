@@ -1,4 +1,6 @@
 import useGame from "../game";
+import usePlayers from "../players";
+import { Player } from "../players/types";
 import {
   BLUFF_CHANCE,
   DIFFICULTY,
@@ -27,7 +29,6 @@ export default function useRoundActions() {
     cpuMoney,
     setPlayerMoney,
     setCpuMoney,
-    setRaiseToMatch,
     setCpuResponse,
   } = useRoundStore();
   const { actions, store } = useGame();
@@ -35,6 +36,12 @@ export default function useRoundActions() {
   const { dealerHand, table } = store;
 
   const { resetGame, getWinner } = actions;
+
+  const { actions: playerActions, store: playerStore } = usePlayers();
+
+  const { setCpu, resetPlayersHasBetted } = playerActions;
+
+  const { cpus, setPlayer, mainPlayer } = playerStore;
 
   function resetGameMoney() {
     setPot(0);
@@ -60,9 +67,9 @@ export default function useRoundActions() {
     }
   }
 
-  function getCPUResponseToBet(betToMatch: number) {
+  function getCPUResponseToBet(betToMatch: number, cpu: Player) {
     const tableHandByRound = table.slice(0, gameRound + 1);
-    const hand = [...dealerHand, ...tableHandByRound];
+    const hand = [...cpu.hand, ...tableHandByRound];
     const { value } = getHandStrength(hand);
 
     const bluff = Math.random() > BLUFF_CHANCE * DIFFICULTY;
@@ -101,66 +108,75 @@ export default function useRoundActions() {
       return;
     }
 
+    setPlayer({
+      ...mainPlayer,
+      money: playerMoney - ammount,
+    });
+
     setBettingOrder(bettingOrder + 1);
     setCurrentBet(ammount);
 
-    const cpuResponse = getCPUResponseToBet(ammount);
-
-    if (cpuMoney < ammount) {
-      setCpuResponse("FOLD");
-      setPlayerMoney(playerMoney + pot);
-      resetGame();
-      return;
-    }
-
-    if (cpuResponse.match) {
-      setCpuResponse("MATCH");
+    cpus.forEach((cpu) => {
+      const cpuResponse = getCPUResponseToBet(ammount, cpu);
       if (cpuMoney < ammount) {
-        setCurrentBet(cpuMoney);
-        setPot(pot + cpuMoney * 2);
-        setCpuMoney(0);
-        setPlayerMoney(playerMoney - cpuMoney);
+        setCpu({
+          ...cpu,
+          status: "FOLD",
+        });
         return;
       }
 
-      setPot(pot + 2 * ammount);
-      setCpuMoney(cpuMoney - ammount);
-      setPlayerMoney(playerMoney - ammount);
-      nextGameRound();
-    } else if (cpuResponse.raise !== 0) {
-      if (cpuResponse.raise > cpuMoney) {
-        cpuResponse.raise = cpuMoney;
-      }
+      if (cpuResponse.match) {
+        if (cpuMoney < ammount) {
+          // TODO: ajustar para que não seja injusto com quem deu raise
+          setPot(pot + cpuMoney + ammount);
+          setCpu({
+            ...cpu,
+            status: "MATCH",
+            money: 0,
+          });
+          return;
+        }
 
-      setCpuResponse("RAISE");
-      setCurrentBet(cpuResponse.raise);
-      setPot(pot + ammount + cpuResponse.raise);
-      setCpuMoney(cpuMoney - ammount - cpuResponse.raise);
-    } else {
-      setCpuResponse("FOLD");
-      setPlayerMoney(playerMoney + pot);
-      resetGame();
-    }
+        setPot(pot + 2 * ammount);
+        setCpu({
+          ...cpu,
+          status: "MATCH",
+          money: cpuMoney - ammount,
+        });
+      } else if (cpuResponse.raise !== 0) {
+        if (cpuResponse.raise > cpuMoney) {
+          cpuResponse.raise = cpuMoney;
+        }
+
+        resetPlayersHasBetted();
+
+        setCurrentBet(cpuResponse.raise);
+        setPot(pot + ammount + cpuResponse.raise);
+        setCpu({
+          ...cpu,
+          status: "RAISE",
+          money: cpuMoney - ammount - cpuResponse.raise,
+        });
+      }
+    });
   }
 
   function handlePlayerContinue() {
-    setCpuResponse("WAITING");
+    resetPlayersHasBetted();
   }
 
   function handlePlayerMatch() {
     if (playerMoney < currentBet) {
+      // TODO: ajustar para que não seja injusto com quem deu raise
       setCurrentBet(playerMoney);
       setPot(pot + playerMoney * 2);
-      setCpuMoney(cpuMoney - playerMoney);
       setPlayerMoney(0);
-      return nextGameRound();
+      return resetPlayersHasBetted();
     }
 
     setPot(pot + currentBet);
     setPlayerMoney(playerMoney - currentBet);
-    setCurrentBet(0);
-    setCpuResponse("WAITING");
-    nextGameRound();
   }
 
   function handlePlayerFold() {

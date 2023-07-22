@@ -9,11 +9,12 @@ const BASE_PLAYER_OBJECT = {
   hand: [],
   money: STARTING_MONEY,
   bet: 0,
-  result: null,
+  status: null,
   isTurn: false,
   isWinner: false,
   isBigBlind: false,
   isSmallBlind: false,
+  hasBetted: false,
 };
 
 export { BASE_PLAYER_OBJECT, CPU_COUNT, NAMES };

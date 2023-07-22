@@ -4,11 +4,12 @@ export interface Player {
   hand: Card[];
   money: number;
   bet: number;
-  result: Result;
+  status: "FOLD" | "MATCH" | "RAISE" | null;
   isTurn: boolean;
   isWinner: boolean;
   isBigBlind: boolean;
   isSmallBlind: boolean;
+  hasBetted: boolean;
 
   handStrength?: {
     name: string;

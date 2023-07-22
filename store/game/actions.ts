@@ -30,21 +30,32 @@ export default function useGameActions() {
 
   const { mainPlayer, cpus, setPlayer, setCpus } = usePlayerStore();
 
-  const { assignCardsToPlayers, initPlayers } = usePlayerActions();
+  const { assignCardsToPlayers, initPlayers, resetPlayersRound } =
+    usePlayerActions();
 
   const { pot } = useRoundStore();
 
   const resetGame = () => {
-    initPlayers();
+    resetPlayersRound();
     setGameStarted(false);
     setTable([]);
     setResult(null);
 
-    // if (playerMoney === 0 || cpuMoney === 0) {
-    //   alert("Game Over");
-    //   setPlayerMoney(STARTING_MONEY);
-    //   setCpuMoney(STARTING_MONEY);
-    // }
+    if (mainPlayer.money === 0) {
+      setPlayer({
+        ...mainPlayer,
+        money: STARTING_MONEY,
+      });
+      alert("Game Over");
+    }
+
+    const newCpus = produce(cpus, (draft) => {
+      draft.filter((cpu) => {
+        cpu.money > 0;
+      });
+    });
+
+    setCpus(newCpus);
   };
 
   const shuffleDeck = () => {
@@ -125,7 +136,7 @@ export default function useGameActions() {
   };
 
   const startNewGameRound = () => {
-    initPlayers();
+    resetPlayersRound();
     setTable([]);
     setResult(null);
 

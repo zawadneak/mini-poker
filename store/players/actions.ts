@@ -1,6 +1,7 @@
 import { produce } from "immer";
 import { BASE_PLAYER_OBJECT, CPU_COUNT, NAMES } from "./constants";
 import usePlayerStore from "./store";
+import { Player } from "./types";
 
 export default function usePlayerActions() {
   const { mainPlayer, cpus, setPlayer, setCpus } = usePlayerStore();
@@ -22,6 +23,35 @@ export default function usePlayerActions() {
     });
 
     setCpus(newCpus);
+  };
+
+  const resetPlayersRound = () => {
+    const newCpus = produce(cpus, (draft) => {
+      draft.forEach((cpu) => {
+        cpu.bet = 0;
+        cpu.hand = [];
+        cpu.hasBetted = false;
+        cpu.isBigBlind = false;
+        cpu.isSmallBlind = false;
+        cpu.isTurn = false;
+        cpu.isWinner = false;
+        cpu.status = null;
+      });
+    });
+
+    setCpus(newCpus);
+
+    setPlayer({
+      ...mainPlayer,
+      bet: 0,
+      hand: [],
+      hasBetted: false,
+      isBigBlind: false,
+      isSmallBlind: false,
+      isTurn: false,
+      isWinner: false,
+      status: null,
+    });
   };
 
   //   TODO: consider big blind and small blind + game rotations
@@ -47,8 +77,36 @@ export default function usePlayerActions() {
     return shuffledDeck;
   };
 
+  const resetPlayersHasBetted = () => {
+    const newCpus = produce(cpus, (draft) => {
+      draft.forEach((cpu) => {
+        cpu.hasBetted = false;
+      });
+    });
+
+    setCpus(newCpus);
+
+    setPlayer({
+      ...mainPlayer,
+      hasBetted: false,
+    });
+  };
+
+  const setCpu = (cpu: Player) => {
+    const newCpus = produce(cpus, (draft) => {
+      const index = draft.findIndex((c) => c.id === cpu.id);
+
+      draft[index] = cpu;
+    });
+
+    setCpus(newCpus);
+  };
+
   return {
     initPlayers,
     assignCardsToPlayers,
+    resetPlayersHasBetted,
+    setCpu,
+    resetPlayersRound,
   };
 }
