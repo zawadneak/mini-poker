@@ -8,7 +8,6 @@ type Props = {
 };
 
 export default function HandInformation({ position, player }: Props) {
-  console.log(player);
   return (
     <View
       style={{

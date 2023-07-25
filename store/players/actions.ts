@@ -5,9 +5,7 @@ import { Player } from "./types";
 import { BIG_BLIND_BET, SMALL_BLIND_BET } from "../poker/constants";
 
 export default function usePlayerActions() {
-  const { mainPlayer, cpus, setPlayer, setCpus } = playerStore(
-    (state) => state
-  );
+  const { mainPlayer, cpus, setPlayer, setCpus } = playerStore.getState();
 
   const initPlayers = async (): Promise<{
     mainPlayer: Player;
@@ -95,11 +93,13 @@ export default function usePlayerActions() {
     },
     player: Player
   ): Promise<Deck> => {
+    let newShuffledDeck = [...shuffledDeck];
+
     const newCpus = await produce(localCPUS, (draft) => {
       Object.values(draft).forEach((cpu) => {
         draft[cpu.id].hand = [];
-        draft[cpu.id].hand.push(shuffledDeck.pop());
-        draft[cpu.id].hand.push(shuffledDeck.pop());
+        draft[cpu.id].hand.push(newShuffledDeck.pop());
+        draft[cpu.id].hand.push(newShuffledDeck.pop());
       });
     });
 
@@ -107,10 +107,10 @@ export default function usePlayerActions() {
 
     setPlayer({
       ...player,
-      hand: [shuffledDeck.pop(), shuffledDeck.pop()],
+      hand: [newShuffledDeck.pop(), newShuffledDeck.pop()],
     });
 
-    return shuffledDeck;
+    return newShuffledDeck;
   };
 
   const resetPlayersHasBetted = () => {

@@ -1,15 +1,26 @@
-import { create } from "zustand";
-import { immer } from "zustand/middleware/immer";
+import { StateCreator, create } from "zustand";
+import { subscribeWithSelector } from "zustand/middleware";
 
 import { PlayerStore } from "./types";
+import { produce } from "immer";
 
 const playerStore = create(
-  immer<PlayerStore>((set) => ({
+  subscribeWithSelector((set) => ({
     mainPlayer: null,
-    setPlayer: (mainPlayer) => set({ mainPlayer }),
+    setPlayer: (mainPlayer) =>
+      set(
+        produce((state) => {
+          state.mainPlayer = mainPlayer;
+        })
+      ),
 
     cpus: {},
-    setCpus: (cpus) => set({ cpus }),
+    setCpus: (cpus) =>
+      set(
+        produce((state) => {
+          state.cpus = cpus;
+        })
+      ),
   }))
 );
 

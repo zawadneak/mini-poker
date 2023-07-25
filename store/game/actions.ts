@@ -33,9 +33,9 @@ export default function useGameActions() {
     bettingOrderSequence,
     bettingOrder,
     table,
-  } = gameStore((state) => state);
+  } = gameStore.getState();
 
-  const { mainPlayer, cpus, setPlayer, setCpus } = usePlayerStore();
+  const { mainPlayer, cpus, setPlayer, setCpus } = playerStore.getState();
 
   const {
     assignCardsToPlayers,
@@ -249,13 +249,19 @@ export default function useGameActions() {
     }
   };
 
-  const handleAdvanceBettingRound = () => {
+  const handleAdvanceBettingRound = async () => {
     const currentPlayerTurn = bettingOrderSequence[bettingOrder + 1];
     setBettingOrder(bettingOrder + 1);
     setPlayerTurn(currentPlayerTurn);
 
+    console.log(currentPlayerTurn, bettingOrderSequence, bettingOrder);
+
     if (currentPlayerTurn !== "mainPlayer") {
-      cpuSimulation.handleSimulateCpuTurn(currentPlayerTurn);
+      // cpuSimulation.handleSimulateCpuTurn(currentPlayerTurn);
+      await new Promise((resolve) => setTimeout(resolve, 3000));
+
+      // Now, the state should be updated, and you can continue with other logic.
+      await handleAdvanceGameRound();
     }
   };
 
