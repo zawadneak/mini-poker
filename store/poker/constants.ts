@@ -73,6 +73,10 @@ const RAISE_AMOUNT = [5, 10, 20, 50];
 
 const STARTING_MONEY = 100;
 
+const BIG_BLIND_BET = 2;
+
+const SMALL_BLIND_BET = 1;
+
 export {
   HIGH_CARD,
   PAIR,
@@ -88,6 +92,8 @@ export {
   RAISE_AMOUNT,
   DIFFICULTY,
   STARTING_MONEY,
+  BIG_BLIND_BET,
+  SMALL_BLIND_BET,
 };
 
 export default BASE_DECK;

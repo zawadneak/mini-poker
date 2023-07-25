@@ -33,7 +33,7 @@ export default function useRoundActions() {
   } = useRoundStore();
   const { actions, store } = useGame();
 
-  const { dealerHand, table } = store;
+  const { table } = store;
 
   const { resetGame, getWinner } = actions;
 
@@ -42,30 +42,6 @@ export default function useRoundActions() {
   const { setCpu, resetPlayersHasBetted } = playerActions;
 
   const { cpus, setPlayer, mainPlayer } = playerStore;
-
-  function resetGameMoney() {
-    setPot(0);
-    setPlayerMoney(STARTING_MONEY);
-    setCpuMoney(STARTING_MONEY);
-  }
-
-  function resetRound() {
-    setBettingRound(0);
-    setGameRound(0);
-    setCurrentBet(0);
-    setPot(0);
-  }
-
-  function nextGameRound() {
-    setBettingRound(0);
-    setCurrentBet(0);
-
-    if (gameRound === 3) {
-      getWinner();
-    } else {
-      setGameRound(gameRound + 1);
-    }
-  }
 
   function getCPUResponseToBet(betToMatch: number, cpu: Player) {
     const tableHandByRound = table.slice(0, gameRound + 1);
@@ -188,12 +164,9 @@ export default function useRoundActions() {
 
   return {
     resetGame,
-    resetRound,
-    nextGameRound,
     handlePlayerBet,
     handlePlayerMatch,
     handlePlayerFold,
     handlePlayerContinue,
-    resetGameMoney,
   };
 }

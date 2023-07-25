@@ -31,17 +31,44 @@ interface GameStore {
   setGameStarted: (gameStarted: boolean) => void;
 
   shuffledDeck: Deck;
-  playerHand: Deck;
-  dealerHand: Deck;
   table: Deck;
 
   setShuffledDeck: (deck: Deck) => void;
-  setPlayerHand: (deck: Deck) => void;
-  setDealerHand: (deck: Deck) => void;
   setTable: (deck: Deck) => void;
 
   result: Result | null;
   setResult: (result: Result) => void;
+
+  gameRound: number;
+  setGameRound: (gameRound: number) => void;
+
+  // total bets in the pot
+  pot: number;
+  setPot: (pot: number) => void;
+
+  // bet to match
+  currentBet: number;
+  setCurrentBet: (currentBet: number) => void;
+
+  // // current hand betting round
+  // bettingRound: number;
+  // setBettingRound: (bettingRound: number) => void;
+
+  // current player betting order
+  bettingOrder: number;
+  setBettingOrder: (bettingOrder: number) => void;
+
+  /**
+   * The order of the players in the betting round
+   *
+   * @example
+   * 0 -> Small Blind
+   * 1 -> Big Blind
+   * n -> Player N
+   * n + 1 -> Player N + 1
+   */
+  bettingOrderSequence: string[];
+  setBettingOrderSequence: (bettingOrderSequence: string[]) => void;
 }
 
 type Result = {

@@ -1,5 +1,5 @@
 import { produce } from "immer";
-import usePlayerStore from "../players/store";
+import usePlayerStore, { playerStore } from "../players/store";
 import BASE_DECK, { STARTING_MONEY } from "../poker/constants";
 import getHandStrength, {
   isFlush,
@@ -10,9 +10,11 @@ import getHandStrength, {
   isStraightFlush,
 } from "../poker/handCheck";
 import useRoundStore from "../rounds/store";
-import useGameStore from "./store";
+import useGameStore, { gameStore } from "./store";
 import usePlayerActions from "../players/actions";
 import { Player } from "../players/types";
+import { CPU_COUNT } from "../players/constants";
+import useCPUSimulation from "../players/cpu/simulation";
 
 export default function useGameActions() {
   const {
@@ -22,18 +24,51 @@ export default function useGameActions() {
     setShuffledDeck,
     setTable,
     setResult,
-
-    playerHand,
-    dealerHand,
+    gameRound,
+    setPot,
+    setGameRound,
+    setCurrentBet,
+    setBettingOrderSequence,
+    setBettingOrder,
+    bettingOrderSequence,
+    bettingOrder,
     table,
-  } = useGameStore();
+  } = gameStore((state) => state);
 
   const { mainPlayer, cpus, setPlayer, setCpus } = usePlayerStore();
 
-  const { assignCardsToPlayers, initPlayers, resetPlayersRound } =
-    usePlayerActions();
+  const {
+    assignCardsToPlayers,
+    initPlayers,
+    resetPlayersRound,
+    setAsSmallBlind,
+    setAsBigBlind,
+    setPlayerTurn,
+  } = usePlayerActions();
 
-  const { pot } = useRoundStore();
+  const cpuSimulation = useCPUSimulation();
+
+  function resetGameMoney() {
+    setPot(0);
+  }
+
+  function resetRound() {
+    setBettingOrder(0);
+    setGameRound(0);
+    setCurrentBet(0);
+    setPot(0);
+  }
+
+  function nextGameRound() {
+    setBettingOrder(0);
+    setCurrentBet(0);
+
+    if (gameRound === 3) {
+      getWinner();
+    } else {
+      setGameRound(gameRound + 1);
+    }
+  }
 
   const resetGame = () => {
     resetPlayersRound();
@@ -58,9 +93,7 @@ export default function useGameActions() {
     setCpus(newCpus);
   };
 
-  const shuffleDeck = () => {
-    resetGame();
-
+  const shuffleDeck = (): Deck => {
     let deck = [...BASE_DECK];
 
     for (let i = BASE_DECK.length - 1; i > 0; i--) {
@@ -69,13 +102,15 @@ export default function useGameActions() {
     }
 
     setShuffledDeck(deck);
+
+    return deck;
   };
 
-  const dealCards = () => {
-    shuffleDeck();
-    setGameStarted(true);
+  const dealCards = async (cpus: Player[]) => {
+    const localShuffledDeck = shuffleDeck();
 
-    const tableCards = assignCardsToPlayers(shuffledDeck);
+    const tableCards = await assignCardsToPlayers(localShuffledDeck, cpus);
+    console.log(tableCards);
     setTable(tableCards.splice(0, 5));
   };
 
@@ -143,11 +178,92 @@ export default function useGameActions() {
     shuffleDeck();
   };
 
+  /**
+   * Rotate players in the betting order (small and big blind)
+   *
+   * @returns void
+   */
+  const rotatePlayers = () => {
+    const lastBigBlind = bettingOrderSequence[0];
+
+    const newBettingOrderSequence = produce(bettingOrderSequence, (draft) => {
+      draft.shift();
+      draft.push(lastBigBlind);
+    });
+
+    setBettingOrderSequence(newBettingOrderSequence);
+
+    bettingOrderSequence.forEach((playerId, i) => {
+      if (i === 0) {
+        setAsSmallBlind(playerId);
+      }
+
+      if (i === 1) {
+        setAsBigBlind(playerId);
+      }
+    });
+  };
+
+  const handleAdvanceGameRound = async () => {
+    console.log("handleAdvanceGameRound");
+    if (!gameStarted) {
+      console.log("START NEW GAME ROUND");
+
+      const { cpus: localCPUS } = await initPlayers();
+      setBettingOrderSequence([
+        "mainPlayer",
+        ...localCPUS.map((cpu) => cpu.id),
+      ]);
+      await dealCards(localCPUS);
+
+      setBettingOrder(0);
+
+      setGameRound(0);
+      setGameStarted(true);
+      console.log(gameStore.getState(), playerStore.getState());
+
+      return;
+    }
+
+    if (gameRound === 3) {
+      getWinner();
+      setGameStarted(false);
+      return;
+    }
+
+    console.log("ADVANCE BETTING ROUND");
+
+    if (bettingOrder === CPU_COUNT + 1) {
+      setGameRound(gameRound + 1);
+      setBettingOrder(0);
+      setCurrentBet(0);
+      resetPlayersRound();
+
+      rotatePlayers();
+    } else {
+      handleAdvanceBettingRound();
+    }
+  };
+
+  const handleAdvanceBettingRound = () => {
+    const currentPlayerTurn = bettingOrderSequence[bettingOrder + 1];
+    setBettingOrder(bettingOrder + 1);
+    setPlayerTurn(currentPlayerTurn);
+
+    if (currentPlayerTurn !== "mainPlayer") {
+      cpuSimulation.handleSimulateCpuTurn(currentPlayerTurn);
+    }
+  };
+
   return {
     resetGame,
     shuffleDeck,
     dealCards,
     getWinner,
     startNewGameRound,
+    nextGameRound,
+    resetGameMoney,
+    resetRound,
+    handleAdvanceGameRound,
   };
 }

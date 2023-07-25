@@ -1,5 +1,5 @@
 import { View, Text, Modal } from "react-native";
-import React from "react";
+import React, { useMemo } from "react";
 import useGame from "../../store/game";
 import Button from "../../components/Button";
 import Card from "../../components/Card";
@@ -15,21 +15,24 @@ import IconButton from "../../components/IconButton";
 import CpuResponseModal from "./CpuResponseModal";
 import Hand from "../../components/Hand";
 import usePlayers from "../../store/players";
+import useGameActions from "../../store/game/actions";
+import useGameStore, { gameStore } from "../../store/game/store";
 
 type Props = {};
 
 const Game = (props: Props) => {
   const router = useRouter();
-
-  const { store, actions } = useGame();
-  const { store: roundStore, actions: roundActions } = useRounds();
   const { store: playerStore, actions: playerActions } = usePlayers();
 
-  const { gameRound, cpuResponse } = roundStore;
-  const { resetRound, resetGameMoney } = roundActions;
-
-  const { dealCards, startNewGameRound, resetGame } = actions;
-  const { table, result, gameStarted, shuffledDeck } = store;
+  const {
+    startNewGameRound,
+    resetGame,
+    resetGameMoney,
+    handleAdvanceGameRound,
+  } = useGameActions();
+  const { table, result, gameStarted, shuffledDeck, gameRound } = gameStore(
+    (state) => state
+  );
 
   const { mainPlayer, cpus } = playerStore;
 
@@ -42,15 +45,7 @@ const Game = (props: Props) => {
     return 0;
   };
 
-  const handleNextGameRound = () => {
-    if (!gameStarted) return handleStartGame();
-  };
-
-  const handleStartGame = () => {
-    if (!shuffledDeck[0]) return router.replace("/");
-    dealCards();
-    resetRound();
-  };
+  const isPlayerTurn = useMemo(() => mainPlayer?.isTurn, [mainPlayer?.isTurn]);
 
   React.useEffect(() => {
     if (!!result) {
@@ -71,10 +66,31 @@ const Game = (props: Props) => {
 
   const positions = ["top", "left", "right"];
 
+  if (!gameStarted) {
+    return (
+      <Container alignItems="center" justifyContent="center">
+        <View
+          style={{
+            position: "absolute",
+            top: 0,
+            left: 0,
+            bottom: 0,
+            right: 0,
+
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
+          <Button onPress={handleAdvanceGameRound}>Start Round</Button>
+        </View>
+      </Container>
+    );
+  }
+
   return (
     <>
       <ResultModal visible={showWinner} onClose={handleEndGame} />
-      {cpuResponse !== "WAITING" && <CpuResponseModal />}
+      {/* {cpuResponse !== "WAITING" && <CpuResponseModal />} */}
       <Container alignItems="center" justifyContent="center">
         <IconButton
           size={20}
@@ -89,13 +105,23 @@ const Game = (props: Props) => {
         ></IconButton>
 
         <GameStatus />
-
+        {/* 
         {cpus.map((cpu, i) => (
           <Hand
             position={positions[i]}
             player={cpu}
             key={cpu.id}
-            hidden={cpuResponse === "WAITING"}
+            hidden={true}
+          ></Hand>
+        ))} */}
+
+        {/* cpu is now map object */}
+        {Object.keys(cpus).map((cpu, i) => (
+          <Hand
+            position={positions[i]}
+            player={cpus[cpu]}
+            key={cpus[cpu].id}
+            hidden={true}
           ></Hand>
         ))}
 
@@ -110,24 +136,7 @@ const Game = (props: Props) => {
 
         <Hand position="bottom" player={mainPlayer} />
 
-        {gameStarted && <BettingMenu handleNextRound={handleNextGameRound} />}
-
-        {!gameStarted && (
-          <View
-            style={{
-              position: "absolute",
-              top: 0,
-              left: 0,
-              bottom: 0,
-              right: 0,
-
-              justifyContent: "center",
-              alignItems: "center",
-            }}
-          >
-            <Button onPress={handleNextGameRound}>Start Round</Button>
-          </View>
-        )}
+        {gameStarted && isPlayerTurn && <BettingMenu />}
       </Container>
     </>
   );

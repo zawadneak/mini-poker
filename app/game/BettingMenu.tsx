@@ -4,68 +4,74 @@ import styled from "styled-components/native";
 import Button from "../../components/Button";
 import useRounds from "../../store/rounds";
 import { RAISE_AMOUNT } from "../../store/poker/constants";
+import useGame from "../../store/game";
+import useGameActions from "../../store/game/actions";
+import useGameStore from "../../store/game/store";
+import usePlayerStore from "../../store/players/store";
 
 export default function BettingMenu() {
-  const { actions, store } = useRounds();
+  const { setPot, pot, bettingOrder, currentBet } = useGameStore();
+  const { handleAdvanceGameRound } = useGameActions();
 
-  const { handlePlayerBet, handlePlayerFold, handlePlayerMatch } = actions;
-  const { bettingRound, bettingOrder, currentBet } = store;
+  const { setPlayer, mainPlayer } = usePlayerStore();
 
   const handleBet = (ammount: 0 | 5 | 10 | 50) => {
-    handlePlayerBet(ammount);
+    setPlayer({
+      ...mainPlayer,
+      isTurn: false,
+      bet: ammount,
+    });
+
+    setPot(pot + ammount);
+
+    handleAdvanceGameRound();
   };
 
-  const didCPURaise = useMemo(
-    () => bettingRound > 0 && bettingOrder === 0 && currentBet > 0,
-    [bettingOrder, bettingRound, currentBet]
-  );
+  const playerMoney = useMemo(() => mainPlayer.money, [mainPlayer.money]);
+  const didCPURaise = useMemo(() => false, []);
 
   return (
     <Container>
-      {didCPURaise ? (
-        <Button onPress={() => handlePlayerMatch()}>Match ${currentBet}</Button>
-      ) : (
-        <View
+      <View
+        style={{
+          flexDirection: "row",
+          alignItems: "center",
+          justifyContent: "center",
+          gap: 10,
+        }}
+      >
+        <Text
           style={{
-            flexDirection: "row",
-            alignItems: "center",
-            justifyContent: "center",
-            gap: 10,
+            fontSize: 20,
+            marginRight: 10,
+            // fontFamily: "Ubuntu-Bold",
           }}
         >
+          ${playerMoney}
+        </Text>
+
+        <BetButton onPress={() => handleBet(0)}>
           <Text
             style={{
-              fontSize: 20,
-              marginRight: 10,
-              // fontFamily: "Ubuntu-Bold",
+              color: "#fff",
             }}
           >
-            ${store.playerMoney}
+            $0
           </Text>
+        </BetButton>
 
-          <BetButton onPress={() => handleBet(0)}>
+        {RAISE_AMOUNT.map((bet: number) => (
+          <BetButton onPress={() => handleBet(bet)} key={bet}>
             <Text
               style={{
                 color: "#fff",
               }}
             >
-              $0
+              ${bet}
             </Text>
           </BetButton>
-
-          {RAISE_AMOUNT.map((bet: number) => (
-            <BetButton onPress={() => handleBet(bet)} key={bet}>
-              <Text
-                style={{
-                  color: "#fff",
-                }}
-              >
-                ${bet}
-              </Text>
-            </BetButton>
-          ))}
-        </View>
-      )}
+        ))}
+      </View>
     </Container>
   );
 }

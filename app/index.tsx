@@ -7,12 +7,13 @@ import useGame from "../store/game";
 import { useFonts } from "expo-font";
 import * as SplashScreen from "expo-splash-screen";
 import { useCallback } from "react";
+import useGameActions from "../store/game/actions";
 
 SplashScreen.preventAutoHideAsync();
 
 export default function App() {
   const router = useRouter();
-  const { actions } = useGame();
+  const actions = useGameActions();
 
   const [fontsLoaded] = useFonts({
     Ubuntu: require("../assets/fonts/Ubuntu/Ubuntu-Regular.ttf"),
@@ -28,8 +29,6 @@ export default function App() {
 
   const handleInitGame = () => {
     console.log("init game");
-
-    actions.shuffleDeck();
 
     // expo router push
     router.push("/game");
