@@ -7,6 +7,7 @@ import Container from "../../components/Container";
 
 import styled from "styled-components/native";
 import { useRouter } from "expo-router";
+import useRounds from "../../store/rounds";
 import BettingMenu from "./BettingMenu";
 import GameStatus from "./GameStatus";
 import ResultModal from "./ResultModal";

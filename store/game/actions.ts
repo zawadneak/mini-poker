@@ -1,8 +1,16 @@
 import { produce } from "immer";
 import usePlayerStore, { playerStore } from "../players/store";
 import BASE_DECK, { STARTING_MONEY } from "../poker/constants";
-import getHandStrength from "../poker/handCheck";
-import { gameStore } from "./store";
+import getHandStrength, {
+  isFlush,
+  isFourOfAKind,
+  isFullHouse,
+  isRoyalFlush,
+  isStraight,
+  isStraightFlush,
+} from "../poker/handCheck";
+import useRoundStore from "../rounds/store";
+import useGameStore, { gameStore } from "./store";
 import usePlayerActions from "../players/actions";
 import { Player } from "../players/types";
 import { CPU_COUNT } from "../players/constants";
@@ -12,6 +20,7 @@ export default function useGameActions() {
   const {
     gameStarted,
     setGameStarted,
+    shuffledDeck,
     setShuffledDeck,
     setTable,
     setResult,

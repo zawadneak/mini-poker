@@ -5,18 +5,17 @@ import { View } from "react-native";
 import { Text } from "react-native";
 import useRounds from "../../store/rounds";
 import Button from "../../components/Button";
-import useGame from "../../store/game";
 
 type Props = {};
 
 export default function CpuResponseModal({}: Props) {
-  const { store, actions } = useGame();
+  const { store, actions } = useRounds();
 
-  const isFolding = false;
+  const isFolding = store.cpuResponse === "FOLD";
 
   return (
     <PokerModal>
-      {/* <View
+      <View
         style={{
           gap: 10,
           textAlign: "center",
@@ -55,7 +54,7 @@ export default function CpuResponseModal({}: Props) {
         <Button onPress={actions.handlePlayerFold}>
           <Text>{isFolding ? "Next match" : "Fold"}</Text>
         </Button>
-      </View> */}
+      </View>
     </PokerModal>
   );
 }
