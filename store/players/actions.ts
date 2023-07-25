@@ -162,6 +162,7 @@ export default function usePlayerActions() {
         isSmallBlind: true,
         isTurn: true,
       });
+      return;
     }
 
     const newCpus = { ...cpus };
@@ -179,24 +180,8 @@ export default function usePlayerActions() {
         ...mainPlayer,
         isTurn: true,
       });
+      return;
     }
-
-    // const newCpus = produce(cpus, (draft) => {
-    //   const index = draft.findIndex((c) => c.id === playerId);
-
-    //   if (index >= 0) {
-    //     draft[index] = {
-    //       ...draft[index],
-    //       isTurn: true,
-    //     };
-    //   }
-
-    //   draft.forEach((cpu) => {
-    //     if (cpu.id !== playerId) {
-    //       cpu.isTurn = false;
-    //     }
-    //   });
-    // });
 
     const newCpus = { ...cpus };
 

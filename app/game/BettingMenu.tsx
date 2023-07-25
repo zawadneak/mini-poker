@@ -12,6 +12,8 @@ export default function BettingMenu() {
 
   const { setPlayer, mainPlayer } = usePlayerStore();
 
+  const isPlayerTurn = mainPlayer.isTurn;
+
   const handleBet = (ammount: 0 | 5 | 10 | 50) => {
     setPlayer({
       ...mainPlayer,
@@ -47,7 +49,10 @@ export default function BettingMenu() {
           ${playerMoney}
         </Text>
 
-        <BetButton onPress={() => handleBet(0)}>
+        {mainPlayer.isBigBlind && <Text>Big Blind</Text>}
+        {mainPlayer.isSmallBlind && <Text>Small Blind</Text>}
+
+        <BetButton onPress={() => handleBet(0)} disabled={!isPlayerTurn}>
           <Text
             style={{
               color: "#fff",
@@ -58,7 +63,11 @@ export default function BettingMenu() {
         </BetButton>
 
         {RAISE_AMOUNT.map((bet: number) => (
-          <BetButton onPress={() => handleBet(bet)} key={bet}>
+          <BetButton
+            onPress={() => handleBet(bet)}
+            key={bet}
+            disabled={!isPlayerTurn}
+          >
             <Text
               style={{
                 color: "#fff",
@@ -90,7 +99,9 @@ const Container = styled.View`
   width: 100%;
 `;
 
-const BetButton = styled.TouchableOpacity`
+const BetButton = styled.TouchableOpacity<{
+  disabled: boolean;
+}>`
   background-color: #333;
   padding: 5px;
   border-radius: 10px;
@@ -98,4 +109,6 @@ const BetButton = styled.TouchableOpacity`
   text-align: center;
   align-items: center;
   justify-content: center;
+
+  opacity: ${(props) => (props.disabled ? 0.5 : 1)};
 `;

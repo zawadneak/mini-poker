@@ -1,8 +1,9 @@
 import React from "react";
-import Card from "./Card";
+import Card from "../Card";
 import styled from "styled-components/native";
 import { Text, View } from "react-native";
-import { Player } from "../store/players/types";
+import { Player } from "../../store/players/types";
+import HandInformation from "./HandInformation";
 
 type Props = {
   position: "bottom" | "right" | "left" | "top";
@@ -47,16 +48,7 @@ export default function Hand({
   return (
     <HandWrapper style={getStyleByPosition(position)}>
       {player.id !== "mainPlayer" && (
-        <View
-          style={{
-            position: "absolute",
-            bottom: position === "top" ? 5 : 120,
-          }}
-        >
-          <Text>
-            {player.name} ${player.money}
-          </Text>
-        </View>
+        <HandInformation player={player} position={position} />
       )}
       {player.hand?.map((card: Card) => (
         <Card card={card} key={card?.id} hidden={hidden} />

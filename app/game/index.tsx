@@ -63,7 +63,7 @@ const Game = (props: Props) => {
     setShowWinner(false);
   };
 
-  const positions = ["top", "left", "right"];
+  const positions = ["right", "top", "left"];
 
   if (!gameStarted) {
     return (
