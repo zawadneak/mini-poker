@@ -136,7 +136,7 @@ const Game = (props: Props) => {
 
         <Hand position="bottom" player={mainPlayer} />
 
-        {gameStarted && isPlayerTurn && <BettingMenu />}
+        {gameStarted && <BettingMenu />}
       </Container>
     </>
   );

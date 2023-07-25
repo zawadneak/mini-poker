@@ -21,8 +21,8 @@ type PlayerStore = {
   mainPlayer: Player | null;
   setPlayer: (player: Player) => void;
 
-  cpus: Map<string, Player>;
-  setCpus: (cpus: Map<string, Player>) => void;
+  cpus: { [key: string]: Player };
+  setCpus: (cpus: { [key: string]: Player }) => void;
 };
 
 export { PlayerStore };

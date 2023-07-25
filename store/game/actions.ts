@@ -85,8 +85,10 @@ export default function useGameActions() {
     }
 
     const newCpus = produce(cpus, (draft) => {
-      draft.filter((cpu) => {
-        cpu.money > 0;
+      Object.values(cpus).map((cpu) => {
+        if (cpu.money >= 0) {
+          draft[cpu.id] = undefined;
+        }
       });
     });
 
@@ -106,11 +108,15 @@ export default function useGameActions() {
     return deck;
   };
 
-  const dealCards = async (cpus: Player[]) => {
+  const dealCards = async (cpus: { [key: string]: Player }, player: Player) => {
     const localShuffledDeck = shuffleDeck();
 
-    const tableCards = await assignCardsToPlayers(localShuffledDeck, cpus);
-    console.log(tableCards);
+    const tableCards = await assignCardsToPlayers(
+      localShuffledDeck,
+      cpus,
+      player
+    );
+
     setTable(tableCards.splice(0, 5));
   };
 
@@ -121,12 +127,14 @@ export default function useGameActions() {
       hand: mainPlayer.hand.concat(table),
       handStrength: getHandStrength(mainPlayer.hand.concat(table)),
     };
-    const cpuHandStrength: Player[] = produce(cpus, (draft) => {
-      draft.forEach((cpu: Player) => {
-        cpu.hand = cpu.hand.concat(table);
-        cpu.handStrength = getHandStrength(cpu.hand);
-      });
-    });
+    const cpuHandStrength: Player[] = Object.values(
+      produce(cpus, (draft) => {
+        Object.values(cpus).forEach((cpu: Player) => {
+          draft[cpu.id].hand = draft[cpu.id].hand.concat(table);
+          draft[cpu.id].handStrength = getHandStrength(draft[cpu.id].hand);
+        });
+      })
+    );
 
     const playerIsWinner = cpuHandStrength.every(
       (cpuPlay: Player) =>
@@ -209,12 +217,9 @@ export default function useGameActions() {
     if (!gameStarted) {
       console.log("START NEW GAME ROUND");
 
-      const { cpus: localCPUS } = await initPlayers();
-      setBettingOrderSequence([
-        "mainPlayer",
-        ...localCPUS.map((cpu) => cpu.id),
-      ]);
-      await dealCards(localCPUS);
+      const { cpus: localCPUS, mainPlayer: localPlayer } = await initPlayers();
+      setBettingOrderSequence(["mainPlayer", ...Object.keys(localCPUS)]);
+      await dealCards(localCPUS, localPlayer);
 
       setBettingOrder(0);
 

@@ -27,11 +27,11 @@ export default function Hand({
         right: 0,
         // backgroundColor: "red",s
         transform: [{ rotate: "-90deg" }],
-        marginRight: -100,
+        marginRight: -50,
       },
       left: {
         left: 0,
-        marginLeft: -100,
+        marginLeft: -50,
         transform: [{ rotate: "90deg" }],
         // backgroundColor: "yellow",
       },

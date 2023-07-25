@@ -8,7 +8,7 @@ const playerStore = create(
     mainPlayer: null,
     setPlayer: (mainPlayer) => set({ mainPlayer }),
 
-    cpus: new Map(),
+    cpus: {},
     setCpus: (cpus) => set({ cpus }),
   }))
 );

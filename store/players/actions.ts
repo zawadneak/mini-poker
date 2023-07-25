@@ -11,18 +11,22 @@ export default function usePlayerActions() {
 
   const initPlayers = async (): Promise<{
     mainPlayer: Player;
-    cpus: Player[];
+    cpus: {
+      [key: string]: Player;
+    };
   }> => {
-    setPlayer({
+    const playerObj = {
       ...BASE_PLAYER_OBJECT,
       id: "mainPlayer",
       name: "Lucas",
       isSmallBlind: true,
       isTurn: true,
-    });
+    };
 
-    let newCpus = [];
-    await Array.from(Array(CPU_COUNT)).forEach((_, i) => {
+    setPlayer(playerObj);
+
+    let newCpus = {};
+    [...Array(CPU_COUNT).fill(null)].forEach((_, i) => {
       console.log("INIT CPU " + i);
       let cpuBaseObject = {
         ...BASE_PLAYER_OBJECT,
@@ -38,28 +42,33 @@ export default function usePlayerActions() {
         };
       }
 
-      newCpus.push(cpuBaseObject);
+      Object.assign(newCpus, {
+        [`cpu-${i}`]: cpuBaseObject,
+      });
     });
 
     setCpus(newCpus);
 
     return {
-      mainPlayer,
-      cpus,
+      mainPlayer: playerObj,
+      cpus: newCpus,
     };
   };
 
   const resetPlayersRound = () => {
     const newCpus = produce(cpus, (draft) => {
-      draft.forEach((cpu) => {
-        cpu.bet = 0;
-        cpu.hand = [];
-        cpu.hasBetted = false;
-        cpu.isBigBlind = false;
-        cpu.isSmallBlind = false;
-        cpu.isTurn = false;
-        cpu.isWinner = false;
-        cpu.status = null;
+      Object.values(cpus).map((cpu) => {
+        draft[cpu.id] = {
+          ...cpu,
+          bet: 0,
+          hand: [],
+          hasBetted: false,
+          isBigBlind: false,
+          isSmallBlind: false,
+          isTurn: false,
+          isWinner: false,
+          status: null,
+        };
       });
     });
 
@@ -81,25 +90,23 @@ export default function usePlayerActions() {
   //   TODO: consider big blind and small blind + game rotations
   const assignCardsToPlayers = async (
     shuffledDeck: Deck,
-    localCPUS: Player[]
+    localCPUS: {
+      [key: string]: Player;
+    },
+    player: Player
   ): Promise<Deck> => {
     const newCpus = await produce(localCPUS, (draft) => {
-      draft.forEach((cpu) => {
-        cpu.hand = [];
-      });
-
-      draft.forEach((cpu) => {
-        cpu.hand.push(shuffledDeck.pop());
-        cpu.hand.push(shuffledDeck.pop());
+      Object.values(draft).forEach((cpu) => {
+        draft[cpu.id].hand = [];
+        draft[cpu.id].hand.push(shuffledDeck.pop());
+        draft[cpu.id].hand.push(shuffledDeck.pop());
       });
     });
-
-    console.log(newCpus);
 
     setCpus(newCpus);
 
     setPlayer({
-      ...mainPlayer,
+      ...player,
       hand: [shuffledDeck.pop(), shuffledDeck.pop()],
     });
 
@@ -108,8 +115,8 @@ export default function usePlayerActions() {
 
   const resetPlayersHasBetted = () => {
     const newCpus = produce(cpus, (draft) => {
-      draft.forEach((cpu) => {
-        cpu.hasBetted = false;
+      Object.values(draft).forEach((cpu) => {
+        draft[cpu.id].hasBetted = false;
       });
     });
 
@@ -123,9 +130,7 @@ export default function usePlayerActions() {
 
   const setCpu = (cpu: Player) => {
     const newCpus = produce(cpus, (draft) => {
-      const index = draft.findIndex((c) => c.id === cpu.id);
-
-      draft[index] = cpu;
+      draft[cpu.id] = cpu;
     });
 
     setCpus(newCpus);
@@ -140,14 +145,12 @@ export default function usePlayerActions() {
       return;
     }
 
-    const newCpus = produce(cpus, (draft) => {
-      const index = draft.findIndex((c) => c.id === playerId);
+    const newCpus = { ...cpus };
 
-      draft[index] = {
-        ...draft[index],
-        isBigBlind: true,
-      };
-    });
+    newCpus[playerId] = {
+      ...newCpus[playerId],
+      isBigBlind: true,
+    };
 
     setCpus(newCpus);
   };
@@ -161,15 +164,12 @@ export default function usePlayerActions() {
       });
     }
 
-    const newCpus = produce(cpus, (draft) => {
-      const index = draft.findIndex((c) => c.id === playerId);
+    const newCpus = { ...cpus };
 
-      draft[index] = {
-        ...draft[index],
-        isSmallBlind: true,
-      };
-    });
-
+    newCpus[playerId] = {
+      ...newCpus[playerId],
+      isSmallBlind: true,
+    };
     setCpus(newCpus);
   };
 
@@ -181,22 +181,36 @@ export default function usePlayerActions() {
       });
     }
 
-    const newCpus = produce(cpus, (draft) => {
-      const index = draft.findIndex((c) => c.id === playerId);
+    // const newCpus = produce(cpus, (draft) => {
+    //   const index = draft.findIndex((c) => c.id === playerId);
 
-      if (index >= 0) {
-        draft[index] = {
-          ...draft[index],
-          isTurn: true,
-        };
-      }
+    //   if (index >= 0) {
+    //     draft[index] = {
+    //       ...draft[index],
+    //       isTurn: true,
+    //     };
+    //   }
 
-      draft.forEach((cpu) => {
-        if (cpu.id !== playerId) {
-          cpu.isTurn = false;
-        }
-      });
+    //   draft.forEach((cpu) => {
+    //     if (cpu.id !== playerId) {
+    //       cpu.isTurn = false;
+    //     }
+    //   });
+    // });
+
+    const newCpus = { ...cpus };
+
+    Object.values(newCpus).forEach((cpu) => {
+      newCpus[cpu.id] = {
+        ...newCpus[cpu.id],
+        isTurn: false,
+      };
     });
+
+    newCpus[playerId] = {
+      ...newCpus[playerId],
+      isSmallBlind: true,
+    };
 
     setCpus(newCpus);
   };
