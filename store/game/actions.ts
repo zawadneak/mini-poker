@@ -33,9 +33,9 @@ export default function useGameActions() {
     bettingOrderSequence,
     bettingOrder,
     table,
-  } = gameStore.getState();
+  } = useGameStore();
 
-  const { mainPlayer, cpus, setPlayer, setCpus } = playerStore.getState();
+  const { mainPlayer, cpus, setPlayer, setCpus } = usePlayerStore();
 
   const {
     assignCardsToPlayers,
@@ -231,14 +231,17 @@ export default function useGameActions() {
       return;
     }
 
-    if (gameRound === 3) {
+    const updatedGameRound = gameStore.getState().gameRound;
+    const updatedBettingOrder = gameStore.getState().bettingOrder;
+
+    if (updatedGameRound === 3) {
       getWinner();
       setGameStarted(false);
       return;
     }
 
-    if (bettingOrder === CPU_COUNT + 1) {
-      setGameRound(gameRound + 1);
+    if (updatedBettingOrder + 1 === CPU_COUNT + 1) {
+      setGameRound(updatedGameRound + 1);
       setBettingOrder(0);
       setCurrentBet(0);
       resetPlayersRound();
@@ -250,11 +253,14 @@ export default function useGameActions() {
   };
 
   const handleAdvanceBettingRound = async () => {
-    const currentPlayerTurn = bettingOrderSequence[bettingOrder + 1];
-    setBettingOrder(bettingOrder + 1);
-    setPlayerTurn(currentPlayerTurn);
+    const updatedBettingOrder = gameStore.getState().bettingOrder;
+    const updatedBettingOrderSequence =
+      gameStore.getState().bettingOrderSequence;
 
-    console.log(currentPlayerTurn, bettingOrderSequence, bettingOrder);
+    const currentPlayerTurn =
+      updatedBettingOrderSequence[updatedBettingOrder + 1];
+    setBettingOrder(updatedBettingOrder + 1);
+    setPlayerTurn(currentPlayerTurn);
 
     if (currentPlayerTurn !== "mainPlayer") {
       // cpuSimulation.handleSimulateCpuTurn(currentPlayerTurn);

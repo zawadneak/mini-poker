@@ -5,7 +5,7 @@ import { Player } from "./types";
 import { BIG_BLIND_BET, SMALL_BLIND_BET } from "../poker/constants";
 
 export default function usePlayerActions() {
-  const { mainPlayer, cpus, setPlayer, setCpus } = playerStore.getState();
+  const { mainPlayer, cpus, setPlayer, setCpus } = usePlayerStore();
 
   const initPlayers = async (): Promise<{
     mainPlayer: Player;
