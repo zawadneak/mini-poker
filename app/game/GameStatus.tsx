@@ -1,10 +1,10 @@
 import { View, Text } from "react-native";
 import React from "react";
 import styled from "styled-components/native";
-import useRounds from "../../store/rounds";
+import useGame from "../../store/game";
 
 export default function GameStatus() {
-  const { store } = useRounds();
+  const { store } = useGame();
 
   const { pot, gameRound } = store;
   return (
@@ -13,11 +13,20 @@ export default function GameStatus() {
         <Text
           style={
             {
-              // sfontFamily: "Ubuntu",
+              // fontFamily: "Ubuntu",
             }
           }
         >
           Round: {gameRound}
+        </Text>
+        <Text
+          style={
+            {
+              // fontFamily: "Ubuntu",
+            }
+          }
+        >
+          Betting Turn: {store.bettingOrder}
         </Text>
         <Text
           style={
