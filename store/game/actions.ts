@@ -183,6 +183,7 @@ export default function useGameActions() {
    * @returns void
    */
   const rotatePlayers = () => {
+    console.log("ROTATING PLAYERS");
     const lastBigBlind = bettingOrderSequence[0];
 
     const newBettingOrderSequence = produce(bettingOrderSequence, (draft) => {
@@ -226,8 +227,6 @@ export default function useGameActions() {
       setGameStarted(false);
       return;
     }
-
-    console.log("ADVANCE BETTING ROUND");
 
     if (bettingOrder === CPU_COUNT + 1) {
       setGameRound(gameRound + 1);

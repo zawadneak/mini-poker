@@ -194,7 +194,7 @@ export default function usePlayerActions() {
 
     newCpus[playerId] = {
       ...newCpus[playerId],
-      isSmallBlind: true,
+      isTurn: true,
     };
 
     setCpus(newCpus);

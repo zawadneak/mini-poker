@@ -8,6 +8,7 @@ type Props = {
 };
 
 export default function HandInformation({ position, player }: Props) {
+  console.log(player);
   return (
     <View
       style={{
@@ -21,7 +22,11 @@ export default function HandInformation({ position, player }: Props) {
       <Text style={{ fontSize: 21 }}>
         {player.name} ${player.money}
       </Text>
-      <Text>{player.status || "Waiting for turn"}</Text>
+      <Text>
+        {player.status ||
+          (player.isTurn && "Current turn") ||
+          "Waiting for turn"}
+      </Text>
       {player?.isBigBlind && <Text>Big Blind</Text>}
       {player?.isSmallBlind && <Text>Small Blind</Text>}
     </View>
