@@ -1,4 +1,4 @@
-import useGameStore from "../../game/store";
+import useGameStore, { gameStore } from "../../game/store";
 import {
   BLUFF_CHANCE,
   DIFFICULTY,
@@ -9,22 +9,23 @@ import {
   TWO_PAIR,
 } from "../../poker/constants";
 import getHandStrength from "../../poker/handCheck";
-import usePlayerStore from "../store";
+import usePlayerStore, { playerStore } from "../store";
 import { Player } from "../types";
 
 export default function useCPUSimulation() {
-  const { cpus, setCpus } = usePlayerStore();
+  const { setPot } = useGameStore();
 
-  const {
-    table,
-    gameRound,
-    setPot,
-    pot,
-
-    currentBet,
-  } = useGameStore();
+  const { setCpus } = usePlayerStore();
 
   function getCPUResponseToBet(cpu: Player) {
+    const {
+      gameRound,
+      currentBet,
+
+      pot,
+      table,
+    } = gameStore.getState();
+
     const tableHandByRound = table.slice(0, gameRound + 1);
     const hand = [...cpu.hand, ...tableHandByRound];
     const { value } = getHandStrength(hand);
@@ -62,7 +63,10 @@ export default function useCPUSimulation() {
   }
 
   const handleSimulateCpuTurn = (cpuId: string) => {
-    console.log("handleSimulateCpuTurn");
+    const cpus = playerStore.getState().cpus;
+    const currentBet = gameStore.getState().currentBet;
+    const pot = gameStore.getState().pot;
+
     const cpu = cpus[cpuId];
 
     const cpuResponse = getCPUResponseToBet(cpu);
@@ -70,6 +74,7 @@ export default function useCPUSimulation() {
     const betAmmount = currentBet - cpu.bet;
 
     if (cpu.money < betAmmount) {
+      console.log("FOLD");
       cpus[cpuId] = {
         ...cpu,
         status: "FOLD",
@@ -80,6 +85,7 @@ export default function useCPUSimulation() {
     }
 
     if (cpuResponse.match) {
+      console.log("MATCH");
       if (cpu.money < betAmmount) {
         // TODO: ajustar para que não seja injusto com quem deu raise
         setPot(pot + cpu.money + betAmmount);
@@ -97,6 +103,7 @@ export default function useCPUSimulation() {
 
       setCpus(cpus);
     } else {
+      console.log("FOLD");
       cpus[cpuId] = {
         ...cpu,
         status: "FOLD",

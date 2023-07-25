@@ -263,7 +263,7 @@ export default function useGameActions() {
     setPlayerTurn(currentPlayerTurn);
 
     if (currentPlayerTurn !== "mainPlayer") {
-      // cpuSimulation.handleSimulateCpuTurn(currentPlayerTurn);
+      cpuSimulation.handleSimulateCpuTurn(currentPlayerTurn);
       await new Promise((resolve) => setTimeout(resolve, 3000));
 
       // Now, the state should be updated, and you can continue with other logic.
