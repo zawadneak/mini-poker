@@ -83,10 +83,6 @@ const getHandStrength = (
   value: number;
 } => {
   const sortedCards = cards.sort((a, b) => b.value - a.value);
-  // console.log(sortedCards);
-
-  // TODO: weight each play by its value
-  // (e.g. a pair of 2s is better than a pair of 3s)
 
   if (isRoyalFlush(sortedCards)) {
     return { name: "Royal Flush", value: ROYAL_FLUSH + 99 };

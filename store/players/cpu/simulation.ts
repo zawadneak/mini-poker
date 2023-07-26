@@ -13,6 +13,8 @@ import usePlayerStore, { playerStore } from "../store";
 import { Player } from "../types";
 
 export default function useCPUSimulation() {
+  const { setCurrentBet } = useGameStore();
+
   function getCPUResponseToBet(cpu: Player) {
     const {
       gameRound,
@@ -31,12 +33,13 @@ export default function useCPUSimulation() {
 
     const betToMatch = currentBet - cpu.bet;
 
-    if (betToMatch === 0 && DIFFICULTY === 3) {
-      return {
-        match: false,
-        raise: raise,
-      };
-    }
+    // TODO: adjust
+    // if (betToMatch === 0 && DIFFICULTY === 3) {
+    //   return {
+    //     match: false,
+    //     raise: raise,
+    //   };
+    // }
 
     const matchByGameRound = [
       betToMatch <= 5,
@@ -45,6 +48,7 @@ export default function useCPUSimulation() {
       betToMatch < 50 && value >= THREE_OF_A_KIND,
     ];
 
+    // TODO: adjust;
     const raiseByGameRound = [
       value >= PAIR,
       value >= TWO_PAIR,
@@ -74,7 +78,7 @@ export default function useCPUSimulation() {
 
     const betAmmount = currentBet - cpu.bet;
 
-    const newCpus = { ...cpus };
+    console.log(cpuResponse);
 
     if (cpu.money < betAmmount) {
       // console.log("FOLD");
@@ -95,6 +99,7 @@ export default function useCPUSimulation() {
 
     // console.log(cpuResponse);
 
+    console.log(cpu.money, betAmmount);
     if (cpuResponse.match) {
       // console.log("MATCH");
       if (cpu.money < betAmmount) {
@@ -115,7 +120,7 @@ export default function useCPUSimulation() {
 
       cpu = {
         ...cpu,
-        bet: currentBet,
+        bet: betAmmount,
         hasBetted: true,
         isTurn: false,
         status: "MATCH",
@@ -126,9 +131,9 @@ export default function useCPUSimulation() {
         pot: pot + betAmmount,
       };
     } else if (cpuResponse.raise !== 0) {
-      // if (cpuResponse.raise > betAmmount) {
-      //   cpuResponse.raise = betAmmount;
-      // }
+      if (cpuResponse.raise > cpu.money) {
+        cpuResponse.raise = cpu.money;
+      }
 
       cpu = {
         ...cpu,
@@ -139,9 +144,10 @@ export default function useCPUSimulation() {
         money: cpu.money - betAmmount - cpuResponse.raise,
       };
 
+      setCurrentBet(currentBet + cpuResponse.raise);
       return {
         cpu,
-        pot: pot + betAmmount + cpuResponse.raise,
+        pot: pot + currentBet + cpuResponse.raise,
       };
     }
   };

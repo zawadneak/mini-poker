@@ -10,7 +10,8 @@ import useGameStore from "../../store/game/store";
 import usePlayerStore from "../../store/players/store";
 
 export default function BettingMenu() {
-  const { setPot, pot, bettingOrder, currentBet } = useGameStore();
+  const { setPot, pot, bettingOrder, currentBet, setCurrentBet } =
+    useGameStore();
   const { handleAdvanceGameRound } = useGameActions();
 
   const { setPlayer, mainPlayer } = usePlayerStore();
@@ -26,12 +27,7 @@ export default function BettingMenu() {
     });
 
     setPot(pot + ammount);
-    // console.log({
-    //   ...mainPlayer,
-    //   isTurn: false,
-    //   bet: ammount,
-    //   money: mainPlayer.money - ammount,
-    // });
+    setCurrentBet(ammount);
 
     handleAdvanceGameRound();
   };
