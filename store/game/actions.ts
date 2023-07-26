@@ -192,7 +192,7 @@ export default function useGameActions() {
    * @returns void
    */
   const rotatePlayers = () => {
-    console.log("ROTATING PLAYERS");
+    // console.log("ROTATING PLAYERS");
     const lastBigBlind = bettingOrderSequence[0];
 
     const newBettingOrderSequence = produce(bettingOrderSequence, (draft) => {
@@ -214,9 +214,9 @@ export default function useGameActions() {
   };
 
   const handleAdvanceGameRound = async () => {
-    console.log("handleAdvanceGameRound");
+    // console.log("handleAdvanceGameRound");
     if (!gameStarted) {
-      console.log("START NEW GAME ROUND");
+      // console.log("START NEW GAME ROUND");
 
       const { cpus: localCPUS, mainPlayer: localPlayer } = await initPlayers();
       setBettingOrderSequence(["mainPlayer", ...Object.keys(localCPUS)]);
@@ -226,7 +226,7 @@ export default function useGameActions() {
 
       setGameRound(0);
       setGameStarted(true);
-      console.log(gameStore.getState(), playerStore.getState());
+      // console.log(gameStore.getState(), playerStore.getState());
 
       return;
     }
@@ -260,13 +260,26 @@ export default function useGameActions() {
     const currentPlayerTurn =
       updatedBettingOrderSequence[updatedBettingOrder + 1];
     setBettingOrder(updatedBettingOrder + 1);
+
     setPlayerTurn(currentPlayerTurn);
 
     if (currentPlayerTurn !== "mainPlayer") {
-      cpuSimulation.handleSimulateCpuTurn(currentPlayerTurn);
-      await new Promise((resolve) => setTimeout(resolve, 3000));
+      const { cpu: bettedCpu, pot: newPot } =
+        cpuSimulation.handleSimulateCpuTurn(currentPlayerTurn);
+
+      // console.log(bettedCpu, newPot);
+      setPot(newPot);
+
+      const allCpus = playerStore.getState().cpus;
+
+      const updatedCpus = produce(allCpus, (draft) => {
+        draft[bettedCpu.id] = bettedCpu;
+      });
+
+      setCpus(updatedCpus);
 
       // Now, the state should be updated, and you can continue with other logic.
+      await new Promise((resolve) => setTimeout(resolve, 3000));
       await handleAdvanceGameRound();
     }
   };

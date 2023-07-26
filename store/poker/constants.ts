@@ -64,7 +64,7 @@ const FOUR_OF_A_KIND = 700;
 const STRAIGHT_FLUSH = 800;
 const ROYAL_FLUSH = 900;
 
-const BLUFF_CHANCE = 0.25;
+const BLUFF_CHANCE = 0.01;
 
 // 1 2 3
 const DIFFICULTY = 3;

@@ -1,6 +1,7 @@
 import React from "react";
 import { Player } from "../../store/players/types";
 import { Text, View } from "react-native";
+import usePlayerStore from "../../store/players/store";
 
 type Props = {
   position: "bottom" | "right" | "left" | "top";
@@ -21,9 +22,10 @@ export default function HandInformation({ position, player }: Props) {
       <Text style={{ fontSize: 21 }}>
         {player.name} ${player.money}
       </Text>
+      <Text> Bet ${player.bet}</Text>
       <Text>
-        {player.status ||
-          (player.isTurn && "Current turn") ||
+        {(player.isTurn && "Current turn") ||
+          player.status ||
           "Waiting for turn"}
       </Text>
       {player?.isBigBlind && <Text>Big Blind</Text>}

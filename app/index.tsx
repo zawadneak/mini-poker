@@ -28,7 +28,7 @@ export default function App() {
   });
 
   const handleInitGame = () => {
-    console.log("init game");
+    // console.log("init game");
 
     // expo router push
     router.push("/game");

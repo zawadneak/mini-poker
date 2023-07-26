@@ -26,12 +26,12 @@ export default function BettingMenu() {
     });
 
     setPot(pot + ammount);
-    console.log({
-      ...mainPlayer,
-      isTurn: false,
-      bet: ammount,
-      money: mainPlayer.money - ammount,
-    });
+    // console.log({
+    //   ...mainPlayer,
+    //   isTurn: false,
+    //   bet: ammount,
+    //   money: mainPlayer.money - ammount,
+    // });
 
     handleAdvanceGameRound();
   };

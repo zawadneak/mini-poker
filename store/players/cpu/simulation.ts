@@ -13,10 +13,6 @@ import usePlayerStore, { playerStore } from "../store";
 import { Player } from "../types";
 
 export default function useCPUSimulation() {
-  const { setPot } = useGameStore();
-
-  const { setCpus } = usePlayerStore();
-
   function getCPUResponseToBet(cpu: Player) {
     const {
       gameRound,
@@ -62,70 +58,92 @@ export default function useCPUSimulation() {
     };
   }
 
-  const handleSimulateCpuTurn = (cpuId: string) => {
+  const handleSimulateCpuTurn = (
+    cpuId: string
+  ): {
+    cpu: Player;
+    pot: number;
+  } => {
     const cpus = playerStore.getState().cpus;
     const currentBet = gameStore.getState().currentBet;
     const pot = gameStore.getState().pot;
 
-    const cpu = cpus[cpuId];
+    let cpu = cpus[cpuId];
 
     const cpuResponse = getCPUResponseToBet(cpu);
 
     const betAmmount = currentBet - cpu.bet;
 
+    const newCpus = { ...cpus };
+
     if (cpu.money < betAmmount) {
-      console.log("FOLD");
-      cpus[cpuId] = {
+      // console.log("FOLD");
+      cpu = {
         ...cpu,
+        hasBetted: true,
+        isTurn: false,
         status: "FOLD",
       };
 
-      setCpus(cpus);
-      return;
+      // console.log(cpu);
+
+      return {
+        cpu,
+        pot,
+      };
     }
 
+    // console.log(cpuResponse);
+
     if (cpuResponse.match) {
-      console.log("MATCH");
+      // console.log("MATCH");
       if (cpu.money < betAmmount) {
         // TODO: ajustar para que não seja injusto com quem deu raise
-        setPot(pot + cpu.money + betAmmount);
 
-        return;
+        return {
+          cpu: {
+            ...cpu,
+            money: 0,
+            bet: cpu.money + betAmmount,
+            hasBetted: true,
+            isTurn: false,
+            status: "MATCH",
+          },
+          pot: pot + cpu.money + betAmmount,
+        };
       }
 
-      setPot(pot + 2 * betAmmount);
-
-      cpu[cpuId] = {
+      cpu = {
         ...cpu,
+        bet: currentBet,
+        hasBetted: true,
+        isTurn: false,
         status: "MATCH",
         money: cpu.money - betAmmount,
       };
+      return {
+        cpu: cpu,
+        pot: pot + betAmmount,
+      };
+    } else if (cpuResponse.raise !== 0) {
+      // if (cpuResponse.raise > betAmmount) {
+      //   cpuResponse.raise = betAmmount;
+      // }
 
-      setCpus(cpus);
-    } else {
-      console.log("FOLD");
-      cpus[cpuId] = {
+      cpu = {
         ...cpu,
-        status: "FOLD",
+        status: "RAISE",
+        bet: currentBet + cpuResponse.raise,
+        hasBetted: true,
+        isTurn: false,
+        money: cpu.money - betAmmount - cpuResponse.raise,
       };
 
-      setCpus(cpus);
+      return {
+        cpu,
+        pot: pot + betAmmount + cpuResponse.raise,
+      };
     }
-    // else if (cpuResponse.raise !== 0) {
-    //   if (cpuResponse.raise > betAmmount) {
-    //     cpuResponse.raise = betAmmount;
-    //   }
-
-    //   resetPlayersHasBetted();
-
-    //   setCurrentBet(cpuResponse.raise);
-    //   setPot(pot + ammount + cpuResponse.raise);
-    //   setCpu({
-    //     ...cpu,
-    //     status: "RAISE",
-    //     money: cpuMoney - ammount - cpuResponse.raise,
-    //   });
-    // }
   };
 
   return {

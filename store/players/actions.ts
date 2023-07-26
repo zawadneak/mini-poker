@@ -25,7 +25,7 @@ export default function usePlayerActions() {
 
     let newCpus = {};
     [...Array(CPU_COUNT).fill(null)].forEach((_, i) => {
-      console.log("INIT CPU " + i);
+      // console.log("INIT CPU " + i);
       let cpuBaseObject = {
         ...BASE_PLAYER_OBJECT,
         id: `cpu-${i}`,
@@ -175,27 +175,23 @@ export default function usePlayerActions() {
   };
 
   const setPlayerTurn = (playerId: string) => {
+    // console.log("SETTING PLAYER TURN");
+    const { mainPlayer: updatedMainPlayer, cpus: updatedCpus } =
+      playerStore.getState();
+
     if (playerId === "mainPlayer") {
-      setPlayer({
-        ...mainPlayer,
+      return {
+        ...updatedMainPlayer,
         isTurn: true,
-      });
-      return;
+      };
     }
 
-    const newCpus = { ...cpus };
-
-    Object.values(newCpus).forEach((cpu) => {
-      newCpus[cpu.id] = {
-        ...newCpus[cpu.id],
-        isTurn: false,
+    let newCpus = produce(updatedCpus, (draft) => {
+      draft[playerId] = {
+        ...draft[playerId],
+        isTurn: true,
       };
     });
-
-    newCpus[playerId] = {
-      ...newCpus[playerId],
-      isTurn: true,
-    };
 
     setCpus(newCpus);
   };
