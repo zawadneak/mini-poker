@@ -32,6 +32,8 @@ export default function useGameActions() {
     setBettingOrder,
     bettingOrderSequence,
     bettingOrder,
+    setRaiseRoundSequence,
+    raiseRoundSequence,
     table,
   } = useGameStore();
 
@@ -244,6 +246,8 @@ export default function useGameActions() {
       setGameRound(updatedGameRound + 1);
       setBettingOrder(0);
       setCurrentBet(0);
+      setRaiseRoundSequence(null);
+      setBettingOrderSequence([]);
       resetPlayersRound();
 
       rotatePlayers();
@@ -256,9 +260,13 @@ export default function useGameActions() {
     const updatedBettingOrder = gameStore.getState().bettingOrder;
     const updatedBettingOrderSequence =
       gameStore.getState().bettingOrderSequence;
+    const updatedRaiseRoundSequence = gameStore.getState().raiseRoundSequence;
 
-    const currentPlayerTurn =
-      updatedBettingOrderSequence[updatedBettingOrder + 1];
+    const currentPlayerTurn = updatedRaiseRoundSequence
+      ? updatedRaiseRoundSequence[updatedBettingOrder + 1]
+      : updatedBettingOrderSequence[updatedBettingOrder + 1];
+
+    console.log(currentPlayerTurn);
     setBettingOrder(updatedBettingOrder + 1);
 
     setPlayerTurn(currentPlayerTurn);
@@ -277,6 +285,48 @@ export default function useGameActions() {
       });
 
       setCpus(updatedCpus);
+
+      if (bettedCpu.status === "RAISE") {
+        // new raise sequence
+        // starts with the next player after the raiser
+
+        const raiserIndex = updatedBettingOrderSequence.findIndex(
+          (playerId) => playerId === bettedCpu.id
+        );
+
+        const replica = [...updatedBettingOrderSequence];
+
+        const newRaiseSequence = replica
+          .splice(raiserIndex + 1)
+          .concat(replica.splice(0, raiserIndex));
+
+        console.log("NEW RAISE", newRaiseSequence);
+
+        setRaiseRoundSequence(newRaiseSequence);
+
+        setBettingOrder(-1);
+
+        if (currentPlayerTurn !== "mainPlayer") {
+          setPlayer({
+            ...mainPlayer,
+            hasBetted: false,
+            isTurn: false,
+            status: null,
+          });
+        }
+
+        const reupdatedCpus = produce(updatedCpus, (draft) => {
+          Object.values(draft).forEach((cpu) => {
+            if (cpu.id !== currentPlayerTurn) {
+              draft[cpu.id].hasBetted = false;
+              draft[cpu.id].status = null;
+              draft[cpu.id].isTurn = false;
+            }
+          });
+        });
+
+        setCpus(reupdatedCpus);
+      }
 
       // Now, the state should be updated, and you can continue with other logic.
       await new Promise((resolve) => setTimeout(resolve, 3000));

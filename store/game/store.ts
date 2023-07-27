@@ -86,6 +86,14 @@ const gameStore = create<GameStore>((set) => ({
         state.bettingOrderSequence = bettingOrderSequence;
       })
     ),
+
+  raiseRoundSequence: null,
+  setRaiseRoundSequence: (raiseRoundSequence) =>
+    set(
+      produce((state) => {
+        state.raiseRoundSequence = raiseRoundSequence;
+      })
+    ),
 }));
 
 export { gameStore };

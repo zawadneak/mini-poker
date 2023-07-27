@@ -16,7 +16,7 @@ export default function BettingMenu() {
 
   const { setPlayer, mainPlayer } = usePlayerStore();
 
-  const isPlayerTurn = mainPlayer.isTurn;
+  const isPlayerTurn = useMemo(() => mainPlayer.isTurn, [mainPlayer.isTurn]);
 
   const handleBet = (ammount: 0 | 5 | 10 | 50) => {
     setPlayer({

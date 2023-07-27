@@ -69,6 +69,9 @@ interface GameStore {
    */
   bettingOrderSequence: string[];
   setBettingOrderSequence: (bettingOrderSequence: string[]) => void;
+
+  raiseRoundSequence: string[] | null;
+  setRaiseRoundSequence: (raiseRoundSequence: string[] | null) => void;
 }
 
 type Result = {

@@ -180,10 +180,11 @@ export default function usePlayerActions() {
       playerStore.getState();
 
     if (playerId === "mainPlayer") {
-      return {
+      setPlayer({
         ...updatedMainPlayer,
         isTurn: true,
-      };
+        hasBetted: false,
+      });
     }
 
     let newCpus = produce(updatedCpus, (draft) => {

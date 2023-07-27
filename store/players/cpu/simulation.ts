@@ -34,12 +34,12 @@ export default function useCPUSimulation() {
     const betToMatch = currentBet - cpu.bet;
 
     // TODO: adjust
-    // if (betToMatch === 0 && DIFFICULTY === 3) {
-    //   return {
-    //     match: false,
-    //     raise: raise,
-    //   };
-    // }
+    if (betToMatch === 0 && DIFFICULTY === 3) {
+      return {
+        match: false,
+        raise: raise,
+      };
+    }
 
     const matchByGameRound = [
       betToMatch <= 5,
