@@ -8,6 +8,7 @@ import useGame from "../../store/game";
 import useGameActions from "../../store/game/actions";
 import useGameStore from "../../store/game/store";
 import usePlayerStore from "../../store/players/store";
+import PokerModal from "../../components/PokerModal";
 
 export default function BettingMenu() {
   const { setPot, pot, bettingOrder, currentBet, setCurrentBet } =
@@ -32,8 +33,15 @@ export default function BettingMenu() {
     handleAdvanceGameRound();
   };
 
+  const handlePlayerFold = () => {};
+
   const playerMoney = useMemo(() => mainPlayer.money, [mainPlayer.money]);
   const didCPURaise = useMemo(() => false, []);
+
+  const showMatchOrFoldModal = useMemo(
+    () => isPlayerTurn && currentBet !== mainPlayer.bet,
+    [isPlayerTurn, currentBet, mainPlayer.bet]
+  );
 
   return (
     <Container>
@@ -84,6 +92,25 @@ export default function BettingMenu() {
           </BetButton>
         ))}
       </View>
+
+      {showMatchOrFoldModal && (
+        <PokerModal>
+          <View
+            style={{
+              gap: 10,
+            }}
+          >
+            <BetButton onPress={() => handleBet(currentBet - mainPlayer.bet)}>
+              <Text style={{ color: "#fff" }}>
+                Match ${currentBet - mainPlayer.bet}
+              </Text>
+            </BetButton>
+            <BetButton onPress={handlePlayerFold}>
+              <Text style={{ color: "#fff" }}>Fold</Text>
+            </BetButton>
+          </View>
+        </PokerModal>
+      )}
     </Container>
   );
 }
@@ -106,7 +133,7 @@ const Container = styled.View`
 `;
 
 const BetButton = styled.TouchableOpacity<{
-  disabled: boolean;
+  disabled?: boolean;
 }>`
   background-color: #333;
   padding: 5px;

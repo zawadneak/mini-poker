@@ -32,8 +32,8 @@ export default function useGameActions() {
     setBettingOrder,
     bettingOrderSequence,
     bettingOrder,
-    setRaiseRoundSequence,
-    raiseRoundSequence,
+    setRoundOrderSequence,
+    roundOrderSequence,
     table,
   } = useGameStore();
 
@@ -46,6 +46,7 @@ export default function useGameActions() {
     setAsSmallBlind,
     setAsBigBlind,
     setPlayerTurn,
+    resetPlayersStatus,
   } = usePlayerActions();
 
   const cpuSimulation = useCPUSimulation();
@@ -85,16 +86,6 @@ export default function useGameActions() {
       });
       alert("Game Over");
     }
-
-    const newCpus = produce(cpus, (draft) => {
-      Object.values(cpus).map((cpu) => {
-        if (cpu.money >= 0) {
-          draft[cpu.id] = undefined;
-        }
-      });
-    });
-
-    setCpus(newCpus);
   };
 
   const shuffleDeck = (): Deck => {
@@ -222,6 +213,7 @@ export default function useGameActions() {
 
       const { cpus: localCPUS, mainPlayer: localPlayer } = await initPlayers();
       setBettingOrderSequence(["mainPlayer", ...Object.keys(localCPUS)]);
+      setRoundOrderSequence(["mainPlayer", ...Object.keys(localCPUS)]);
       await dealCards(localCPUS, localPlayer);
 
       setBettingOrder(0);
@@ -235,41 +227,41 @@ export default function useGameActions() {
 
     const updatedGameRound = gameStore.getState().gameRound;
     const updatedBettingOrder = gameStore.getState().bettingOrder;
+    const roundOrder = gameStore.getState().roundOrderSequence;
+
+    console.log(updatedGameRound, updatedBettingOrder, roundOrder);
 
     if (updatedGameRound === 3) {
       getWinner();
       setGameStarted(false);
+      resetPlayersRound();
       return;
     }
 
-    if (updatedBettingOrder + 1 === CPU_COUNT + 1) {
+    if (updatedBettingOrder === roundOrder.length - 1) {
+      console.log("ADVANCE GAME ROUND");
       setGameRound(updatedGameRound + 1);
-      setBettingOrder(0);
-      setCurrentBet(0);
-      setRaiseRoundSequence(null);
-      setBettingOrderSequence([]);
-      resetPlayersRound();
-
-      rotatePlayers();
-    } else {
-      handleAdvanceBettingRound();
+      setBettingOrder(-1);
+      resetPlayersStatus();
     }
+    handleAdvanceBettingRound();
   };
 
   const handleAdvanceBettingRound = async () => {
     const updatedBettingOrder = gameStore.getState().bettingOrder;
     const updatedBettingOrderSequence =
       gameStore.getState().bettingOrderSequence;
-    const updatedRaiseRoundSequence = gameStore.getState().raiseRoundSequence;
+    const updatedRoundSequence = gameStore.getState().roundOrderSequence;
 
-    const currentPlayerTurn = updatedRaiseRoundSequence
-      ? updatedRaiseRoundSequence[updatedBettingOrder + 1]
+    const currentPlayerTurn = updatedRoundSequence
+      ? updatedRoundSequence[updatedBettingOrder + 1]
       : updatedBettingOrderSequence[updatedBettingOrder + 1];
 
-    console.log(currentPlayerTurn);
     setBettingOrder(updatedBettingOrder + 1);
 
     setPlayerTurn(currentPlayerTurn);
+
+    console.log(cpus);
 
     if (currentPlayerTurn !== "mainPlayer") {
       const { cpu: bettedCpu, pot: newPot } =
@@ -300,9 +292,7 @@ export default function useGameActions() {
           .splice(raiserIndex + 1)
           .concat(replica.splice(0, raiserIndex));
 
-        console.log("NEW RAISE", newRaiseSequence);
-
-        setRaiseRoundSequence(newRaiseSequence);
+        setRoundOrderSequence(newRaiseSequence);
 
         setBettingOrder(-1);
 
@@ -326,6 +316,10 @@ export default function useGameActions() {
         });
 
         setCpus(reupdatedCpus);
+      } else if (bettedCpu.status === "FOLD") {
+        setRoundOrderSequence(
+          updatedRoundSequence.filter((playerId) => playerId !== bettedCpu.id)
+        );
       }
 
       // Now, the state should be updated, and you can continue with other logic.

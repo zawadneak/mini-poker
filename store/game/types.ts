@@ -60,6 +60,8 @@ interface GameStore {
 
   /**
    * The order of the players in the betting round
+   * Serves as a base for rounds
+   * Not
    *
    * @example
    * 0 -> Small Blind
@@ -70,8 +72,13 @@ interface GameStore {
   bettingOrderSequence: string[];
   setBettingOrderSequence: (bettingOrderSequence: string[]) => void;
 
-  raiseRoundSequence: string[] | null;
-  setRaiseRoundSequence: (raiseRoundSequence: string[] | null) => void;
+  /**
+   * The order of the players in the round
+   * If a player folds, he is removed from the round
+   * If a player raises, he is moved to the end of the round
+   */
+  roundOrderSequence: string[];
+  setRoundOrderSequence: (roundOrderSequence: string[]) => void;
 }
 
 type Result = {

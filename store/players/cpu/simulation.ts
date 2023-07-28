@@ -24,6 +24,8 @@ export default function useCPUSimulation() {
       table,
     } = gameStore.getState();
 
+    console.log(currentBet);
+
     const tableHandByRound = table.slice(0, gameRound + 1);
     const hand = [...cpu.hand, ...tableHandByRound];
     const { value } = getHandStrength(hand);
@@ -34,12 +36,12 @@ export default function useCPUSimulation() {
     const betToMatch = currentBet - cpu.bet;
 
     // TODO: adjust
-    if (betToMatch === 0 && DIFFICULTY === 3) {
-      return {
-        match: false,
-        raise: raise,
-      };
-    }
+    // if (betToMatch === 0 && DIFFICULTY === 3) {
+    //   return {
+    //     match: false,
+    //     raise: raise,
+    //   };
+    // }
 
     const matchByGameRound = [
       betToMatch <= 5,
@@ -58,7 +60,8 @@ export default function useCPUSimulation() {
 
     return {
       match: matchByGameRound[gameRound] || betToMatch === 0,
-      raise: raiseByGameRound[gameRound] || bluff ? raise + betToMatch : 0,
+      // raise: raiseByGameRound[gameRound] || bluff ? raise + betToMatch : 0,
+      raise: 0,
     };
   }
 
@@ -131,8 +134,8 @@ export default function useCPUSimulation() {
         pot: pot + betAmmount,
       };
     } else if (cpuResponse.raise !== 0) {
-      if (cpuResponse.raise > cpu.money) {
-        cpuResponse.raise = cpu.money;
+      if (cpuResponse.raise + betAmmount > cpu.money) {
+        cpuResponse.raise = cpu.money - betAmmount;
       }
 
       cpu = {

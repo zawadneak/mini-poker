@@ -185,6 +185,7 @@ export default function usePlayerActions() {
         isTurn: true,
         hasBetted: false,
       });
+      return;
     }
 
     let newCpus = produce(updatedCpus, (draft) => {
@@ -197,6 +198,21 @@ export default function usePlayerActions() {
     setCpus(newCpus);
   };
 
+  const resetPlayersStatus = () => {
+    const newCpus = produce(playerStore.getState().cpus, (draft) => {
+      Object.values(draft).forEach((cpu) => {
+        draft[cpu.id].status = null;
+      });
+    });
+
+    setCpus(newCpus);
+
+    setPlayer({
+      ...playerStore.getState().mainPlayer,
+      status: null,
+    });
+  };
+
   return {
     initPlayers,
     assignCardsToPlayers,
@@ -206,5 +222,6 @@ export default function usePlayerActions() {
     setAsBigBlind,
     setAsSmallBlind,
     setPlayerTurn,
+    resetPlayersStatus,
   };
 }

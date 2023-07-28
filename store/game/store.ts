@@ -79,6 +79,8 @@ const gameStore = create<GameStore>((set) => ({
       })
     ),
 
+  // sequencia que define a rodada de apostas inicial
+  // + big e small
   bettingOrderSequence: [],
   setBettingOrderSequence: (bettingOrderSequence) =>
     set(
@@ -87,11 +89,11 @@ const gameStore = create<GameStore>((set) => ({
       })
     ),
 
-  raiseRoundSequence: null,
-  setRaiseRoundSequence: (raiseRoundSequence) =>
+  roundOrderSequence: null,
+  setRoundOrderSequence: (roundOrderSequence) =>
     set(
       produce((state) => {
-        state.raiseRoundSequence = raiseRoundSequence;
+        state.roundOrderSequence = roundOrderSequence;
       })
     ),
 }));
