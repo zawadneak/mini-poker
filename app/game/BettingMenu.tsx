@@ -43,6 +43,8 @@ export default function BettingMenu() {
     [isPlayerTurn, currentBet, mainPlayer.bet]
   );
 
+  console.log(currentBet, mainPlayer.bet);
+
   return (
     <Container>
       <View

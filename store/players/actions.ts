@@ -202,6 +202,7 @@ export default function usePlayerActions() {
     const newCpus = produce(playerStore.getState().cpus, (draft) => {
       Object.values(draft).forEach((cpu) => {
         draft[cpu.id].status = null;
+        draft[cpu.id].bet = 0;
       });
     });
 
@@ -210,6 +211,7 @@ export default function usePlayerActions() {
     setPlayer({
       ...playerStore.getState().mainPlayer,
       status: null,
+      bet: 0,
     });
   };
 

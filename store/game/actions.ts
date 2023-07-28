@@ -242,6 +242,7 @@ export default function useGameActions() {
       console.log("ADVANCE GAME ROUND");
       setGameRound(updatedGameRound + 1);
       setBettingOrder(-1);
+      setCurrentBet(0);
       resetPlayersStatus();
     }
     handleAdvanceBettingRound();
@@ -261,7 +262,7 @@ export default function useGameActions() {
 
     setPlayerTurn(currentPlayerTurn);
 
-    console.log(cpus);
+    console.log(currentPlayerTurn, updatedRoundSequence);
 
     if (currentPlayerTurn !== "mainPlayer") {
       const { cpu: bettedCpu, pot: newPot } =
@@ -320,6 +321,7 @@ export default function useGameActions() {
         setRoundOrderSequence(
           updatedRoundSequence.filter((playerId) => playerId !== bettedCpu.id)
         );
+        setBettingOrder(bettingOrder);
       }
 
       // Now, the state should be updated, and you can continue with other logic.

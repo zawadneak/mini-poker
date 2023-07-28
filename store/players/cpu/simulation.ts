@@ -81,26 +81,20 @@ export default function useCPUSimulation() {
 
     const betAmmount = currentBet - cpu.bet;
 
-    console.log(cpuResponse);
+    console.log("BET AMMOUNT: ", betAmmount);
 
     if (cpu.money < betAmmount) {
-      // console.log("FOLD");
       cpu = {
         ...cpu,
         hasBetted: true,
         isTurn: false,
         status: "FOLD",
       };
-
-      // console.log(cpu);
-
       return {
         cpu,
         pot,
       };
     }
-
-    // console.log(cpuResponse);
 
     console.log(cpu.money, betAmmount);
     if (cpuResponse.match) {
@@ -112,7 +106,7 @@ export default function useCPUSimulation() {
           cpu: {
             ...cpu,
             money: 0,
-            bet: cpu.money + betAmmount,
+            bet: cpu.money,
             hasBetted: true,
             isTurn: false,
             status: "MATCH",
@@ -151,6 +145,16 @@ export default function useCPUSimulation() {
       return {
         cpu,
         pot: pot + currentBet + cpuResponse.raise,
+      };
+    } else {
+      return {
+        cpu: {
+          ...cpu,
+          status: "FOLD",
+          hasBetted: true,
+          isTurn: false,
+        },
+        pot,
       };
     }
   };
