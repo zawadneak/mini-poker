@@ -7,12 +7,10 @@ import Container from "../../components/Container";
 
 import styled from "styled-components/native";
 import { useRouter } from "expo-router";
-import useRounds from "../../store/rounds";
 import BettingMenu from "./BettingMenu";
 import GameStatus from "./GameStatus";
 import ResultModal from "./ResultModal";
 import IconButton from "../../components/IconButton";
-import CpuResponseModal from "./CpuResponseModal";
 import Hand from "../../components/Hand";
 import usePlayers from "../../store/players";
 import useGameActions from "../../store/game/actions";
@@ -90,7 +88,6 @@ const Game = (props: Props) => {
   return (
     <>
       <ResultModal visible={showWinner} onClose={handleEndGame} />
-      {/* {cpuResponse !== "WAITING" && <CpuResponseModal />} */}
       <Container alignItems="center" justifyContent="center">
         <IconButton
           size={20}
@@ -105,17 +102,7 @@ const Game = (props: Props) => {
         ></IconButton>
 
         <GameStatus />
-        {/* 
-        {cpus.map((cpu, i) => (
-          <Hand
-            position={positions[i]}
-            player={cpu}
-            key={cpu.id}
-            hidden={true}
-          ></Hand>
-        ))} */}
 
-        {/* cpu is now map object */}
         {Object.keys(cpus).map((cpu, i) => (
           <Hand
             position={positions[i]}

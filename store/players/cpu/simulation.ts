@@ -23,10 +23,10 @@ export default function useCPUSimulation() {
       pot,
       table,
     } = gameStore.getState();
-
-    console.log(currentBet);
-
     const tableHandByRound = table.slice(0, gameRound + 1);
+
+    console.log(currentBet, cpu, tableHandByRound);
+
     const hand = [...cpu.hand, ...tableHandByRound];
     const { value } = getHandStrength(hand);
 

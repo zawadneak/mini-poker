@@ -9,9 +9,11 @@ import useGameActions from "../../store/game/actions";
 import useGameStore from "../../store/game/store";
 import usePlayerStore from "../../store/players/store";
 import PokerModal from "../../components/PokerModal";
+import { useRouter } from "expo-router";
 
 export default function BettingMenu() {
-  const { setPot, pot, bettingOrder, currentBet, setCurrentBet } =
+  const router = useRouter();
+  const { setPot, pot, bettingOrder, currentBet, setCurrentBet, gameRound } =
     useGameStore();
   const { handleAdvanceGameRound } = useGameActions();
 
@@ -39,9 +41,16 @@ export default function BettingMenu() {
   const didCPURaise = useMemo(() => false, []);
 
   const showMatchOrFoldModal = useMemo(
-    () => isPlayerTurn && currentBet !== mainPlayer.bet,
+    () =>
+      isPlayerTurn &&
+      currentBet !== mainPlayer.bet &&
+      !(gameRound === 0 && bettingOrder === 0),
     [isPlayerTurn, currentBet, mainPlayer.bet]
   );
+
+  const handleLeaveTable = () => {
+    router.replace("/");
+  };
 
   console.log(currentBet, mainPlayer.bet);
 
@@ -68,31 +77,58 @@ export default function BettingMenu() {
         {mainPlayer.isBigBlind && <Text>Big Blind</Text>}
         {mainPlayer.isSmallBlind && <Text>Small Blind</Text>}
 
-        <BetButton onPress={() => handleBet(0)} disabled={!isPlayerTurn}>
-          <Text
-            style={{
-              color: "#fff",
-            }}
-          >
-            $0
-          </Text>
-        </BetButton>
+        {!mainPlayer.isTurn &&
+        !mainPlayer.isSmallBlind &&
+        bettingOrder === 0 ? (
+          <>
+            <BetButton onPress={handleAdvanceGameRound}>
+              <Text
+                style={{
+                  color: "#fff",
+                }}
+              >
+                Start new round
+              </Text>
+            </BetButton>
+            <BetButton onPress={handleLeaveTable}>
+              <Text
+                style={{
+                  color: "#fff",
+                }}
+              >
+                Leave table
+              </Text>
+            </BetButton>
+          </>
+        ) : (
+          <>
+            <BetButton onPress={() => handleBet(0)} disabled={!isPlayerTurn}>
+              <Text
+                style={{
+                  color: "#fff",
+                }}
+              >
+                $0
+              </Text>
+            </BetButton>
 
-        {RAISE_AMOUNT.map((bet: number) => (
-          <BetButton
-            onPress={() => handleBet(bet)}
-            key={bet}
-            disabled={!isPlayerTurn}
-          >
-            <Text
-              style={{
-                color: "#fff",
-              }}
-            >
-              ${bet}
-            </Text>
-          </BetButton>
-        ))}
+            {RAISE_AMOUNT.map((bet: number) => (
+              <BetButton
+                onPress={() => handleBet(bet)}
+                key={bet}
+                disabled={!isPlayerTurn}
+              >
+                <Text
+                  style={{
+                    color: "#fff",
+                  }}
+                >
+                  ${bet}
+                </Text>
+              </BetButton>
+            ))}
+          </>
+        )}
       </View>
 
       {showMatchOrFoldModal && (

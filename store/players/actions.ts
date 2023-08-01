@@ -54,6 +54,7 @@ export default function usePlayerActions() {
   };
 
   const resetPlayersRound = () => {
+    const { cpus, mainPlayer } = playerStore.getState();
     const newCpus = produce(cpus, (draft) => {
       Object.values(cpus).map((cpu) => {
         draft[cpu.id] = {
@@ -137,6 +138,8 @@ export default function usePlayerActions() {
   };
 
   const setAsBigBlind = (playerId: string) => {
+    const { cpus, mainPlayer } = playerStore.getState();
+    console.log("SETTINGS AS BIG BLIND", playerId);
     if (playerId === "mainPlayer") {
       setPlayer({
         ...mainPlayer,
@@ -145,17 +148,21 @@ export default function usePlayerActions() {
       return;
     }
 
-    const newCpus = { ...cpus };
-
-    newCpus[playerId] = {
-      ...newCpus[playerId],
-      isBigBlind: true,
-    };
+    const newCpus = produce(cpus, (draft) => {
+      draft[playerId] = {
+        ...draft[playerId],
+        isBigBlind: true,
+      };
+    });
 
     setCpus(newCpus);
   };
 
   const setAsSmallBlind = (playerId: string) => {
+    const { cpus, mainPlayer } = playerStore.getState();
+
+    console.log("SETTINGS AS SMALL BLIND", playerId);
+
     if (playerId === "mainPlayer") {
       setPlayer({
         ...mainPlayer,
@@ -165,12 +172,14 @@ export default function usePlayerActions() {
       return;
     }
 
-    const newCpus = { ...cpus };
+    const newCpus = produce(cpus, (draft) => {
+      draft[playerId] = {
+        ...draft[playerId],
+        isSmallBlind: true,
+        isTurn: true,
+      };
+    });
 
-    newCpus[playerId] = {
-      ...newCpus[playerId],
-      isSmallBlind: true,
-    };
     setCpus(newCpus);
   };
 

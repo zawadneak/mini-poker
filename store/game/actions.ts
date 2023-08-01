@@ -103,10 +103,7 @@ export default function useGameActions() {
     return deck;
   };
 
-  const dealCards = async (
-    cpusB: { [key: string]: Player },
-    playerB: Player
-  ) => {
+  const dealCards = async () => {
     const { cpus, mainPlayer: player } = playerStore.getState();
 
     const localShuffledDeck = shuffleDeck();
@@ -153,7 +150,7 @@ export default function useGameActions() {
 
     if (playerIsWinner) {
       setResult({
-        winner: mainPlayer.id,
+        winner: "mainPlayer",
         play: playerHandStrength.handStrength.name,
       });
     } else if (playerIsLoser) {
@@ -182,11 +179,9 @@ export default function useGameActions() {
     setGameRound(0);
     setCurrentBet(0);
     setPot(0);
-    setTable([]);
     setResult(null);
 
     setBettingOrder(0);
-    setRoundOrderSequence([]);
   };
 
   const startNewGameRound = () => {
@@ -206,18 +201,23 @@ export default function useGameActions() {
    * @returns void
    */
   const rotatePlayers = () => {
-    // console.log("ROTATING PLAYERS");
-    const lastBigBlind = bettingOrderSequence[0];
+    resetPlayersRound();
+    console.log("ROTATING PLAYERS");
+    const updatedBettingOrder = gameStore.getState().bettingOrderSequence;
 
-    const newBettingOrderSequence = produce(bettingOrderSequence, (draft) => {
+    const lastBigBlind = updatedBettingOrder[0];
+
+    const newBettingOrderSequence = produce(updatedBettingOrder, (draft) => {
       draft.shift();
       draft.push(lastBigBlind);
     });
 
+    console.log("newBettingOrderSequence", newBettingOrderSequence);
+
     setBettingOrderSequence(newBettingOrderSequence);
     setRoundOrderSequence(newBettingOrderSequence);
 
-    bettingOrderSequence.forEach((playerId, i) => {
+    newBettingOrderSequence.forEach((playerId, i) => {
       if (i === 0) {
         setAsSmallBlind(playerId);
       }
@@ -236,7 +236,7 @@ export default function useGameActions() {
       const { cpus: localCPUS, mainPlayer: localPlayer } = await initPlayers();
       setBettingOrderSequence(["mainPlayer", ...Object.keys(localCPUS)]);
       setRoundOrderSequence(["mainPlayer", ...Object.keys(localCPUS)]);
-      await dealCards(localCPUS, localPlayer);
+      await dealCards();
 
       setBettingOrder(0);
 
@@ -252,7 +252,9 @@ export default function useGameActions() {
     const roundOrder = gameStore.getState().roundOrderSequence;
     const updatedPot = gameStore.getState().pot;
 
-    console.log(updatedGameRound, updatedBettingOrder, roundOrder);
+    // if (updatedBettingOrder === 0 && updatedBettingOrder[0] !== "mainPlayer") {
+    //   dealCards();
+    // }
 
     if (updatedGameRound === 3) {
       getWinner();
@@ -267,7 +269,7 @@ export default function useGameActions() {
       );
       clearGameRound();
 
-      dealCards(cpus, mainPlayer);
+      dealCards();
       return;
     }
 
@@ -278,7 +280,7 @@ export default function useGameActions() {
 
       addMoneyToPlayer(roundOrder[0], updatedPot);
       clearGameRound();
-      dealCards(cpus, mainPlayer);
+      dealCards();
 
       return;
     }
@@ -312,7 +314,7 @@ export default function useGameActions() {
       const { cpu: bettedCpu, pot: newPot } =
         cpuSimulation.handleSimulateCpuTurn(currentPlayerTurn);
 
-      // console.log(bettedCpu, newPot);
+      console.log(bettedCpu, newPot);
       setPot(newPot);
 
       const allCpus = playerStore.getState().cpus;
