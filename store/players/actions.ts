@@ -215,6 +215,28 @@ export default function usePlayerActions() {
     });
   };
 
+  const addMoneyToPlayer = (playerId: string, amount: number) => {
+    console.log("ADDING MONEY TO PLAYER " + playerId + " AMOUNT " + amount);
+
+    if (playerId === "mainPlayer") {
+      const updatedPlayerData = playerStore.getState().mainPlayer;
+
+      console.log(updatedPlayerData.money + amount);
+
+      setPlayer({
+        ...updatedPlayerData,
+        money: updatedPlayerData.money + amount,
+      });
+      return;
+    }
+
+    const newCpus = produce(playerStore.getState().cpus, (draft) => {
+      draft[playerId].money += amount;
+    });
+
+    setCpus(newCpus);
+  };
+
   return {
     initPlayers,
     assignCardsToPlayers,
@@ -225,5 +247,6 @@ export default function usePlayerActions() {
     setAsSmallBlind,
     setPlayerTurn,
     resetPlayersStatus,
+    addMoneyToPlayer,
   };
 }

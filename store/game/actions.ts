@@ -35,6 +35,7 @@ export default function useGameActions() {
     setRoundOrderSequence,
     roundOrderSequence,
     table,
+    result,
   } = useGameStore();
 
   const { mainPlayer, cpus, setPlayer, setCpus } = usePlayerStore();
@@ -47,6 +48,7 @@ export default function useGameActions() {
     setAsBigBlind,
     setPlayerTurn,
     resetPlayersStatus,
+    addMoneyToPlayer,
   } = usePlayerActions();
 
   const cpuSimulation = useCPUSimulation();
@@ -101,7 +103,12 @@ export default function useGameActions() {
     return deck;
   };
 
-  const dealCards = async (cpus: { [key: string]: Player }, player: Player) => {
+  const dealCards = async (
+    cpusB: { [key: string]: Player },
+    playerB: Player
+  ) => {
+    const { cpus, mainPlayer: player } = playerStore.getState();
+
     const localShuffledDeck = shuffleDeck();
 
     const tableCards = await assignCardsToPlayers(
@@ -171,12 +178,26 @@ export default function useGameActions() {
     }
   };
 
+  const clearGameRound = () => {
+    setGameRound(0);
+    setCurrentBet(0);
+    setPot(0);
+    setTable([]);
+    setResult(null);
+
+    setBettingOrder(0);
+    setRoundOrderSequence([]);
+  };
+
   const startNewGameRound = () => {
     resetPlayersRound();
     setTable([]);
     setResult(null);
 
-    shuffleDeck();
+    setGameRound(0);
+    setCurrentBet(0);
+    setPot(0);
+    handleAdvanceGameRound();
   };
 
   /**
@@ -194,6 +215,7 @@ export default function useGameActions() {
     });
 
     setBettingOrderSequence(newBettingOrderSequence);
+    setRoundOrderSequence(newBettingOrderSequence);
 
     bettingOrderSequence.forEach((playerId, i) => {
       if (i === 0) {
@@ -228,16 +250,38 @@ export default function useGameActions() {
     const updatedGameRound = gameStore.getState().gameRound;
     const updatedBettingOrder = gameStore.getState().bettingOrder;
     const roundOrder = gameStore.getState().roundOrderSequence;
+    const updatedPot = gameStore.getState().pot;
 
     console.log(updatedGameRound, updatedBettingOrder, roundOrder);
 
     if (updatedGameRound === 3) {
       getWinner();
-      setGameStarted(false);
+      // setGameStarted(false);
+
+      rotatePlayers();
       resetPlayersRound();
+
+      addMoneyToPlayer(
+        result.winner === "Tie" ? "mainPlayer" : result.winner,
+        updatedPot
+      );
+      clearGameRound();
+
+      dealCards(cpus, mainPlayer);
       return;
     }
 
+    if (roundOrder.length === 1) {
+      console.log("EVERYBODY FOLDED");
+
+      rotatePlayers();
+
+      addMoneyToPlayer(roundOrder[0], updatedPot);
+      clearGameRound();
+      dealCards(cpus, mainPlayer);
+
+      return;
+    }
     if (updatedBettingOrder === roundOrder.length - 1) {
       console.log("ADVANCE GAME ROUND");
       setGameRound(updatedGameRound + 1);
