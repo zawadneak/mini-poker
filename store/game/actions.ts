@@ -181,7 +181,7 @@ export default function useGameActions() {
     setPot(0);
     setResult(null);
 
-    setBettingOrder(0);
+    setBettingOrder(-1);
   };
 
   const startNewGameRound = () => {
@@ -308,7 +308,12 @@ export default function useGameActions() {
 
     setPlayerTurn(currentPlayerTurn);
 
-    console.log(currentPlayerTurn, updatedRoundSequence);
+    console.log(
+      "CURRENT PLAYER TURN",
+      currentPlayerTurn,
+      updatedRoundSequence,
+      updatedBettingOrder + 1
+    );
 
     if (currentPlayerTurn !== "mainPlayer") {
       const { cpu: bettedCpu, pot: newPot } =
@@ -367,13 +372,47 @@ export default function useGameActions() {
         setRoundOrderSequence(
           updatedRoundSequence.filter((playerId) => playerId !== bettedCpu.id)
         );
-        setBettingOrder(bettingOrder);
+        setBettingOrder(updatedBettingOrder);
       }
 
       // Now, the state should be updated, and you can continue with other logic.
-      await new Promise((resolve) => setTimeout(resolve, 3000));
+      await new Promise((resolve) => setTimeout(resolve, 1000));
       await handleAdvanceGameRound();
     }
+  };
+
+  const handlePlayerRaise = () => {
+    const updatedBettingOrderSequence =
+      gameStore.getState().bettingOrderSequence;
+
+    // new raise sequence
+    // starts with the next player after the raiser
+
+    const raiserIndex = updatedBettingOrderSequence.findIndex(
+      (playerId) => playerId === "mainPlayer"
+    );
+
+    const replica = [...updatedBettingOrderSequence];
+
+    const newRaiseSequence = replica
+      .splice(raiserIndex)
+      .concat(replica.splice(0, raiserIndex));
+
+    console.log(newRaiseSequence);
+
+    setRoundOrderSequence(newRaiseSequence);
+
+    setBettingOrder(0);
+
+    const reupdatedCpus = produce(playerStore.getState().cpus, (draft) => {
+      Object.values(draft).forEach((cpu) => {
+        draft[cpu.id].hasBetted = false;
+        draft[cpu.id].status = null;
+        draft[cpu.id].isTurn = false;
+      });
+    });
+
+    setCpus(reupdatedCpus);
   };
 
   return {
@@ -386,5 +425,6 @@ export default function useGameActions() {
     resetGameMoney,
     resetRound,
     handleAdvanceGameRound,
+    handlePlayerRaise,
   };
 }

@@ -15,7 +15,7 @@ export default function BettingMenu() {
   const router = useRouter();
   const { setPot, pot, bettingOrder, currentBet, setCurrentBet, gameRound } =
     useGameStore();
-  const { handleAdvanceGameRound } = useGameActions();
+  const { handleAdvanceGameRound, handlePlayerRaise } = useGameActions();
 
   const { setPlayer, mainPlayer } = usePlayerStore();
 
@@ -31,6 +31,9 @@ export default function BettingMenu() {
 
     setPot(pot + ammount);
     setCurrentBet(ammount);
+    if (!mainPlayer.isSmallBlind && ammount > pot) {
+      handlePlayerRaise();
+    }
 
     handleAdvanceGameRound();
   };
@@ -79,7 +82,7 @@ export default function BettingMenu() {
 
         {!mainPlayer.isTurn &&
         !mainPlayer.isSmallBlind &&
-        bettingOrder === 0 ? (
+        bettingOrder === -1 ? (
           <>
             <BetButton onPress={handleAdvanceGameRound}>
               <Text
