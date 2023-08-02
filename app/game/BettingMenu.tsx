@@ -1,10 +1,7 @@
-import { View, Text, TouchableOpacity } from "react-native";
+import { View, Text } from "react-native";
 import React, { useMemo } from "react";
 import styled from "styled-components/native";
-import Button from "../../components/Button";
-import useRounds from "../../store/rounds";
 import { RAISE_AMOUNT } from "../../store/poker/constants";
-import useGame from "../../store/game";
 import useGameActions from "../../store/game/actions";
 import useGameStore from "../../store/game/store";
 import usePlayerStore from "../../store/players/store";

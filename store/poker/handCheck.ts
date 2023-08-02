@@ -89,13 +89,14 @@ const getHandStrength = (
   }
 
   if (isStraightFlush(sortedCards)) {
+    console.log(sortedCards, "STRAIGHT FLUSH");
     const removedNonFlushCards = sortedCards.filter(
       (c) => c.suit === getFlushSuit(sortedCards)
     );
 
     return {
       name: "Straight Flush",
-      value: removedNonFlushCards[0].value + STRAIGHT_FLUSH,
+      value: (removedNonFlushCards[0]?.value || 0) + STRAIGHT_FLUSH,
     };
   }
 

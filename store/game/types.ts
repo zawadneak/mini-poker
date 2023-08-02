@@ -84,6 +84,9 @@ interface GameStore {
 type Result = {
   winner: "Jogador" | string | "Tie";
   play: string;
+
+  // if there is a tie, the pot is split between the players
+  splitBetween?: string[];
 };
 
 type Plays = "StraightFlush" | "F";

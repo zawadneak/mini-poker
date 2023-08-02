@@ -46,7 +46,7 @@ const Game = (props: Props) => {
   const isPlayerTurn = useMemo(() => mainPlayer?.isTurn, [mainPlayer?.isTurn]);
 
   React.useEffect(() => {
-    if (!!result) {
+    if (!!result?.winner) {
       setShowWinner(true);
     }
   }, [result]);

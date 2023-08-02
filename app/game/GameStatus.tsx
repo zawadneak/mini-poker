@@ -18,7 +18,7 @@ export default function GameStatus() {
           }
         >
           Round: {gameRound}
-        </Text>{" "}
+        </Text>
         <Text
           style={
             {

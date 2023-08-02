@@ -1,19 +1,10 @@
 import { produce } from "immer";
 import usePlayerStore, { playerStore } from "../players/store";
 import BASE_DECK, { STARTING_MONEY } from "../poker/constants";
-import getHandStrength, {
-  isFlush,
-  isFourOfAKind,
-  isFullHouse,
-  isRoyalFlush,
-  isStraight,
-  isStraightFlush,
-} from "../poker/handCheck";
-import useRoundStore from "../rounds/store";
+import getHandStrength from "../poker/handCheck";
 import useGameStore, { gameStore } from "./store";
 import usePlayerActions from "../players/actions";
 import { Player } from "../players/types";
-import { CPU_COUNT } from "../players/constants";
 import useCPUSimulation from "../players/cpu/simulation";
 
 export default function useGameActions() {
@@ -135,19 +126,23 @@ export default function useGameActions() {
 
     const playerIsWinner = cpuHandStrength.every(
       (cpuPlay: Player) =>
-        playerHandStrength.handStrength >= cpuPlay.handStrength
+        playerHandStrength.handStrength.value >= cpuPlay.handStrength.value
     );
 
-    const playerIsLoser = cpuHandStrength.every(
-      (cpuPlay) => playerHandStrength.handStrength < cpuPlay.handStrength
+    const playerIsLoser = cpuHandStrength.some(
+      (cpuPlay) =>
+        playerHandStrength.handStrength.value < cpuPlay.handStrength.value
     );
 
     const playerIsTied =
       playerIsWinner &&
       cpuHandStrength.some(
-        (cpuPlay) => playerHandStrength.handStrength === cpuPlay.handStrength
+        (cpuPlay) =>
+          playerHandStrength.handStrength.value === cpuPlay.handStrength.value
       );
 
+    console.log("GETTING RESULT");
+    console.log("W", playerIsWinner, "L", playerIsLoser, "T", playerIsTied);
     if (playerIsWinner) {
       setResult({
         winner: "mainPlayer",
@@ -161,14 +156,46 @@ export default function useGameActions() {
         return acc;
       }, cpuHandStrength[0]);
 
+      const isTie = cpuHandStrength.some(
+        (cpuPlay) =>
+          cpuPlay.handStrength.value === cpuWithHighestPlay.handStrength.value
+      );
+
+      if (isTie) {
+        const tieCpuIds = cpuHandStrength.reduce((acc, cpuPlay) => {
+          if (
+            cpuPlay.handStrength.value === cpuWithHighestPlay.handStrength.value
+          ) {
+            acc.push(cpuPlay.id);
+          }
+          return acc;
+        }, []);
+
+        setResult({
+          winner: "Tie",
+          play: cpuWithHighestPlay.handStrength.name,
+          splitBetween: [...tieCpuIds],
+        });
+      }
+
       setResult({
         winner: cpuWithHighestPlay.id,
         play: cpuWithHighestPlay.handStrength.name,
       });
     } else if (playerIsTied) {
+      const tieCpuIds = cpuHandStrength.reduce((acc, cpuPlay) => {
+        if (
+          cpuPlay.handStrength.value === playerHandStrength.handStrength.value
+        ) {
+          acc.push(cpuPlay.id);
+        }
+        return acc;
+      }, []);
+
       setResult({
         winner: "Tie",
         play: playerHandStrength.handStrength.name,
+        splitBetween: [...tieCpuIds, "mainPlayer"],
       });
 
       setGameStarted(false);
@@ -257,25 +284,31 @@ export default function useGameActions() {
     // }
 
     if (updatedGameRound === 3) {
+      if (!!gameStore.getState().result?.winner) {
+        clearGameRound();
+        dealCards();
+        return;
+      }
+
       getWinner();
       // setGameStarted(false);
 
       rotatePlayers();
       resetPlayersRound();
 
-      addMoneyToPlayer(
-        result.winner === "Tie" ? "mainPlayer" : result.winner,
-        updatedPot
-      );
-      clearGameRound();
+      const result = gameStore.getState().result;
 
-      dealCards();
+      if (result?.winner === "Tie") {
+        result.splitBetween.forEach((playerId) => {
+          addMoneyToPlayer(playerId, updatedPot / result.splitBetween.length);
+        });
+      } else {
+        addMoneyToPlayer(result.winner, updatedPot);
+      }
       return;
     }
 
     if (roundOrder.length === 1) {
-      console.log("EVERYBODY FOLDED");
-
       rotatePlayers();
 
       addMoneyToPlayer(roundOrder[0], updatedPot);

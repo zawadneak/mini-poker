@@ -12,15 +12,15 @@ export default function ResultModal({
   visible: boolean;
   onClose: () => void;
 }) {
-  const { store } = useGame();
+  const { store, actions } = useGame();
 
   const [seeTable, setSeeTable] = useState(false);
 
   const { result } = store;
 
   const handleClose = () => {
+    actions.handleAdvanceGameRound();
     onClose();
-    setSeeTable(false);
   };
 
   return (
@@ -40,9 +40,21 @@ export default function ResultModal({
             >
               {result?.winner} | {result?.play}
             </Text>
+            {result?.winner === "Tie" &&
+              result?.splitBetween?.map((player) => (
+                <Text
+                  style={{
+                    fontSize: 16,
+                    margin: 10,
+                  }}
+                >
+                  {player}
+                </Text>
+              ))}
+
             <Button onPress={handleClose}>End round</Button>
 
-            <Button onPress={() => setSeeTable(true)}>See table</Button>
+            {/* <Button onPress={() => setSeeTable(true)}>See table</Button> */}
           </ModalView>
         </Background>
       )}

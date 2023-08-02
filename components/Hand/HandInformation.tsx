@@ -6,9 +6,10 @@ import usePlayerStore from "../../store/players/store";
 type Props = {
   position: "bottom" | "right" | "left" | "top";
   player: Player;
+  isTurn: boolean;
 };
 
-export default function HandInformation({ position, player }: Props) {
+export default function HandInformation({ position, player, isTurn }: Props) {
   return (
     <View
       style={{
@@ -19,7 +20,13 @@ export default function HandInformation({ position, player }: Props) {
         gap: 5,
       }}
     >
-      <Text style={{ fontSize: 21 }}>
+      <Text
+        style={{
+          fontSize: 21,
+          fontWeight: isTurn ? "bold" : "normal",
+          color: isTurn ? "red" : "black",
+        }}
+      >
         {player.name} ${player.money}
       </Text>
       <Text> Bet ${player.bet}</Text>
