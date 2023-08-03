@@ -3,6 +3,7 @@ import React from "react";
 import styled from "styled-components/native";
 import { Link } from "expo-router";
 import Icon, { IconType } from "./Icon";
+import PokerText from "./Text";
 
 type Props = {
   icon?: IconType;
@@ -21,14 +22,14 @@ const Button = ({
   const content = (
     <ButtonWrapper backgroundColor={backgroundColor} color={color} {...props}>
       {icon && <Icon name={icon} size={24} color={color} />}
-      <Text
+      <PokerText
         style={{
           color: color || "white",
           //  fontFamily: "Ubuntu-Bold"
         }}
       >
         {props.children}
-      </Text>
+      </PokerText>
     </ButtonWrapper>
   );
 

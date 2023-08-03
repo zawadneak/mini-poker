@@ -7,6 +7,7 @@ import useGameStore from "../../store/game/store";
 import usePlayerStore from "../../store/players/store";
 import PokerModal from "../../components/PokerModal";
 import { useRouter } from "expo-router";
+import PokerText from "../../components/Text";
 
 export default function BettingMenu() {
   const router = useRouter();
@@ -64,52 +65,51 @@ export default function BettingMenu() {
           gap: 10,
         }}
       >
-        <Text
+        <PokerText
           style={{
             fontSize: 20,
             marginRight: 10,
-            // fontFamily: "Ubuntu-Bold",
           }}
         >
           ${playerMoney}
-        </Text>
+        </PokerText>
 
-        {mainPlayer.isBigBlind && <Text>Big Blind</Text>}
-        {mainPlayer.isSmallBlind && <Text>Small Blind</Text>}
+        {mainPlayer.isBigBlind && <PokerText>Big Blind</PokerText>}
+        {mainPlayer.isSmallBlind && <PokerText>Small Blind</PokerText>}
 
         {!mainPlayer.isTurn &&
         !mainPlayer.isSmallBlind &&
         bettingOrder === -1 ? (
           <>
             <BetButton onPress={handleAdvanceGameRound}>
-              <Text
+              <PokerText
                 style={{
                   color: "#fff",
                 }}
               >
                 Start new round
-              </Text>
+              </PokerText>
             </BetButton>
             <BetButton onPress={handleLeaveTable}>
-              <Text
+              <PokerText
                 style={{
                   color: "#fff",
                 }}
               >
                 Leave table
-              </Text>
+              </PokerText>
             </BetButton>
           </>
         ) : (
           <>
             <BetButton onPress={() => handleBet(0)} disabled={!isPlayerTurn}>
-              <Text
+              <PokerText
                 style={{
                   color: "#fff",
                 }}
               >
                 $0
-              </Text>
+              </PokerText>
             </BetButton>
 
             {RAISE_AMOUNT.map((bet: number) => (
@@ -118,13 +118,13 @@ export default function BettingMenu() {
                 key={bet}
                 disabled={!isPlayerTurn}
               >
-                <Text
+                <PokerText
                   style={{
                     color: "#fff",
                   }}
                 >
                   ${bet}
-                </Text>
+                </PokerText>
               </BetButton>
             ))}
           </>
@@ -139,12 +139,12 @@ export default function BettingMenu() {
             }}
           >
             <BetButton onPress={() => handleBet(currentBet - mainPlayer.bet)}>
-              <Text style={{ color: "#fff" }}>
+              <PokerText style={{ color: "#fff" }}>
                 Match ${currentBet - mainPlayer.bet}
-              </Text>
+              </PokerText>
             </BetButton>
             <BetButton onPress={handlePlayerFold}>
-              <Text style={{ color: "#fff" }}>Fold</Text>
+              <PokerText style={{ color: "#fff" }}>Fold</PokerText>
             </BetButton>
           </View>
         </PokerModal>

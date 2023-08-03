@@ -2,6 +2,7 @@ import { View, Text } from "react-native";
 import React from "react";
 import styled from "styled-components/native";
 import useGame from "../../store/game";
+import PokerText from "../../components/Text";
 
 export default function GameStatus() {
   const { store } = useGame();
@@ -10,7 +11,7 @@ export default function GameStatus() {
   return (
     <Container>
       <View>
-        <Text
+        <PokerText
           style={
             {
               // sfontFamily: "Ubuntu",
@@ -18,8 +19,8 @@ export default function GameStatus() {
           }
         >
           Round: {gameRound}
-        </Text>
-        <Text
+        </PokerText>
+        <PokerText
           style={
             {
               // sfontFamily: "Ubuntu",
@@ -27,8 +28,8 @@ export default function GameStatus() {
           }
         >
           Betting Order: {store.bettingOrder}
-        </Text>
-        <Text
+        </PokerText>
+        <PokerText
           style={
             {
               // fontFamily: "Ubuntu",
@@ -36,7 +37,7 @@ export default function GameStatus() {
           }
         >
           Pot: ${pot}
-        </Text>
+        </PokerText>
       </View>
     </Container>
   );

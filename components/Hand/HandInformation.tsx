@@ -2,6 +2,7 @@ import React from "react";
 import { Player } from "../../store/players/types";
 import { Text, View } from "react-native";
 import usePlayerStore from "../../store/players/store";
+import PokerText from "../Text";
 
 type Props = {
   position: "bottom" | "right" | "left" | "top";
@@ -20,7 +21,7 @@ export default function HandInformation({ position, player, isTurn }: Props) {
         gap: 5,
       }}
     >
-      <Text
+      <PokerText
         style={{
           fontSize: 21,
           fontWeight: isTurn ? "bold" : "normal",
@@ -28,15 +29,15 @@ export default function HandInformation({ position, player, isTurn }: Props) {
         }}
       >
         {player.name} ${player.money}
-      </Text>
-      <Text> Bet ${player.bet}</Text>
-      <Text>
+      </PokerText>
+      <PokerText> Bet ${player.bet}</PokerText>
+      <PokerText>
         {(player.isTurn && "Current turn") ||
           player.status ||
           "Waiting for turn"}
-      </Text>
-      {player?.isBigBlind && <Text>Big Blind</Text>}
-      {player?.isSmallBlind && <Text>Small Blind</Text>}
+      </PokerText>
+      {player?.isBigBlind && <PokerText>Big Blind</PokerText>}
+      {player?.isSmallBlind && <PokerText>Small Blind</PokerText>}
     </View>
   );
 }

@@ -4,6 +4,7 @@ import Button from "../../components/Button";
 import { Modal } from "react-native";
 import useGame from "../../store/game";
 import styled from "styled-components/native";
+import PokerText from "../../components/Text";
 
 export default function ResultModal({
   visible,
@@ -30,8 +31,8 @@ export default function ResultModal({
       ) : (
         <Background>
           <ModalView>
-            <Text>Winner</Text>
-            <Text
+            <PokerText>Winner</PokerText>
+            <PokerText
               style={{
                 fontWeight: "bold",
                 fontSize: 32,
@@ -39,17 +40,17 @@ export default function ResultModal({
               }}
             >
               {result?.winner} | {result?.play}
-            </Text>
+            </PokerText>
             {result?.winner === "Tie" &&
               result?.splitBetween?.map((player) => (
-                <Text
+                <PokerText
                   style={{
                     fontSize: 16,
                     margin: 10,
                   }}
                 >
                   {player}
-                </Text>
+                </PokerText>
               ))}
 
             <Button onPress={handleClose}>End round</Button>

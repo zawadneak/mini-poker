@@ -16,15 +16,10 @@ export default function App() {
   const actions = useGameActions();
 
   const [fontsLoaded] = useFonts({
-    Ubuntu: require("../assets/fonts/Ubuntu/Ubuntu-Regular.ttf"),
     "Ubuntu-Bold": require("../assets/fonts/Ubuntu/Ubuntu-Bold.ttf"),
     "Ubuntu-Light": require("../assets/fonts/Ubuntu/Ubuntu-Light.ttf"),
     "Ubuntu-Medium": require("../assets/fonts/Ubuntu/Ubuntu-Medium.ttf"),
     "Ubuntu-Regular": require("../assets/fonts/Ubuntu/Ubuntu-Regular.ttf"),
-    "Ubuntu-Italic": require("../assets/fonts/Ubuntu/Ubuntu-Italic.ttf"),
-    "Ubuntu-BoldItalic": require("../assets/fonts/Ubuntu/Ubuntu-BoldItalic.ttf"),
-    "Ubuntu-LightItalic": require("../assets/fonts/Ubuntu/Ubuntu-LightItalic.ttf"),
-    "Ubuntu-MediumItalic": require("../assets/fonts/Ubuntu/Ubuntu-MediumItalic.ttf"),
   });
 
   const handleInitGame = () => {
