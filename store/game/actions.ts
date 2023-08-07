@@ -110,14 +110,34 @@ export default function useGameActions() {
 
   const getWinner = () => {
     if (!gameStarted) return;
-    const playerHandStrength = {
+
+    const roundOrder = gameStore.getState().roundOrderSequence;
+    const mainPlayer = playerStore.getState().mainPlayer;
+
+    let playerHandStrength = {
       ...mainPlayer,
       hand: mainPlayer.hand.concat(table),
       handStrength: getHandStrength(mainPlayer.hand.concat(table)),
     };
+
+    if (mainPlayer.status === "FOLD") {
+      playerHandStrength.handStrength = {
+        value: 0,
+        name: "Folded",
+      };
+    }
+
     const cpuHandStrength: Player[] = Object.values(
       produce(cpus, (draft) => {
         Object.values(cpus).forEach((cpu: Player) => {
+          if (!roundOrder.includes(cpu.id)) {
+            draft[cpu.id].handStrength = {
+              value: 0,
+              name: "Folded",
+            };
+            return;
+          }
+
           draft[cpu.id].hand = draft[cpu.id].hand.concat(table);
           draft[cpu.id].handStrength = getHandStrength(draft[cpu.id].hand);
         });
@@ -448,6 +468,27 @@ export default function useGameActions() {
     setCpus(reupdatedCpus);
   };
 
+  const handlePlayerFold = () => {
+    const roundSequence = gameStore.getState().roundOrderSequence;
+    const player = playerStore.getState().mainPlayer;
+    const currentOrder = gameStore.getState().bettingOrder;
+
+    setRoundOrderSequence(
+      produce(roundSequence, (draft) => {
+        draft.splice(draft.indexOf(player.id), 1);
+      })
+    );
+
+    setPlayer({
+      ...player,
+      status: "FOLD",
+    });
+
+    setBettingOrder(currentOrder - 1);
+
+    handleAdvanceGameRound();
+  };
+
   return {
     resetGame,
     shuffleDeck,
@@ -459,5 +500,6 @@ export default function useGameActions() {
     resetRound,
     handleAdvanceGameRound,
     handlePlayerRaise,
+    handlePlayerFold,
   };
 }

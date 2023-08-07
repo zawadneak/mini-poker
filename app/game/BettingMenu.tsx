@@ -13,13 +13,15 @@ export default function BettingMenu() {
   const router = useRouter();
   const { setPot, pot, bettingOrder, currentBet, setCurrentBet, gameRound } =
     useGameStore();
-  const { handleAdvanceGameRound, handlePlayerRaise } = useGameActions();
+  const { handleAdvanceGameRound, handlePlayerRaise, handlePlayerFold } =
+    useGameActions();
 
-  const { setPlayer, mainPlayer } = usePlayerStore();
+  const { setPlayer, mainPlayer, cpus } = usePlayerStore();
 
   const isPlayerTurn = useMemo(() => mainPlayer.isTurn, [mainPlayer.isTurn]);
 
-  const handleBet = (ammount: 0 | 5 | 10 | 50) => {
+  const handleBet = (ammount: number) => {
+    console.log(ammount, mainPlayer.money - ammount);
     setPlayer({
       ...mainPlayer,
       isTurn: false,
@@ -36,16 +38,14 @@ export default function BettingMenu() {
     handleAdvanceGameRound();
   };
 
-  const handlePlayerFold = () => {};
-
   const playerMoney = useMemo(() => mainPlayer.money, [mainPlayer.money]);
-  const didCPURaise = useMemo(() => false, []);
+  const didCPURaise = useMemo(
+    () => Object.values(cpus).some((c) => c.status === "RAISE"),
+    [cpus]
+  );
 
   const showMatchOrFoldModal = useMemo(
-    () =>
-      isPlayerTurn &&
-      currentBet !== mainPlayer.bet &&
-      !(gameRound === 0 && bettingOrder === 0),
+    () => isPlayerTurn && didCPURaise,
     [isPlayerTurn, currentBet, mainPlayer.bet]
   );
 
