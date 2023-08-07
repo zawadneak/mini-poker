@@ -1,3 +1,5 @@
+import { Profile } from "./cpu/profiles";
+
 export interface Player {
   id: string;
   name: string;
@@ -8,8 +10,12 @@ export interface Player {
   status: "FOLD" | "MATCH" | "RAISE" | null;
   isTurn: boolean;
   isWinner: boolean;
+
   isBigBlind: boolean;
   isSmallBlind: boolean;
+  blindCompleted: boolean;
+
+  profile?: Profile;
 
   handStrength?: {
     name: string;

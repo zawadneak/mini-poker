@@ -1,19 +1,65 @@
 import useGameStore, { gameStore } from "../../game/store";
-import {
-  BLUFF_CHANCE,
-  DIFFICULTY,
-  PAIR,
-  RAISE_AMOUNT,
-  STRAIGHT,
-  THREE_OF_A_KIND,
-  TWO_PAIR,
-} from "../../poker/constants";
+import { BIG_BLIND_BET } from "../../poker/constants";
 import getHandStrength from "../../poker/handCheck";
 import usePlayerStore, { playerStore } from "../store";
 import { Player } from "../types";
+import { Profile } from "./profiles";
 
 export default function useCPUSimulation() {
   const { setCurrentBet } = useGameStore();
+
+  // Generate all possible combinations of k elements from an array
+  function generateCombinations<T>(arr: T[], k: number): T[][] {
+    const result: T[][] = [];
+
+    function backtrack(start: number, currentCombination: T[]) {
+      if (currentCombination.length === k) {
+        result.push([...currentCombination]);
+        return;
+      }
+
+      for (let i = start; i < arr.length; i++) {
+        currentCombination.push(arr[i]);
+        backtrack(i + 1, currentCombination);
+        currentCombination.pop();
+      }
+    }
+
+    backtrack(0, []);
+    return result;
+  }
+
+  function possibleHandsInTable(table: Card[]): {
+    cards: Card[];
+    score: number;
+  }[] {
+    const allCards = [...table]; // Combine table cards with player's cards if needed
+    const hands: {
+      cards: Card[];
+      score: number;
+    }[] = [];
+
+    // Generate all possible combinations of 5-card hands from the table and player's cards
+    const combinations = generateCombinations(allCards, 5);
+
+    for (const combination of combinations) {
+      const handScore = getHandStrength(combination); // Implement your hand evaluation logic here
+      hands.push({ cards: combination, score: handScore.value });
+    }
+
+    // Sort hands by score in descending order
+    hands.sort((a, b) => b.score - a.score);
+
+    // Return the top 20 hands
+    return hands.slice(0, 20);
+  }
+
+  function rankPlayerHandInPossibleHands(
+    handValue: number,
+    possibleHands: Card[][]
+  ) {
+    return 1;
+  }
 
   function getCPUResponseToBet(cpu: Player) {
     const {
@@ -25,42 +71,65 @@ export default function useCPUSimulation() {
     } = gameStore.getState();
     const tableHandByRound = table.slice(0, gameRound + 1);
 
-    console.log(currentBet, cpu, tableHandByRound);
-
     const hand = [...cpu.hand, ...tableHandByRound];
     const { value } = getHandStrength(hand);
 
-    const bluff = Math.random() > BLUFF_CHANCE * DIFFICULTY;
-    const raise = RAISE_AMOUNT[Math.floor(Math.random() * RAISE_AMOUNT.length)];
+    // const bluff = Math.random() > cpu.profile.bluffPercentage;
+    // const raise = bluff && Math.random() > cpu.profile.raisePercentage;
 
     const betToMatch = currentBet - cpu.bet;
 
-    // TODO: adjust
-    // if (betToMatch === 0 && DIFFICULTY === 3) {
-    //   return {
-    //     match: false,
-    //     raise: raise,
-    //   };
-    // }
+    const betToMatchPercentage = betToMatch / pot || 0.01;
 
-    const matchByGameRound = [
-      betToMatch <= 5,
-      betToMatch < 10 && value >= PAIR,
-      betToMatch < 50 && value >= TWO_PAIR,
-      betToMatch < 50 && value >= THREE_OF_A_KIND,
-    ];
+    const tableInCurrentRound = table.slice(0, gameRound + 1);
 
-    // TODO: adjust;
-    const raiseByGameRound = [
-      value >= PAIR,
-      value >= TWO_PAIR,
-      value >= THREE_OF_A_KIND,
-      value >= STRAIGHT,
-    ];
+    const possibleHands = possibleHandsInTable(tableInCurrentRound);
 
+    console.log(possibleHands);
+
+    const playerHandRank = 20;
+
+    const isBadHand = playerHandRank < cpu.profile.badHandRank;
+    const isGoodHand = playerHandRank > cpu.profile.goodHandRank;
+
+    // IF NEEDS TO MATCH A RAISE
+    if (betToMatch > 0) {
+      // IF THE HAND IS BAD = FOLD
+      if (isBadHand) {
+        return {
+          match: false,
+          raise: 0,
+        };
+      }
+
+      // IF THE HAND IS GOOD = RAISE
+      // TODO: adjust raise
+      if (isGoodHand) {
+        return {
+          match: false,
+          raise: 10,
+        };
+      }
+
+      // IF THE HAND IS OK = MATCH
+      return {
+        match: true,
+        raise: 0,
+      };
+    }
+
+    // IF NO NEED TO MATCH A RAISE
+    // IF THE HAND IS GOOD = RAISE
+    if (isGoodHand) {
+      return {
+        match: true,
+        raise: 10,
+      };
+    }
+
+    // IF THE HAND IS OK/BAD = MATCH
     return {
-      match: matchByGameRound[gameRound] || betToMatch === 0,
-      // raise: raiseByGameRound[gameRound] || bluff ? raise + betToMatch : 0,
+      match: true,
       raise: 0,
     };
   }
@@ -76,6 +145,37 @@ export default function useCPUSimulation() {
     const pot = gameStore.getState().pot;
 
     let cpu = cpus[cpuId];
+
+    if (cpu.isBigBlind && !cpu.blindCompleted) {
+      cpu = {
+        ...cpu,
+        bet: BIG_BLIND_BET,
+        money: cpu.money - BIG_BLIND_BET,
+        blindCompleted: true,
+        hasBetted: true,
+        isTurn: false,
+      };
+      return {
+        cpu,
+        pot: pot + BIG_BLIND_BET,
+      };
+    }
+
+    // TODO: rotate the blinds
+    if (cpu.isSmallBlind && !cpu.blindCompleted) {
+      cpu = {
+        ...cpu,
+        bet: BIG_BLIND_BET,
+        money: cpu.money - BIG_BLIND_BET,
+        hasBetted: true,
+        isTurn: false,
+        blindCompleted: true,
+      };
+      return {
+        cpu,
+        pot: pot + BIG_BLIND_BET,
+      };
+    }
 
     const cpuResponse = getCPUResponseToBet(cpu);
 
@@ -96,7 +196,6 @@ export default function useCPUSimulation() {
       };
     }
 
-    console.log(cpu.money, betAmmount);
     if (cpuResponse.match) {
       // console.log("MATCH");
       if (cpu.money < betAmmount) {

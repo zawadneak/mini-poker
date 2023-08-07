@@ -2,7 +2,7 @@ import { produce } from "immer";
 import { BASE_PLAYER_OBJECT, CPU_COUNT, NAMES } from "./constants";
 import usePlayerStore, { playerStore } from "./store";
 import { Player } from "./types";
-import { BIG_BLIND_BET, SMALL_BLIND_BET } from "../poker/constants";
+import PROFILES from "./cpu/profiles";
 
 export default function usePlayerActions() {
   const { mainPlayer, cpus, setPlayer, setCpus } = usePlayerStore();
@@ -30,6 +30,7 @@ export default function usePlayerActions() {
         ...BASE_PLAYER_OBJECT,
         id: `cpu-${i}`,
         name: NAMES[Math.floor(Math.random() * NAMES.length)],
+        profile: PROFILES.Conservative,
       };
 
       // IS BIG BLIND?
