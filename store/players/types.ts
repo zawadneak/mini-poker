@@ -29,6 +29,28 @@ type PlayerStore = {
 
   cpus: { [key: string]: Player };
   setCpus: (cpus: { [key: string]: Player }) => void;
+
+  tableVariance: number;
+  setTableVariance: (tableVariance: number) => void;
+
+  tableStandardDeviation: number;
+  setTableStandardDeviation: (tableStandardDeviation: number) => void;
+
+  playStatistics: PlayStatics[];
+  setPlayStatistics: (playStatistics: PlayStatics[]) => void;
 };
 
-export { PlayerStore };
+type PlayStatics = {
+  tournouts?: {
+    cards: Card[];
+    score: number;
+  };
+  tournoutsVarianceStandardDeviation: number;
+  tournoutsVarianceAverage: number;
+  scoresVarianceStandardDeviation: number;
+  scoresVarianceAverage: number;
+
+  player: string;
+};
+
+export { PlayerStore, PlayStatics };

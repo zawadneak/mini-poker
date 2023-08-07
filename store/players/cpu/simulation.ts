@@ -1,57 +1,174 @@
 import useGameStore, { gameStore } from "../../game/store";
-import { BIG_BLIND_BET } from "../../poker/constants";
+import BASE_DECK, {
+  BIG_BLIND_BET,
+  STARTING_HANDS,
+} from "../../poker/constants";
 import getHandStrength from "../../poker/handCheck";
 import usePlayerStore, { playerStore } from "../store";
-import { Player } from "../types";
+import { PlayStatics, Player } from "../types";
 import { Profile } from "./profiles";
 
 export default function useCPUSimulation() {
   const { setCurrentBet } = useGameStore();
+  const { setTableStandardDeviation, setTableVariance, setPlayStatistics } =
+    usePlayerStore();
 
-  // Generate all possible combinations of k elements from an array
-  function generateCombinations<T>(arr: T[], k: number): T[][] {
-    const result: T[][] = [];
+  function getTableByGameRound() {
+    const { table, gameRound } = gameStore.getState();
 
-    function backtrack(start: number, currentCombination: T[]) {
-      if (currentCombination.length === k) {
-        result.push([...currentCombination]);
-        return;
-      }
-
-      for (let i = start; i < arr.length; i++) {
-        currentCombination.push(arr[i]);
-        backtrack(i + 1, currentCombination);
-        currentCombination.pop();
-      }
+    if (gameRound === 0) {
+      return [];
     }
-
-    backtrack(0, []);
-    return result;
+    if (gameRound === 1) {
+      return table.slice(0, 3);
+    }
+    return table.slice(0, gameRound + 2);
   }
 
   function possibleHandsInTable(table: Card[]): {
     cards: Card[];
     score: number;
   }[] {
-    const allCards = [...table]; // Combine table cards with player's cards if needed
-    const hands: {
-      cards: Card[];
-      score: number;
-    }[] = [];
+    const gameRound = gameStore.getState().gameRound;
+    const deck = BASE_DECK;
 
-    // Generate all possible combinations of 5-card hands from the table and player's cards
-    const combinations = generateCombinations(allCards, 5);
+    const tableCards = getTableByGameRound();
+    const deckWithoutTableCards = deck.filter(
+      (card) => !tableCards.some((tableCard) => tableCard.id === card.id)
+    );
 
-    for (const combination of combinations) {
-      const handScore = getHandStrength(combination); // Implement your hand evaluation logic here
-      hands.push({ cards: combination, score: handScore.value });
+    const possibleTables = [];
+
+    if (gameRound === 1) {
+      for (let i = 0; i < deckWithoutTableCards.length; i++) {
+        for (let j = i + 1; j < deckWithoutTableCards.length; j++) {
+          const hand = [deckWithoutTableCards[i], deckWithoutTableCards[j]];
+          const fullHand = [...hand, ...table];
+
+          const fullHandStrength = getHandStrength(fullHand);
+
+          possibleTables.push({
+            cards: fullHand,
+            score: fullHandStrength.value,
+            name: fullHandStrength.name,
+          });
+        }
+      }
+    } else if (gameRound === 2) {
+      for (let i = 0; i < deckWithoutTableCards.length; i++) {
+        const hand = [deckWithoutTableCards[i]];
+        const fullHand = [...hand, ...table];
+
+        const fullHandStrength = getHandStrength(fullHand);
+
+        possibleTables.push({
+          cards: fullHand,
+          score: fullHandStrength.value,
+          name: fullHandStrength.name,
+        });
+      }
+    } else {
+      return [
+        {
+          cards: table,
+          score: getHandStrength(table).value,
+        },
+      ];
     }
 
-    // Sort hands by score in descending order
-    hands.sort((a, b) => b.score - a.score);
+    possibleTables.sort((a, b) => b.score - a.score);
 
-    // Return the top 20 hands
-    return hands.slice(0, 20);
+    console.log("possibleTables", possibleTables);
+
+    return possibleTables;
+  }
+
+  function possibleHandTurnouts(
+    possibleTables: {
+      cards: Card[];
+      score: number;
+    }[],
+    hand
+  ): PlayStatics {
+    let tournouts = [];
+
+    for (let pt of possibleTables) {
+      const localHand = [...hand, ...pt.cards];
+      const localHandStrength = getHandStrength(localHand);
+
+      const handExists = tournouts.findIndex(
+        (h) => h.score === localHandStrength.value
+      );
+
+      if (handExists > -1) {
+        tournouts[handExists].chance += 1;
+      } else {
+        tournouts.push({
+          cards: [...pt.cards, ...hand],
+          score: localHandStrength.value,
+          name: localHandStrength.name,
+          chance: 1,
+        });
+      }
+    }
+
+    tournouts.sort((a, b) => b.score - a.score);
+    tournouts.map(
+      (t) => (t.chancePercent = (t.chance / possibleTables.length) * 100)
+    );
+
+    console.log("tournouts", tournouts);
+
+    const tournoutsVariance = tournouts.map((t) => t.chancePercent);
+    const tournoutsVarianceSum = tournouts
+      .map((t) => t.chancePercent)
+      .reduce((a, b) => a + b, 0);
+    const tournoutsVarianceAverage = tournoutsVarianceSum / tournouts.length;
+    const tournoutsVarianceSumOfSquares = tournoutsVariance.reduce(
+      (a, b) => a + Math.pow(b - tournoutsVarianceAverage, 2),
+      0
+    );
+    const tournoutsVarianceStandardDeviation = Math.sqrt(
+      tournoutsVarianceSumOfSquares / tournouts.length
+    );
+
+    // repeat score by number of chance
+    let scores = [];
+    tournouts.map((t) => {
+      for (let i = 0; i < t.chance; i++) {
+        scores.push(t.score);
+      }
+    });
+
+    const scoresVariance = scores;
+    const scoresVarianceSum = scores.reduce((a, b) => a + b, 0);
+    const scoresVarianceAverage = scoresVarianceSum / scores.length;
+    const scoresVarianceSumOfSquares = scoresVariance.reduce(
+      (a, b) => a + Math.pow(b - scoresVarianceAverage, 2),
+      0
+    );
+    const scoresVarianceStandardDeviation = Math.sqrt(
+      scoresVarianceSumOfSquares / scores.length
+    );
+
+    console.log(
+      "tournoutsVarianceStandardDeviation",
+      tournoutsVarianceStandardDeviation,
+      "tournoutsVarianceAverage",
+      tournoutsVarianceAverage,
+      "scoresVarianceStandardDeviation",
+      scoresVarianceStandardDeviation,
+      "scoresVarianceAverage",
+      scoresVarianceAverage
+    );
+
+    return {
+      tournouts,
+      tournoutsVarianceStandardDeviation,
+      tournoutsVarianceAverage,
+      scoresVarianceStandardDeviation,
+      scoresVarianceAverage,
+    };
   }
 
   function rankPlayerHandInPossibleHands(
@@ -69,28 +186,56 @@ export default function useCPUSimulation() {
       pot,
       table,
     } = gameStore.getState();
-    const tableHandByRound = table.slice(0, gameRound + 1);
+    const tableHandByRound = getTableByGameRound();
+    const { tableStandardDeviation, tableVariance } = playerStore.getState();
 
     const hand = [...cpu.hand, ...tableHandByRound];
-    const { value } = getHandStrength(hand);
 
-    // const bluff = Math.random() > cpu.profile.bluffPercentage;
-    // const raise = bluff && Math.random() > cpu.profile.raisePercentage;
+    const { value } = getHandStrength(hand);
 
     const betToMatch = currentBet - cpu.bet;
 
     const betToMatchPercentage = betToMatch / pot || 0.01;
 
-    const tableInCurrentRound = table.slice(0, gameRound + 1);
+    const tableInCurrentRound = getTableByGameRound();
 
-    const possibleHands = possibleHandsInTable(tableInCurrentRound);
+    let isGoodHand = false;
+    let isBadHand = false;
 
-    console.log(possibleHands);
+    if (gameRound === 0) {
+      const handString = hand
+        .map((card) => (card.rank === "10" ? "T" : card.rank))
+        .join("");
 
-    const playerHandRank = 20;
+      const handPosition = STARTING_HANDS.findIndex(
+        (startingHand) => startingHand.hand === handString
+      );
 
-    const isBadHand = playerHandRank < cpu.profile.badHandRank;
-    const isGoodHand = playerHandRank > cpu.profile.goodHandRank;
+      isGoodHand = handPosition < cpu.profile.goodHandPreFlop;
+      isBadHand = handPosition > cpu.profile.badHandPreFlop;
+    } else {
+      let playerHandRank = playerStore
+        .getState()
+        .playStatistics.findIndex((p) => p.player === cpu.id);
+
+      if (playerHandRank > -1) {
+        const statistics =
+          playerStore.getState().playStatistics[playerHandRank];
+
+        const fromTableDifference =
+          statistics.scoresVarianceAverage - tableVariance;
+        const fromTableDifferencePercentage =
+          (fromTableDifference * 100) / tableVariance || 0.001;
+
+        console.log(fromTableDifferencePercentage);
+
+        isBadHand = cpu.profile.badHandRank >= fromTableDifferencePercentage;
+        isGoodHand = cpu.profile.goodHandRank <= fromTableDifferencePercentage;
+      } else {
+        isBadHand = false;
+        isGoodHand = false;
+      }
+    }
 
     // IF NEEDS TO MATCH A RAISE
     if (betToMatch > 0) {
@@ -258,7 +403,63 @@ export default function useCPUSimulation() {
     }
   };
 
+  const handleGetTableStatistics = () => {
+    const bettingRounds = gameStore.getState().bettingOrder;
+    const { cpus, mainPlayer } = playerStore.getState();
+
+    if (bettingRounds === 0) {
+      setTableStandardDeviation(0);
+      setTableVariance(0);
+      return;
+    }
+
+    const table = getTableByGameRound();
+
+    const possibleTables = possibleHandsInTable(table);
+
+    const activePlayers = Object.values(playerStore.getState().cpus).filter(
+      (cpu) => cpu.status !== "FOLD"
+    );
+
+    let playersStatistics = activePlayers.map((cpu) => {
+      return {
+        ...possibleHandTurnouts(possibleTables, cpu.hand),
+        player: cpu.id,
+      };
+    });
+
+    if (mainPlayer.status !== "FOLD") {
+      playersStatistics.push({
+        ...possibleHandTurnouts(possibleTables, mainPlayer.hand),
+        player: mainPlayer.id,
+      });
+    }
+
+    setPlayStatistics(playersStatistics);
+
+    const totalVarianceAverage =
+      playersStatistics.reduce(
+        (acc, cpu) => acc + cpu.scoresVarianceAverage,
+        0
+      ) / playersStatistics.length;
+    const totalStandardDeviationAverage =
+      playersStatistics.reduce(
+        (acc, cpu) => acc + cpu.scoresVarianceStandardDeviation,
+        0
+      ) / playersStatistics.length;
+
+    console.log("TOTAL VARIANCE AVERAGE: ", totalVarianceAverage);
+    console.log(
+      "TOTAL STANDARD DEVIATION AVERAGE: ",
+      totalStandardDeviationAverage
+    );
+
+    setTableVariance(totalVarianceAverage);
+    setTableStandardDeviation(totalStandardDeviationAverage);
+  };
+
   return {
     handleSimulateCpuTurn,
+    handleGetTableStatistics,
   };
 }

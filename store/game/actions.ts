@@ -29,6 +29,8 @@ export default function useGameActions() {
     result,
   } = useGameStore();
 
+  const { handleGetTableStatistics } = useCPUSimulation();
+
   const { mainPlayer, cpus, setPlayer, setCpus } = usePlayerStore();
 
   const {
@@ -340,6 +342,9 @@ export default function useGameActions() {
     if (updatedBettingOrder === roundOrder.length - 1) {
       console.log("ADVANCE GAME ROUND");
       setGameRound(updatedGameRound + 1);
+
+      handleGetTableStatistics();
+
       setBettingOrder(-1);
       setCurrentBet(0);
       resetPlayersStatus();

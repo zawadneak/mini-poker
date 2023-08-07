@@ -19,6 +19,23 @@ const playerStore = create<PlayerStore>((set) => ({
         state.cpus = cpus;
       })
     ),
+  tableVariance: 0,
+  setTableVariance: (tableVariance) =>
+    set(
+      produce((state) => {
+        state.tableVariance = tableVariance;
+      })
+    ),
+  tableStandardDeviation: 0,
+  setTableStandardDeviation: (tableStandardDeviation) =>
+    set(
+      produce((state) => {
+        state.tableStandardDeviation = tableStandardDeviation;
+      })
+    ),
+
+  playStatistics: [],
+  setPlayStatistics: (playStatistics) => set({ playStatistics }),
 }));
 
 export { playerStore };

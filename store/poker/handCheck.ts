@@ -36,12 +36,15 @@ const isFullHouse = (hand: Card[]): boolean => {
 };
 
 const isFlush = (hand: Card[]): boolean => {
-  return hand.every((c) => c.suit === hand[0].suit);
+  return hand.every((c) => c.suit === hand[0].suit) && hand.length === 5;
 };
 
 const isStraight = (hand: Card[]): boolean => {
   const sortedRanks = hand.map((c) => c.value).sort((a, b) => a - b);
-  return sortedRanks.every((r, i) => i === 0 || r === sortedRanks[i - 1] + 1);
+  return (
+    sortedRanks.every((r, i) => i === 0 || r === sortedRanks[i - 1] + 1) &&
+    hand.length === 5
+  );
 };
 
 const isThreeOfAKind = (hand: Card[]): boolean => {
