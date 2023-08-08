@@ -341,6 +341,17 @@ export default function useGameActions() {
       setGameRound(updatedGameRound + 1);
 
       setBettingOrder(-1);
+
+      setRoundOrderSequence(
+        bettingOrderSequence.filter((playerId) => {
+          if (playerId === "mainPlayer") {
+            return mainPlayer.status !== "FOLD";
+          }
+
+          return cpus[playerId].status !== "FOLD";
+        })
+      );
+
       setCurrentBet(0);
       resetPlayersStatus();
 
@@ -393,15 +404,12 @@ export default function useGameActions() {
           (playerId) => playerId === bettedCpu.id
         );
 
-        const replica = [...updatedBettingOrderSequence];
-
-        const newRaiseSequence = replica
-          .splice(raiserIndex + 1)
-          .concat(replica.splice(0, raiserIndex));
-
+        const newRaiseSequence = updatedBettingOrderSequence
+          .slice(raiserIndex)
+          .concat(updatedBettingOrderSequence.slice(0, raiserIndex));
         setRoundOrderSequence(newRaiseSequence);
 
-        setBettingOrder(-1);
+        setBettingOrder(0);
 
         if (currentPlayerTurn !== "mainPlayer") {
           setPlayer({
@@ -450,12 +458,9 @@ export default function useGameActions() {
       (playerId) => playerId === "mainPlayer"
     );
 
-    const replica = [...updatedBettingOrderSequence];
-
-    const newRaiseSequence = replica
-      .splice(raiserIndex)
-      .concat(replica.splice(0, raiserIndex));
-
+    const newRaiseSequence = updatedBettingOrderSequence
+      .slice(raiserIndex)
+      .concat(updatedBettingOrderSequence.slice(0, raiserIndex));
     setRoundOrderSequence(newRaiseSequence);
 
     setBettingOrder(0);
