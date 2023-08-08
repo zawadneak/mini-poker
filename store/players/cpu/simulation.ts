@@ -407,7 +407,8 @@ export default function useCPUSimulation() {
     const bettingRounds = gameStore.getState().bettingOrder;
     const { cpus, mainPlayer } = playerStore.getState();
 
-    if (bettingRounds === 0) {
+    if (bettingRounds >= 0) {
+      console.log("BETTING ROUNDS: ", bettingRounds);
       setTableStandardDeviation(0);
       setTableVariance(0);
       return;

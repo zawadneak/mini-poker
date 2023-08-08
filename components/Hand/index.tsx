@@ -48,6 +48,7 @@ export default function Hand({
     return coordinates[position];
   };
 
+  console.log(player.status);
   return (
     <HandWrapper
       style={getStyleByPosition(position)}

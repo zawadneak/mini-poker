@@ -158,7 +158,7 @@ const getHandStrength = (
     return { name: "Pair", value: PAIR + pairValue };
   }
 
-  return { name: "High Card", value: sortedCards[0].value };
+  return { name: "High Card", value: sortedCards[0]?.value };
 };
 
 export {

@@ -211,6 +211,7 @@ export default function usePlayerActions() {
   const resetPlayersStatus = () => {
     const newCpus = produce(playerStore.getState().cpus, (draft) => {
       Object.values(draft).forEach((cpu) => {
+        if (cpu.status === "FOLD") return;
         draft[cpu.id].status = null;
         draft[cpu.id].bet = 0;
       });

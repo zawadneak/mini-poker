@@ -278,10 +278,7 @@ export default function useGameActions() {
   };
 
   const handleAdvanceGameRound = async () => {
-    // console.log("handleAdvanceGameRound");
     if (!gameStarted) {
-      // console.log("START NEW GAME ROUND");
-
       const { cpus: localCPUS, mainPlayer: localPlayer } = await initPlayers();
       setBettingOrderSequence(["mainPlayer", ...Object.keys(localCPUS)]);
       setRoundOrderSequence(["mainPlayer", ...Object.keys(localCPUS)]);
@@ -291,7 +288,6 @@ export default function useGameActions() {
 
       setGameRound(0);
       setGameStarted(true);
-      // console.log(gameStore.getState(), playerStore.getState());
 
       return;
     }
@@ -307,16 +303,17 @@ export default function useGameActions() {
 
     if (updatedGameRound === 3) {
       if (!!gameStore.getState().result?.winner) {
+        console.log("ROUND ENDED");
         clearGameRound();
         dealCards();
         return;
       }
+      console.log("GETTING WINNER");
 
       getWinner();
       // setGameStarted(false);
 
       rotatePlayers();
-      resetPlayersRound();
 
       const result = gameStore.getState().result;
 
@@ -343,11 +340,11 @@ export default function useGameActions() {
       console.log("ADVANCE GAME ROUND");
       setGameRound(updatedGameRound + 1);
 
-      handleGetTableStatistics();
-
       setBettingOrder(-1);
       setCurrentBet(0);
       resetPlayersStatus();
+
+      handleGetTableStatistics();
     }
     handleAdvanceBettingRound();
   };
@@ -419,8 +416,11 @@ export default function useGameActions() {
           Object.values(draft).forEach((cpu) => {
             if (cpu.id !== currentPlayerTurn) {
               draft[cpu.id].hasBetted = false;
-              draft[cpu.id].status = null;
               draft[cpu.id].isTurn = false;
+
+              if (draft[cpu.id].status !== "FOLD") {
+                draft[cpu.id].status = null;
+              }
             }
           });
         });
@@ -456,8 +456,6 @@ export default function useGameActions() {
       .splice(raiserIndex)
       .concat(replica.splice(0, raiserIndex));
 
-    console.log(newRaiseSequence);
-
     setRoundOrderSequence(newRaiseSequence);
 
     setBettingOrder(0);
@@ -465,8 +463,11 @@ export default function useGameActions() {
     const reupdatedCpus = produce(playerStore.getState().cpus, (draft) => {
       Object.values(draft).forEach((cpu) => {
         draft[cpu.id].hasBetted = false;
-        draft[cpu.id].status = null;
         draft[cpu.id].isTurn = false;
+
+        if (draft[cpu.id].status !== "FOLD") {
+          draft[cpu.id].status = null;
+        }
       });
     });
 
@@ -494,6 +495,27 @@ export default function useGameActions() {
     handleAdvanceGameRound();
   };
 
+  const handlePlayerBet = (amount: number) => {
+    const { pot } = gameStore.getState();
+    const { mainPlayer } = playerStore.getState();
+
+    setPlayer({
+      ...mainPlayer,
+      isTurn: false,
+      bet: amount,
+      money: mainPlayer.money - amount,
+      blindCompleted: true,
+    });
+
+    setPot(pot + amount);
+    setCurrentBet(amount);
+    if (!mainPlayer.isSmallBlind && amount > pot) {
+      handlePlayerRaise();
+    }
+
+    handleAdvanceGameRound();
+  };
+
   return {
     resetGame,
     shuffleDeck,
@@ -506,5 +528,6 @@ export default function useGameActions() {
     handleAdvanceGameRound,
     handlePlayerRaise,
     handlePlayerFold,
+    handlePlayerBet,
   };
 }

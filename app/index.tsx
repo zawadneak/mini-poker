@@ -44,15 +44,7 @@ export default function App() {
       onLayout={onLayoutRootView}
       style={{ paddingTop: headerHeight }}
     >
-      <Title
-        style={
-          {
-            // fontFamily: "Ubuntu-Bold",
-          }
-        }
-      >
-        MiniPoker
-      </Title>
+      <Title>MiniPoker</Title>
       <Button onPress={handleInitGame} icon="cards">
         New Game
       </Button>
