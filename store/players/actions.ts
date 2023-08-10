@@ -68,6 +68,7 @@ export default function usePlayerActions() {
           isTurn: false,
           isWinner: false,
           status: null,
+          blindCompleted: false,
         };
       });
     });
@@ -84,6 +85,7 @@ export default function usePlayerActions() {
       isTurn: false,
       isWinner: false,
       status: null,
+      blindCompleted: false,
     });
   };
 

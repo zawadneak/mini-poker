@@ -41,6 +41,12 @@ const BettingOptions: React.FC = () => {
     setPot(pot + SMALL_BLIND_BET);
   };
 
+  const showBettingOptions = useMemo(() => {
+    if (isSmallBlind || isBigBlind) return mainPlayer.blindCompleted;
+
+    return true;
+  }, [isSmallBlind, isBigBlind, mainPlayer.blindCompleted]);
+
   return (
     <View style={{ flexDirection: "row", justifyContent: "center", gap: 5 }}>
       {isSmallBlind && !mainPlayer.blindCompleted && (
@@ -68,7 +74,7 @@ const BettingOptions: React.FC = () => {
           </BetButton>
         </>
       )}
-      {isBigBlind && (
+      {isBigBlind && !mainPlayer.blindCompleted && (
         <>
           <BetButton
             onPress={() => handlePlayerBet(2)}
@@ -106,7 +112,7 @@ const BettingOptions: React.FC = () => {
           </BetButton>
         </>
       ) : (
-        mainPlayer.blindCompleted && (
+        showBettingOptions && (
           <>
             <BetButton
               onPress={() => handlePlayerBet(0)}

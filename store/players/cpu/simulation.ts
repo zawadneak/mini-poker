@@ -187,17 +187,11 @@ export default function useCPUSimulation() {
       table,
     } = gameStore.getState();
     const tableHandByRound = getTableByGameRound();
-    const { tableStandardDeviation, tableVariance } = playerStore.getState();
+    const { tableVariance } = playerStore.getState();
 
     const hand = [...cpu.hand, ...tableHandByRound];
 
-    const { value } = getHandStrength(hand);
-
     const betToMatch = currentBet - cpu.bet;
-
-    const betToMatchPercentage = betToMatch / pot || 0.01;
-
-    const tableInCurrentRound = getTableByGameRound();
 
     let isGoodHand = false;
     let isBadHand = false;
@@ -237,7 +231,7 @@ export default function useCPUSimulation() {
       }
     }
 
-    // IF NEEDS TO MATCH A RAISE
+    // IF NEEDS TO MATCH A RAISE OR BET
     if (betToMatch > 0) {
       // IF THE HAND IS BAD = FOLD
       if (isBadHand) {
@@ -249,7 +243,7 @@ export default function useCPUSimulation() {
 
       // IF THE HAND IS GOOD = RAISE
       // TODO: adjust raise
-      if (isGoodHand) {
+      if (isGoodHand && betToMatch < 0.5 * pot && gameRound !== 0) {
         return {
           match: false,
           raise: 10,
@@ -268,7 +262,7 @@ export default function useCPUSimulation() {
     if (isGoodHand) {
       return {
         match: true,
-        raise: 10,
+        raise: 0.3 * pot,
       };
     }
 

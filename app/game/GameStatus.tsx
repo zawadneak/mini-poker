@@ -7,37 +7,14 @@ import PokerText from "../../components/Text";
 export default function GameStatus() {
   const { store } = useGame();
 
-  const { pot, gameRound } = store;
+  const { pot, gameRound, currentBet } = store;
   return (
     <Container>
       <View>
-        <PokerText
-          style={
-            {
-              // sfontFamily: "Ubuntu",
-            }
-          }
-        >
-          Round: {gameRound}
-        </PokerText>
-        <PokerText
-          style={
-            {
-              // sfontFamily: "Ubuntu",
-            }
-          }
-        >
-          Betting Order: {store.bettingOrder}
-        </PokerText>
-        <PokerText
-          style={
-            {
-              // fontFamily: "Ubuntu",
-            }
-          }
-        >
-          Pot: ${pot}
-        </PokerText>
+        <PokerText>Round: {gameRound}</PokerText>
+        <PokerText>Betting Order: {store.bettingOrder}</PokerText>
+        <PokerText>Pot: ${pot}</PokerText>
+        <PokerText>CB: ${currentBet}</PokerText>
       </View>
     </Container>
   );

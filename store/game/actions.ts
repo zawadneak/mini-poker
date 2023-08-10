@@ -53,12 +53,16 @@ export default function useGameActions() {
   function resetRound() {
     setBettingOrder(0);
     setGameRound(0);
+
+    console.log("SETTING BET TO 0");
     setCurrentBet(0);
     setPot(0);
   }
 
   function nextGameRound() {
     setBettingOrder(0);
+
+    console.log("SETTING BET TO 0");
     setCurrentBet(0);
 
     if (gameRound === 3) {
@@ -226,6 +230,8 @@ export default function useGameActions() {
 
   const clearGameRound = () => {
     setGameRound(0);
+
+    console.log("SETTING BET TO 0");
     setCurrentBet(0);
     setPot(0);
     setResult(null);
@@ -341,6 +347,7 @@ export default function useGameActions() {
         })
       );
 
+      console.log("SETTING BET TO 0");
       setCurrentBet(0);
       resetPlayersStatus();
 
