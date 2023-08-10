@@ -233,17 +233,6 @@ export default function useGameActions() {
     setBettingOrder(-1);
   };
 
-  const startNewGameRound = () => {
-    resetPlayersRound();
-    setTable([]);
-    setResult(null);
-
-    setGameRound(0);
-    setCurrentBet(0);
-    setPot(0);
-    handleAdvanceGameRound();
-  };
-
   /**
    * Rotate players in the betting order (small and big blind)
    *
@@ -277,6 +266,12 @@ export default function useGameActions() {
     });
   };
 
+  const handleEndGameRound = () => {
+    rotatePlayers();
+    clearGameRound();
+    dealCards();
+  };
+
   const handleAdvanceGameRound = async () => {
     if (!gameStarted) {
       const { cpus: localCPUS, mainPlayer: localPlayer } = await initPlayers();
@@ -301,19 +296,12 @@ export default function useGameActions() {
     //   dealCards();
     // }
 
-    if (updatedGameRound === 3) {
-      if (!!gameStore.getState().result?.winner) {
-        console.log("ROUND ENDED");
-        clearGameRound();
-        dealCards();
-        return;
-      }
-      console.log("GETTING WINNER");
-
+    if (
+      updatedGameRound === 3 &&
+      updatedBettingOrder >= roundOrder.length - 1
+    ) {
       getWinner();
       // setGameStarted(false);
-
-      rotatePlayers();
 
       const result = gameStore.getState().result;
 
@@ -336,7 +324,8 @@ export default function useGameActions() {
 
       return;
     }
-    if (updatedBettingOrder === roundOrder.length - 1) {
+    if (updatedBettingOrder >= roundOrder.length - 1) {
+      const { cpus, mainPlayer } = playerStore.getState();
       console.log("ADVANCE GAME ROUND");
       setGameRound(updatedGameRound + 1);
 
@@ -522,11 +511,11 @@ export default function useGameActions() {
   };
 
   return {
+    handleEndGameRound,
     resetGame,
     shuffleDeck,
     dealCards,
     getWinner,
-    startNewGameRound,
     nextGameRound,
     resetGameMoney,
     resetRound,

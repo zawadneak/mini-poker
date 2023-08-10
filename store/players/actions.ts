@@ -219,6 +219,8 @@ export default function usePlayerActions() {
 
     setCpus(newCpus);
 
+    if (playerStore.getState().mainPlayer.status === "FOLD") return;
+
     setPlayer({
       ...playerStore.getState().mainPlayer,
       status: null,

@@ -22,12 +22,8 @@ const Game = (props: Props) => {
   const router = useRouter();
   const { store: playerStore, actions: playerActions } = usePlayers();
 
-  const {
-    startNewGameRound,
-    resetGame,
-    resetGameMoney,
-    handleAdvanceGameRound,
-  } = useGameActions();
+  const { resetGame, resetGameMoney, handleAdvanceGameRound } =
+    useGameActions();
   const { table, result, gameStarted, shuffledDeck, gameRound } = gameStore(
     (state) => state
   );
@@ -58,7 +54,6 @@ const Game = (props: Props) => {
   };
 
   const handleEndGame = () => {
-    startNewGameRound();
     setShowWinner(false);
   };
 

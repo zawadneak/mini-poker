@@ -20,7 +20,7 @@ export default function ResultModal({
   const { result } = store;
 
   const handleClose = () => {
-    actions.handleAdvanceGameRound();
+    actions.handleEndGameRound();
     onClose();
   };
 
