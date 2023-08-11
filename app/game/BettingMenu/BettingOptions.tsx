@@ -13,7 +13,7 @@ import { RAISE_AMOUNT, SMALL_BLIND_BET } from "../../../store/poker/constants";
 const BettingOptions: React.FC = () => {
   const router = useRouter();
   const { mainPlayer, setPlayer } = usePlayerStore();
-  const { bettingOrder, pot, setPot } = useGameStore();
+  const { bettingOrder, pot, setPot, currentBet } = useGameStore();
 
   const { handleAdvanceGameRound, handlePlayerBet, handlePlayerFold } =
     useGameActions();
@@ -114,8 +114,17 @@ const BettingOptions: React.FC = () => {
       ) : (
         showBettingOptions && (
           <>
+            <BetButton onPress={handlePlayerFold} disabled={!isPlayerTurn}>
+              <PokerText
+                style={{
+                  color: "#fff",
+                }}
+              >
+                Fold
+              </PokerText>
+            </BetButton>
             <BetButton
-              onPress={() => handlePlayerBet(0)}
+              onPress={() => handlePlayerBet(currentBet || 0)}
               disabled={!isPlayerTurn}
             >
               <PokerText
@@ -123,7 +132,7 @@ const BettingOptions: React.FC = () => {
                   color: "#fff",
                 }}
               >
-                $0
+                ${currentBet || 0}
               </PokerText>
             </BetButton>
 

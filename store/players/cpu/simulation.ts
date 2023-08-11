@@ -193,6 +193,8 @@ export default function useCPUSimulation() {
 
     const betToMatch = currentBet - cpu.bet;
 
+    console.log("SIMULATION BET TO MATCH", betToMatch, currentBet, cpu.bet);
+
     let isGoodHand = false;
     let isBadHand = false;
 
@@ -302,6 +304,8 @@ export default function useCPUSimulation() {
 
     // TODO: rotate the blinds
     if (cpu.isSmallBlind && !cpu.blindCompleted) {
+      setCurrentBet(BIG_BLIND_BET);
+
       cpu = {
         ...cpu,
         bet: BIG_BLIND_BET,
@@ -320,7 +324,7 @@ export default function useCPUSimulation() {
 
     const betAmmount = currentBet - cpu.bet;
 
-    console.log("BET AMMOUNT: ", betAmmount);
+    console.log("BET AMMOUNT: ", betAmmount, currentBet, cpu.bet);
 
     if (cpu.money < betAmmount) {
       cpu = {

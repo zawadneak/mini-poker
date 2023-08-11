@@ -497,7 +497,7 @@ export default function useGameActions() {
   };
 
   const handlePlayerBet = (amount: number) => {
-    const { pot } = gameStore.getState();
+    const { pot, currentBet } = gameStore.getState();
     const { mainPlayer } = playerStore.getState();
 
     setPlayer({
@@ -508,11 +508,11 @@ export default function useGameActions() {
       blindCompleted: true,
     });
 
-    setPot(pot + amount);
-    setCurrentBet(amount);
-    if (!mainPlayer.isSmallBlind && amount > pot) {
+    if (!mainPlayer.isSmallBlind && amount > currentBet) {
       handlePlayerRaise();
     }
+    setCurrentBet(amount);
+    setPot(pot + amount);
 
     handleAdvanceGameRound();
   };

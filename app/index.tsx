@@ -44,9 +44,16 @@ export default function App() {
       onLayout={onLayoutRootView}
       style={{ paddingTop: headerHeight }}
     >
-      <Title>MiniPoker</Title>
-      <Button onPress={handleInitGame} icon="cards">
+      <Title>JustPoker</Title>
+      <Button
+        onPress={handleInitGame}
+        icon="cards"
+        style={{ marginBottom: 10 }}
+      >
         New Game
+      </Button>
+      <Button onPress={handleInitGame} icon="cog">
+        Settings
       </Button>
     </Container>
   );
