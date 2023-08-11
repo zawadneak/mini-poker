@@ -1,12 +1,12 @@
 import styled from "styled-components/native";
+import colors from "../../../styles/colors";
 
 const BetButton = styled.TouchableOpacity<{
   disabled?: boolean;
 }>`
-  background-color: #333;
-  padding: 5px;
-  border-radius: 10px;
-  width: 50px;
+  background-color: ${colors.highlight};
+  padding: 5px 20px;
+  border-radius: 5px;
   text-align: center;
   align-items: center;
   justify-content: center;
@@ -14,4 +14,4 @@ const BetButton = styled.TouchableOpacity<{
   opacity: ${(props) => (props.disabled ? 0.5 : 1)};
 `;
 
-export default BetButton
+export default BetButton;

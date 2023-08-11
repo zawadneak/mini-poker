@@ -8,6 +8,7 @@ import { useFonts } from "expo-font";
 import * as SplashScreen from "expo-splash-screen";
 import { useCallback } from "react";
 import useGameActions from "../store/game/actions";
+import PokerText from "../components/Text";
 
 SplashScreen.preventAutoHideAsync();
 
@@ -44,7 +45,9 @@ export default function App() {
       onLayout={onLayoutRootView}
       style={{ paddingTop: headerHeight }}
     >
-      <Title>JustPoker</Title>
+      <PokerText fontWeight="bold" style={{ fontSize: 42, marginBottom: 30 }}>
+        JustPoker
+      </PokerText>
       <Button
         onPress={handleInitGame}
         icon="cards"
@@ -58,8 +61,3 @@ export default function App() {
     </Container>
   );
 }
-
-const Title = styled.Text`
-  margin-bottom: 20px;
-  font-size: 24px;
-`;

@@ -2,6 +2,7 @@ import { TouchableOpacity } from "react-native";
 import Icon, { IconType } from "./Icon";
 import styled from "styled-components/native";
 import { Link } from "expo-router";
+import colors from "../styles/colors";
 
 export default function IconButton({
   icon,
@@ -33,7 +34,8 @@ const StyledTO = styled.TouchableOpacity<{
 }>`
   padding: 5px;
   border-radius: 5px;
-  background-color: ${({ backgroundColor }) => backgroundColor || "#555"};
+  background-color: ${({ backgroundColor }) =>
+    backgroundColor || colors.highlight};
   color: ${({ color }) => color || "white"};
   align-items: center;
   justify-content: center;

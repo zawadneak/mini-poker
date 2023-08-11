@@ -25,13 +25,12 @@ export default function HandInformation({ position, player, isTurn }: Props) {
         style={{
           fontSize: 21,
           fontWeight: isTurn ? "bold" : "normal",
-          color: isTurn ? "red" : "black",
         }}
       >
         {player.name} ${player.money}
       </PokerText>
       <PokerText> Bet ${player.bet}</PokerText>
-      <PokerText>
+      <PokerText style={{ textAlign: "center" }}>
         {(player.isTurn && "Current turn") ||
           player.status ||
           "Waiting for turn"}

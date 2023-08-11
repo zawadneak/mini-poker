@@ -1,6 +1,7 @@
 import { View, Text } from "react-native";
 import React from "react";
 import styled from "styled-components/native";
+import colors from "../styles/colors";
 
 type Props = {
   children: React.ReactNode;
@@ -36,6 +37,8 @@ const ContainerView = styled.SafeAreaView<{
     justifyContent ? justifyContent : "flex-start"};
 
   align-items: ${({ alignItems }) => (alignItems ? alignItems : "flex-start")};
+
+  background-color: ${colors.primary};
 
   height: 100%;
   width: 100%;

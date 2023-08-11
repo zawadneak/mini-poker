@@ -10,6 +10,8 @@ import { useRouter } from "expo-router";
 import PokerText from "../../../components/Text";
 import BettingOptions from "./BettingOptions";
 import BetButton from "./BetButton";
+import { lighten } from "polished";
+import colors from "../../../styles/colors";
 
 export default function BettingMenu() {
   const { currentBet } = useGameStore();
@@ -84,7 +86,7 @@ const Container = styled.View`
   bottom: 0;
   left: 0;
 
-  background-color: #f0f0f0;
+  background-color: ${lighten(0.1, colors.primary)};
   border-top: 1px solid #ccc;
   padding: 5px;
 

@@ -2,13 +2,15 @@ import { View, Text } from "react-native";
 import React, { useMemo } from "react";
 
 import styled from "styled-components/native";
+import { darken } from "polished";
+import colors from "../styles/colors";
 
 type Props = {
   card: Card;
   hidden?: boolean;
 };
 
-const colors = {
+const baseColors = {
   hearts: "red",
   diamonds: "red",
   spades: "black",
@@ -24,8 +26,8 @@ const cardIcon = {
 
 const Card = ({ card, hidden = false }: Props) => {
   const cardColor = useMemo(
-    () => colors[card?.suit] || "blue",
-    [card?.suit, colors]
+    () => baseColors[card?.suit] || "blue",
+    [card?.suit, baseColors]
   );
 
   if (!card) return <View></View>;
@@ -59,11 +61,12 @@ const CardWrapper = styled.View`
   min-height: 80px;
   min-width: 50px;
 
-  border: 1px solid black;
   border-radius: 10px;
 
   align-items: center;
   justify-content: center;
+  background-color: ${colors.secondary};
+  border: 1px solid ${darken(0.15, "#1f4068")};
 `;
 
 const CardText = styled.Text<{ color: "red" | "black" }>`

@@ -3,6 +3,8 @@ import React from "react";
 import styled from "styled-components/native";
 import useGame from "../../store/game";
 import PokerText from "../../components/Text";
+import colors from "../../styles/colors";
+import { lighten } from "polished";
 
 export default function GameStatus() {
   const { store } = useGame();
@@ -26,7 +28,7 @@ const Container = styled.View`
 
   gap: 5px;
 
-  background-color: #f0f0f0;
+  background-color: ${lighten(0.1, colors.primary)};
 
   flex-direction: row;
   align-items: center;

@@ -46,7 +46,7 @@ const ButtonWrapper = styled.TouchableOpacity<{
   backgroundColor?: string;
   color?: string;
 }>`
-  background-color: ${({ backgroundColor }) => backgroundColor || "#555"};
+  background-color: ${({ backgroundColor }) => backgroundColor || "#E43F5A"};
   padding: 10px 30px;
   border-radius: 5px;
   color: ${({ color }) => color || "white"};

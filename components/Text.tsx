@@ -23,6 +23,7 @@ const PokerText = ({ fontWeight = "normal", children, ...style }: Props) => {
     <Text
       style={{
         fontFamily: font,
+        color: "#f0f0f0",
         ...style.style,
       }}
     >
