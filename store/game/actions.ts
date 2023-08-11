@@ -273,6 +273,44 @@ export default function useGameActions() {
   };
 
   const handleEndGameRound = () => {
+    const { mainPlayer, cpus } = playerStore.getState();
+
+    if (mainPlayer.money <= 0) {
+      setGameStarted(false);
+      alert("Game Over");
+      return;
+    }
+
+    Object.values(cpus).forEach((c) => {
+      if (c.money <= 0) {
+        // remove cpu from game
+        const updatedCpus = produce(cpus, (draft) => {
+          delete draft[c.id];
+        });
+        setCpus(updatedCpus);
+
+        if (Object.keys(updatedCpus).length === 0) {
+          setGameStarted(false);
+          alert("Game Over - You won");
+          return;
+        }
+      }
+
+      setRoundOrderSequence(
+        roundOrderSequence.filter((playerId) => playerId !== c.id)
+      );
+
+      setBettingOrderSequence(
+        bettingOrderSequence.filter((playerId) => playerId !== c.id)
+      );
+    });
+
+    if (Object.values(cpus).length === 0) {
+      setGameStarted(false);
+      alert("Game Over - You won");
+      return;
+    }
+
     rotatePlayers();
     clearGameRound();
     dealCards();
@@ -322,11 +360,8 @@ export default function useGameActions() {
     }
 
     if (roundOrder.length === 1) {
-      rotatePlayers();
-
       addMoneyToPlayer(roundOrder[0], updatedPot);
-      clearGameRound();
-      dealCards();
+      handleEndGameRound();
 
       return;
     }
