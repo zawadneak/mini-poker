@@ -9,6 +9,12 @@ import * as SplashScreen from "expo-splash-screen";
 import { useCallback } from "react";
 import useGameActions from "../store/game/actions";
 import PokerText from "../components/Text";
+import { Image } from "react-native";
+
+import Constants from "expo-constants";
+
+import JustPokerLogo from "../assets/branding/just-poker.png";
+import CuriLogo from "../assets/branding/curi-white.png";
 
 SplashScreen.preventAutoHideAsync();
 
@@ -43,21 +49,42 @@ export default function App() {
       justifyContent="center"
       alignItems="center"
       onLayout={onLayoutRootView}
-      style={{ paddingTop: headerHeight }}
+      style={{ paddingTop: headerHeight, backgroundColor: "#191919" }}
     >
-      <PokerText fontWeight="bold" style={{ fontSize: 42, marginBottom: 30 }}>
+      <Image
+        source={JustPokerLogo}
+        style={{
+          height: 100,
+          width: 100,
+          borderRadius: 10,
+        }}
+      />
+      <PokerText fontWeight="bold" style={{ fontSize: 36, marginTop: 10 }}>
         JustPoker
+      </PokerText>{" "}
+      <PokerText
+        fontWeight="light"
+        style={{ fontSize: 18, marginBottom: 30, marginTop: 0 }}
+      >
+        by curi studios
       </PokerText>
       <Button
         onPress={handleInitGame}
         icon="cards"
-        style={{ marginBottom: 10 }}
+        style={{ marginBottom: 10, width: 200 }}
       >
-        New Game
+        Start Match
       </Button>
-      <Button onPress={handleInitGame} icon="cog">
+      <Button
+        onPress={handleInitGame}
+        icon="cog"
+        style={{ marginBottom: 10, width: 200 }}
+      >
         Settings
       </Button>
+      <PokerText fontWeight="light" style={{ fontSize: 12, marginTop: 0 }}>
+        v{Constants.manifest.version}
+      </PokerText>
     </Container>
   );
 }

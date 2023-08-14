@@ -1,12 +1,12 @@
 import React, { useMemo } from "react";
 import { View } from "react-native";
-import usePlayerStore from "../../../store/players/store";
-import useGameStore from "../../../store/game/store";
+import usePlayerStore from "../store/players/store";
+import useGameStore from "../store/game/store";
 import BetButton from "./BetButton";
-import PokerText from "../../../components/Text";
-import useGameActions from "../../../store/game/actions";
+import PokerText from "./Text";
+import useGameActions from "../store/game/actions";
 import { useRouter } from "expo-router";
-import { RAISE_AMOUNT, SMALL_BLIND_BET } from "../../../store/poker/constants";
+import { RAISE_AMOUNT, SMALL_BLIND_BET } from "../store/poker/constants";
 
 // import { Container } from './styles';
 

@@ -4,6 +4,7 @@ import styled from "styled-components/native";
 import { Link } from "expo-router";
 import Icon, { IconType } from "./Icon";
 import PokerText from "./Text";
+import colors from "../styles/colors";
 
 type Props = {
   icon?: IconType;
@@ -23,6 +24,7 @@ const Button = ({
     <ButtonWrapper backgroundColor={backgroundColor} color={color} {...props}>
       {icon && <Icon name={icon} size={24} color={color} />}
       <PokerText
+        fontWeight="medium"
         style={{
           color: color || "white",
           //  fontFamily: "Ubuntu-Bold"
@@ -46,7 +48,8 @@ const ButtonWrapper = styled.TouchableOpacity<{
   backgroundColor?: string;
   color?: string;
 }>`
-  background-color: ${({ backgroundColor }) => backgroundColor || "#E43F5A"};
+  background-color: ${({ backgroundColor }) =>
+    backgroundColor || colors.highlight};
   padding: 10px 30px;
   border-radius: 5px;
   color: ${({ color }) => color || "white"};

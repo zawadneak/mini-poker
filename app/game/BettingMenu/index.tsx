@@ -8,8 +8,8 @@ import usePlayerStore from "../../../store/players/store";
 import PokerModal from "../../../components/PokerModal";
 import { useRouter } from "expo-router";
 import PokerText from "../../../components/Text";
-import BettingOptions from "./BettingOptions";
-import BetButton from "./BetButton";
+import BettingOptions from "../../../components/BettingOptions";
+import BetButton from "../../../components/BetButton";
 import { lighten } from "polished";
 import colors from "../../../styles/colors";
 
