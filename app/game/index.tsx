@@ -15,6 +15,7 @@ import Hand from "../../components/Hand";
 import usePlayers from "../../store/players";
 import useGameActions from "../../store/game/actions";
 import useGameStore, { gameStore } from "../../store/game/store";
+import Table from "./Table";
 
 type Props = {};
 
@@ -31,13 +32,6 @@ const Game = (props: Props) => {
   const { mainPlayer, cpus } = playerStore;
 
   const [showWinner, setShowWinner] = React.useState(false);
-
-  const getTableCardsShowPerRound = (): number => {
-    if (gameRound === 1) return 3;
-    if (gameRound === 2) return 4;
-    if (gameRound === 3) return 5;
-    return 0;
-  };
 
   const isPlayerTurn = useMemo(() => mainPlayer?.isTurn, [mainPlayer?.isTurn]);
 
@@ -56,8 +50,6 @@ const Game = (props: Props) => {
   const handleEndGame = () => {
     setShowWinner(false);
   };
-
-  const positions = ["right", "top", "left"];
 
   if (!gameStarted) {
     return (
@@ -98,27 +90,9 @@ const Game = (props: Props) => {
 
         <GameStatus />
 
-        {Object.keys(cpus).map((cpu, i) => (
-          <Hand
-            position={positions[i]}
-            player={cpus[cpu]}
-            key={cpus[cpu].id}
-            hidden={true}
-          ></Hand>
-        ))}
-
-        <Table>
-          {table?.map(
-            (card: Card, i: number) =>
-              i < getTableCardsShowPerRound() && (
-                <Card card={card} key={card?.id} />
-              )
-          )}
-        </Table>
-
-        <Hand position="bottom" player={mainPlayer} />
-
         {gameStarted && <BettingMenu />}
+
+        <Table />
       </Container>
     </>
   );
@@ -137,8 +111,8 @@ const CardWrapper = styled.View`
   flex: 1;
 `;
 
-const Table = styled(CardWrapper)`
-  width: 100%;
-  flex-wrap: wrap;
-  flex: 1;
-`;
+// const Table = styled(CardWrapper)`
+//   width: 100%;
+//   flex-wrap: wrap;
+//   flex: 1;
+// `;

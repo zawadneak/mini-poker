@@ -31,17 +31,17 @@ export default function Hand({
         right: 0,
         // backgroundColor: "red",s
         transform: [{ rotate: "-90deg" }],
-        marginRight: -50,
+        marginRight: 20,
       },
       left: {
         left: 0,
-        marginLeft: -50,
+        marginLeft: 20,
         transform: [{ rotate: "90deg" }],
         // backgroundColor: "yellow",
       },
       top: {
         top: 0,
-        marginTop: -30,
+        marginTop: 0,
       },
     };
 
@@ -54,13 +54,11 @@ export default function Hand({
       style={getStyleByPosition(position)}
       folded={player?.status === "FOLD"}
     >
-      {player.id !== "mainPlayer" && (
-        <HandInformation
-          player={player}
-          position={position}
-          isTurn={player?.isTurn}
-        />
-      )}
+      <HandInformation
+        player={player}
+        position={position}
+        isTurn={player?.isTurn}
+      />
       {player.hand?.map((card: Card) => (
         <Card card={card} key={card?.id} hidden={hidden && !result?.winner} />
       ))}

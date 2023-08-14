@@ -14,7 +14,7 @@ import { Image } from "react-native";
 import Constants from "expo-constants";
 
 import JustPokerLogo from "../assets/branding/just-poker.png";
-import CuriLogo from "../assets/branding/curi-white.png";
+import colors from "../styles/colors";
 
 SplashScreen.preventAutoHideAsync();
 
@@ -34,6 +34,7 @@ export default function App() {
 
     // expo router push
     router.push("/game");
+    actions.handleAdvanceGameRound();
   };
 
   const onLayoutRootView = useCallback(async () => {
@@ -49,7 +50,7 @@ export default function App() {
       justifyContent="center"
       alignItems="center"
       onLayout={onLayoutRootView}
-      style={{ paddingTop: headerHeight, backgroundColor: "#191919" }}
+      style={{ paddingTop: headerHeight, backgroundColor: colors.primary }}
     >
       <Image
         source={JustPokerLogo}

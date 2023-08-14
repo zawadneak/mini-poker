@@ -12,6 +12,8 @@ import BettingOptions from "../../../components/BettingOptions";
 import BetButton from "../../../components/BetButton";
 import { lighten } from "polished";
 import colors from "../../../styles/colors";
+import { BigBlindTag, SmallBlindTag } from "../../../components/Hand/Tags";
+import Avatar from "../../../components/Avatar";
 
 export default function BettingMenu() {
   const { currentBet } = useGameStore();
@@ -32,6 +34,12 @@ export default function BettingMenu() {
     [isPlayerTurn, currentBet, mainPlayer.bet]
   );
 
+  const avatarUrl = useMemo(
+    () =>
+      "https://source.boringavatars.com/bauhaus/120/Stefan?colors=264653,2a9d8f,e9c46a",
+    []
+  );
+
   return (
     <Container>
       <View
@@ -43,16 +51,19 @@ export default function BettingMenu() {
         }}
       >
         <PokerText
+          fontWeight="bold"
           style={{
-            fontSize: 20,
+            fontSize: 24,
             marginRight: 10,
           }}
         >
           ${playerMoney}
         </PokerText>
 
-        {mainPlayer.isBigBlind && <PokerText>Big Blind</PokerText>}
-        {mainPlayer.isSmallBlind && <PokerText>Small Blind</PokerText>}
+        <Avatar source={avatarUrl} />
+
+        {mainPlayer.isBigBlind && <BigBlindTag />}
+        {mainPlayer.isSmallBlind && <SmallBlindTag />}
 
         <BettingOptions />
       </View>
@@ -83,10 +94,11 @@ export default function BettingMenu() {
 
 const Container = styled.View`
   position: absolute;
+  z-index: 2;
   bottom: 0;
   left: 0;
 
-  background-color: ${lighten(0.1, colors.primary)};
+  background-color: transparent;
   border-top: 1px solid #ccc;
   padding: 5px;
 

@@ -32,7 +32,7 @@ const Card = ({ card, hidden = false }: Props) => {
 
   if (!card) return <View></View>;
   return (
-    <CardWrapper>
+    <CardWrapper hidden={hidden}>
       {hidden ? (
         <View />
       ) : (
@@ -54,19 +54,20 @@ const Card = ({ card, hidden = false }: Props) => {
 
 export default Card;
 
-const CardWrapper = styled.View`
-  width: 20%;
-  height: 30%;
-  max-width: 100px;
-  min-height: 80px;
-  min-width: 50px;
+const CardWrapper = styled.View<{
+  hidden?: boolean;
+}>`
+  width: 50px;
+  height: 80px;
 
-  border-radius: 10px;
+  border-radius: 15%;
 
   align-items: center;
   justify-content: center;
   background-color: ${colors.secondary};
   border: 1px solid ${darken(0.15, "#1f4068")};
+
+  opacity: ${({ hidden }) => (hidden ? 0.5 : 1)};
 `;
 
 const CardText = styled.Text<{ color: "red" | "black" }>`
