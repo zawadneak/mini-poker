@@ -11,7 +11,7 @@ import Hand from "../../../components/Hand";
 // import { Container } from './styles';
 
 const Table: React.FC = () => {
-  const { table, gameRound } = useGameStore();
+  const { table, gameRound, currentBet } = useGameStore();
   const { cpus, mainPlayer } = usePlayerStore();
 
   const getTableCardsShowPerRound = (): number => {
@@ -43,6 +43,8 @@ const Table: React.FC = () => {
               hidden={true}
             ></Hand>
           ))}
+
+          <PokerText>${currentBet}</PokerText>
 
           <Hand position="bottom" player={mainPlayer} />
         </TableCards>

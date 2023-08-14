@@ -39,9 +39,10 @@ export default function HandInformation({ position, player, isTurn }: Props) {
       <View style={{ alignItems: "center" }}>
         <Avatar source={avatarUrl} />
         <PokerText
+          fontWeight="medium"
           style={{
-            fontSize: 21,
-            fontWeight: isTurn ? "bold" : "normal",
+            fontSize: 18,
+            marginTop: 5,
           }}
         >
           {playerName}
