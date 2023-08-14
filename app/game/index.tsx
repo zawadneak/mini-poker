@@ -76,18 +76,6 @@ const Game = (props: Props) => {
     <>
       <ResultModal visible={showWinner} onClose={handleEndGame} />
       <Container alignItems="center" justifyContent="center">
-        <IconButton
-          size={20}
-          icon="arrow-left"
-          onPress={handleCloseGame}
-          style={{
-            position: "absolute",
-            top: 50,
-            left: 0,
-            zIndex: 2,
-          }}
-        ></IconButton>
-
         <GameStatus />
 
         {gameStarted && <BettingMenu />}
