@@ -7,6 +7,7 @@ import useGameStore from "../../../store/game/store";
 import Card from "../../../components/Card";
 import usePlayerStore from "../../../store/players/store";
 import Hand from "../../../components/Hand";
+import { isMobileScreen } from "../../../styles/constants";
 
 // import { Container } from './styles';
 
@@ -27,13 +28,26 @@ const Table: React.FC = () => {
     <TableContainer>
       <TableObject>
         <TableCards>
-          {table?.map((card: Card, i: number) => (
-            <Card
-              card={card}
-              key={card?.id}
-              hidden={!(i < getTableCardsShowPerRound())}
-            />
-          ))}
+          <View
+            style={{
+              flexDirection: "row",
+              alignItems: "center",
+              justifyContent: "center",
+              height: "100%",
+              gap: 10,
+              padding: 40,
+              marginTop: isMobileScreen ? "100%" : 0,
+              flexWrap: "wrap",
+            }}
+          >
+            {table?.map((card: Card, i: number) => (
+              <Card
+                card={card}
+                key={card?.id}
+                hidden={!(i < getTableCardsShowPerRound())}
+              />
+            ))}
+          </View>
 
           {Object.keys(cpus).map((cpu, i) => (
             <Hand
@@ -63,7 +77,7 @@ const TableContainer = styled.View`
 `;
 
 const TableObject = styled.View`
-  width: 70%;
+  width: ${isMobileScreen ? "60%" : "70%"};
   height: 60%;
   margin-bottom: 5%;
 
@@ -78,7 +92,7 @@ const CardWrapper = styled.View`
   flex-direction: row;
   justify-content: center;
   align-items: center;
-  gap: 0.5%;
+  gap: 10px;
 
   flex: 1;
 `;

@@ -4,7 +4,7 @@ import React from "react";
 export default function Avatar({ source }: { source: string }) {
   return (
     <Image
-      source={source}
+      source={{ uri: source }}
       style={{
         width: 50,
         height: 50,

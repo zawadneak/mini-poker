@@ -16,6 +16,7 @@ import {
 import colors from "../../styles/colors";
 import { lighten } from "polished";
 import useGameStore from "../../store/game/store";
+import { isMobileScreen } from "../../styles/constants";
 
 type Props = {
   position: "bottom" | "right" | "left" | "top";
@@ -45,7 +46,7 @@ export default function HandInformation({ position, player, isTurn }: Props) {
     <View
       style={{
         position: "absolute",
-        bottom: position === "top" ? 180 : -130,
+        bottom: position === "top" ? 150 : isMobileScreen ? -40 : -100,
         alignItems: "center",
         justifyContent: "center",
         flexDirection: "row",

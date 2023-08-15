@@ -5,6 +5,7 @@ import { Text, View } from "react-native";
 import { Player } from "../../store/players/types";
 import HandInformation from "./HandInformation";
 import useGameStore from "../../store/game/store";
+import { isMobileScreen } from "../../styles/constants";
 
 type Props = {
   position: "bottom" | "right" | "left" | "top";
@@ -25,22 +26,21 @@ export default function Hand({
     const coordinates = {
       bottom: {
         bottom: 0,
-        marginBottom: 0,
+        marginBottom: -80,
       },
       right: {
         right: 0,
         // backgroundColor: "red",s
         transform: [{ rotate: "-90deg" }],
-        marginRight: 20,
+        marginRight: isMobileScreen ? 40 : 0,
       },
       left: {
         left: 0,
-        marginLeft: 20,
+        marginLeft: isMobileScreen ? 40 : 0,
         transform: [{ rotate: "90deg" }],
-        // backgroundColor: "yellow",
       },
       top: {
-        top: 0,
+        top: isMobileScreen ? 60 : 20,
         marginTop: 0,
       },
     };
@@ -48,7 +48,6 @@ export default function Hand({
     return coordinates[position];
   };
 
-  console.log(player.status);
   return (
     <HandWrapper
       style={getStyleByPosition(position)}
@@ -59,9 +58,10 @@ export default function Hand({
         position={position}
         isTurn={player?.isTurn}
       />
-      {player.hand?.map((card: Card) => (
-        <Card card={card} key={card?.id} hidden={hidden && !result?.winner} />
-      ))}
+      {(!isMobileScreen || player?.id === "mainPlayer") &&
+        player.hand?.map((card: Card) => (
+          <Card card={card} key={card?.id} hidden={hidden && !result?.winner} />
+        ))}
     </HandWrapper>
   );
 }

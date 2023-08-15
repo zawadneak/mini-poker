@@ -62,7 +62,7 @@ export default function App() {
       />
       <PokerText fontWeight="bold" style={{ fontSize: 36, marginTop: 10 }}>
         JustPoker
-      </PokerText>{" "}
+      </PokerText>
       <PokerText
         fontWeight="light"
         style={{ fontSize: 18, marginBottom: 30, marginTop: 0 }}

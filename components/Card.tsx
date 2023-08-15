@@ -4,6 +4,7 @@ import React, { useMemo } from "react";
 import styled from "styled-components/native";
 import { darken } from "polished";
 import colors from "../styles/colors";
+import { isMobileScreen } from "../styles/constants";
 
 type Props = {
   card: Card;
@@ -57,15 +58,14 @@ export default Card;
 const CardWrapper = styled.View<{
   hidden?: boolean;
 }>`
-  width: 50px;
-  height: 80px;
+  width: ${isMobileScreen ? "45px" : "50px"};
+  height: ${isMobileScreen ? "65px" : "80px"};
 
-  border-radius: 15%;
+  border-radius: 10px;
 
   align-items: center;
   justify-content: center;
   background-color: ${colors.secondary};
-  border: 1px solid ${darken(0.15, "#1f4068")};
 
   opacity: ${({ hidden }) => (hidden ? 0.5 : 1)};
 `;

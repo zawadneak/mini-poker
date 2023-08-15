@@ -9,6 +9,7 @@ import IconButton from "../../components/IconButton";
 import { useRouter } from "expo-router";
 
 import JustPokerLogo from "../../assets/branding/just-poker.png";
+import { isMobileScreen } from "../../styles/constants";
 
 export default function GameStatus() {
   const route = useRouter();
@@ -54,18 +55,25 @@ export default function GameStatus() {
           justifyContent: "center",
         }}
       >
-        <Image
-          source={JustPokerLogo}
+        {!isMobileScreen && (
+          <Image
+            source={JustPokerLogo}
+            style={{
+              height: 50,
+              width: 50,
+              borderRadius: 10,
+              marginLeft: 20,
+              marginRight: -10,
+              marginBottom: 10,
+            }}
+          />
+        )}
+        <View
           style={{
-            height: 50,
-            width: 50,
-            borderRadius: 10,
-            marginLeft: 20,
-            marginRight: -10,
-            marginBottom: 10,
+            flexDirection: isMobileScreen ? "row" : "column",
+            width: isMobileScreen ? "100%" : "auto",
           }}
-        />
-        <View>
+        >
           <StyledInfoBar>
             <PokerText>round</PokerText>
 
@@ -95,7 +103,14 @@ export default function GameStatus() {
         </View>
       </View>
 
-      <View>
+      <View
+        style={{
+          flexDirection: isMobileScreen ? "row-reverse" : "column",
+          alignItems: "center",
+          justifyContent: "center",
+          width: isMobileScreen ? "100%" : "auto",
+        }}
+      >
         <View
           style={{
             flexDirection: "row",
@@ -136,29 +151,29 @@ export default function GameStatus() {
 }
 const Container = styled.View`
   position: absolute;
-  top: 20;
+  top: 20px;
 
   width: 100%;
 
   z-index: 2;
-  flex-direction: row;
+  flex-direction: ${isMobileScreen ? "column" : "row"};
 
   align-items: flex-start;
-  justify-content: space-between;
+  justify-content: ${isMobileScreen ? "space-between" : "space-between"};
 `;
 
 const StyledInfoBar = styled.View`
   background-color: ${colors.dark};
 
   flex-direction: row;
-  gap: 20;
+  gap: ${isMobileScreen ? "5px" : "20px"};
   padding: 5px 10px;
 
   align-items: baseline;
   justify-content: space-between;
 
   border-radius: 5px;
-  margin-bottom: 5;
+  margin-bottom: 5px;
   margin-left: 20px;
   margin-right: 20px;
 `;
