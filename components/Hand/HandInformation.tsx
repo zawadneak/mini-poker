@@ -53,7 +53,7 @@ export default function HandInformation({ position, player, isTurn }: Props) {
       }}
     >
       <View style={{ alignItems: "center", justifyContent: "center", gap: 10 }}>
-        {player?.status !== "FOLD" && <PlayerStatusTag {...player} />}
+        <PlayerStatusTag {...player} />
 
         {player?.isBigBlind && <BigBlindTag />}
         {player?.isSmallBlind && <SmallBlindTag />}
@@ -100,7 +100,7 @@ export default function HandInformation({ position, player, isTurn }: Props) {
         </MoneyHolder>
       </View>
 
-      <PokerText>{player?.status}</PokerText>
+      {/* <PokerText>{player?.status}</PokerText> */}
     </View>
   );
 }

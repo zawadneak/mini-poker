@@ -527,6 +527,8 @@ export default function useGameActions() {
     const { pot, currentBet } = gameStore.getState();
     const { mainPlayer } = playerStore.getState();
 
+    const isRaise = !mainPlayer.isSmallBlind && amount > currentBet;
+
     setPlayer({
       ...mainPlayer,
       isTurn: false,
@@ -534,9 +536,10 @@ export default function useGameActions() {
       money: mainPlayer.money - amount,
       blindCompleted: true,
       hasBetted: true,
+      status: isRaise ? "RAISE" : "MATCH",
     });
 
-    if (!mainPlayer.isSmallBlind && amount > currentBet) {
+    if (isRaise) {
       handlePlayerRaise();
     }
     setCurrentBet(amount);

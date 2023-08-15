@@ -3,6 +3,8 @@ import { View } from "react-native";
 import PokerText from "../../Text";
 import styled from "styled-components/native";
 import Icon from "../../Icon";
+import colors from "../../../styles/colors";
+import { Player } from "../../../store/players/types";
 
 // import { Container } from './styles';
 
@@ -46,15 +48,33 @@ const DoneStatusTag: React.FC = () => {
   );
 };
 
+const FoldStatusTag: React.FC = () => {
+  return (
+    <StatusTag background={colors.dark}>
+      <Icon name="close" color="#fff" />
+    </StatusTag>
+  );
+};
+
+const RaiseStatusTag: React.FC = () => {
+  return (
+    <StatusTag background={colors.highlight}>
+      <Icon name="trending-up" color="#fff" />
+    </StatusTag>
+  );
+};
+
 const PlayerStatusTag: React.FC = ({
   isTurn,
   hasBetted,
-  ...player
+  status,
 }: {
   isTurn: boolean;
   hasBetted: boolean;
-  player: any;
+  status: Player["status"];
 }) => {
+  if (status === "RAISE") return <RaiseStatusTag />;
+  if (status === "FOLD") return <FoldStatusTag />;
   if (isTurn) return <PlayingStatusTag />;
   if (hasBetted) return <DoneStatusTag />;
   return <WaitingStatusTag />;
