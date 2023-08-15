@@ -216,6 +216,7 @@ export default function usePlayerActions() {
         if (cpu.status === "FOLD") return;
         draft[cpu.id].status = null;
         draft[cpu.id].bet = 0;
+        draft[cpu.id].hasBetted = false;
       });
     });
 

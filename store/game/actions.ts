@@ -382,7 +382,6 @@ export default function useGameActions() {
         })
       );
 
-      console.log("SETTING BET TO 0");
       setCurrentBet(0);
       resetPlayersStatus();
 
@@ -404,13 +403,6 @@ export default function useGameActions() {
     setBettingOrder(updatedBettingOrder + 1);
 
     setPlayerTurn(currentPlayerTurn);
-
-    console.log(
-      "CURRENT PLAYER TURN",
-      currentPlayerTurn,
-      updatedRoundSequence,
-      updatedBettingOrder + 1
-    );
 
     if (currentPlayerTurn !== "mainPlayer") {
       const { cpu: bettedCpu, pot: newPot } =
@@ -541,6 +533,7 @@ export default function useGameActions() {
       bet: amount,
       money: mainPlayer.money - amount,
       blindCompleted: true,
+      hasBetted: true,
     });
 
     if (!mainPlayer.isSmallBlind && amount > currentBet) {

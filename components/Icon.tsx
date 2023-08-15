@@ -1,8 +1,6 @@
-import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { Ionicons } from "@expo/vector-icons";
 
-export type IconType = React.ComponentProps<
-  typeof MaterialCommunityIcons
->["name"];
+export type IconType = React.ComponentProps<typeof Ionicons>["name"];
 
 export default function Icon({
   name,
@@ -18,7 +16,7 @@ export default function Icon({
   [key: string]: any;
 }) {
   return (
-    <MaterialCommunityIcons
+    <Ionicons
       name={name}
       size={size}
       color={color}

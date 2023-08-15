@@ -75,6 +75,14 @@ export default function GameStatus() {
           </StyledInfoBar>
 
           <StyledInfoBar>
+            <PokerText>bet</PokerText>
+
+            <PokerText fontWeight="bold" style={{ fontSize: 21 }}>
+              ${currentBet}
+            </PokerText>
+          </StyledInfoBar>
+
+          <StyledInfoBar>
             <PokerText>pot</PokerText>
 
             <PokerText
@@ -98,7 +106,7 @@ export default function GameStatus() {
           }}
         >
           <IconButton
-            icon="cog-outline"
+            icon="settings"
             size={24}
             onPress={() => route.replace("/")}
             style={{
@@ -106,7 +114,7 @@ export default function GameStatus() {
             }}
           />
           <IconButton
-            icon="logout-variant"
+            icon="exit"
             size={24}
             onPress={() => route.replace("/")}
             style={{
@@ -135,7 +143,7 @@ const Container = styled.View`
   z-index: 2;
   flex-direction: row;
 
-  align-items: flex-end;
+  align-items: flex-start;
   justify-content: space-between;
 `;
 

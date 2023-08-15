@@ -2,6 +2,7 @@ import React from "react";
 import { View } from "react-native";
 import PokerText from "../../Text";
 import styled from "styled-components/native";
+import Icon from "../../Icon";
 
 // import { Container } from './styles';
 
@@ -21,6 +22,44 @@ const SmallBlindTag: React.FC = () => {
   );
 };
 
+const WaitingStatusTag: React.FC = () => {
+  return (
+    <StatusTag background={"#30d0db"}>
+      <Icon name="hourglass" color="#fff" />
+    </StatusTag>
+  );
+};
+
+const PlayingStatusTag: React.FC = () => {
+  return (
+    <StatusTag background={"#f4a261"}>
+      <Icon name="hand-right" color="#fff" />
+    </StatusTag>
+  );
+};
+
+const DoneStatusTag: React.FC = () => {
+  return (
+    <StatusTag background={"#27c434"}>
+      <Icon name="checkmark-done" color="#fff" />
+    </StatusTag>
+  );
+};
+
+const PlayerStatusTag: React.FC = ({
+  isTurn,
+  hasBetted,
+  ...player
+}: {
+  isTurn: boolean;
+  hasBetted: boolean;
+  player: any;
+}) => {
+  if (isTurn) return <PlayingStatusTag />;
+  if (hasBetted) return <DoneStatusTag />;
+  return <WaitingStatusTag />;
+};
+
 const BigBlindWrapper = styled.View`
   background-color: #f4a261;
   padding: 5px 10px;
@@ -32,4 +71,14 @@ const SmallBlindWrapper = styled(BigBlindWrapper)`
   background-color: #9a17e6;
 `;
 
-export { BigBlindTag, SmallBlindTag };
+const StatusTag = styled.View<{ background: string }>`
+  padding: 5px 10px;
+  border-radius: 20px;
+  margin-left: 5px;
+  align-items: center;
+  justify-content: center;
+
+  background-color: ${(props) => props.background || "#f4a261"};
+`;
+
+export { BigBlindTag, SmallBlindTag, PlayerStatusTag };

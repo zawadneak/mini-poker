@@ -71,14 +71,14 @@ export default function App() {
       </PokerText>
       <Button
         onPress={handleInitGame}
-        icon="cards"
+        icon="play"
         style={{ marginBottom: 10, width: 200 }}
       >
         Start Match
       </Button>
       <Button
         onPress={handleInitGame}
-        icon="cog"
+        icon="settings"
         style={{ marginBottom: 10, width: 200 }}
       >
         Settings

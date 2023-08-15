@@ -50,21 +50,6 @@ export default function BettingMenu() {
           gap: 10,
         }}
       >
-        <PokerText
-          fontWeight="bold"
-          style={{
-            fontSize: 24,
-            marginRight: 10,
-          }}
-        >
-          ${playerMoney}
-        </PokerText>
-
-        <Avatar source={avatarUrl} />
-
-        {mainPlayer.isBigBlind && <BigBlindTag />}
-        {mainPlayer.isSmallBlind && <SmallBlindTag />}
-
         <BettingOptions />
       </View>
 

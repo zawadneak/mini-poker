@@ -44,8 +44,6 @@ const Table: React.FC = () => {
             ></Hand>
           ))}
 
-          <PokerText>${currentBet}</PokerText>
-
           <Hand position="bottom" player={mainPlayer} />
         </TableCards>
       </TableObject>

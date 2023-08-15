@@ -5,7 +5,17 @@ import usePlayerStore from "../../store/players/store";
 import PokerText from "../Text";
 import Avatar from "../Avatar";
 import styled from "styled-components/native";
-import { BigBlindTag, SmallBlindTag } from "./Tags";
+import {
+  BigBlindTag,
+  DoneStatusTag,
+  PlayerStatusTag,
+  PlayingStatusTag,
+  SmallBlindTag,
+  WaitingStatusTag,
+} from "./Tags";
+import colors from "../../styles/colors";
+import { lighten } from "polished";
+import useGameStore from "../../store/game/store";
 
 type Props = {
   position: "bottom" | "right" | "left" | "top";
@@ -14,9 +24,10 @@ type Props = {
 };
 
 export default function HandInformation({ position, player, isTurn }: Props) {
+  const { roundOrderSequence } = useGameStore();
+
   const avatarUrl = useMemo(
-    () =>
-      "https://source.boringavatars.com/beam/120/Stefan?colors=264653,f4a261,e76f51",
+    () => "https://placebear.com/250/25" + Math.floor(Math.random() * 10),
     []
   );
 
@@ -25,36 +36,77 @@ export default function HandInformation({ position, player, isTurn }: Props) {
     [player.id, player.name]
   );
 
+  const playerRoundIndex = useMemo(
+    () => roundOrderSequence.findIndex((id) => id === player.id),
+    [roundOrderSequence, player.id]
+  );
+
   return (
     <View
       style={{
         position: "absolute",
-        bottom: position === "top" ? 180 : -100,
+        bottom: position === "top" ? 180 : -130,
         alignItems: "center",
         justifyContent: "center",
         flexDirection: "row",
-        gap: 5,
+        gap: 10,
       }}
     >
+      <View style={{ alignItems: "center", justifyContent: "center", gap: 10 }}>
+        {player?.status !== "FOLD" && <PlayerStatusTag {...player} />}
+
+        {player?.isBigBlind && <BigBlindTag />}
+        {player?.isSmallBlind && <SmallBlindTag />}
+      </View>
       <View style={{ alignItems: "center" }}>
         <Avatar source={avatarUrl} />
-        <PokerText
-          fontWeight="medium"
+        <View
           style={{
-            fontSize: 18,
-            marginTop: 5,
+            flexDirection: "row",
+            gap: 5,
+            alignItems: "center",
+            justifyContent: "center",
           }}
         >
-          {playerName}
-        </PokerText>
+          <PokerText
+            fontWeight="light"
+            style={{
+              fontSize: 12,
+              marginTop: 5,
+            }}
+          >
+            {playerRoundIndex + 1}
+          </PokerText>
+          <PokerText
+            fontWeight="medium"
+            style={{
+              fontSize: 18,
+              marginTop: 5,
+            }}
+          >
+            {playerName}
+          </PokerText>
+        </View>
+        <MoneyHolder>
+          <PokerText
+            fontWeight="bold"
+            style={{
+              fontSize: 14,
+              marginTop: 5,
+            }}
+          >
+            ${player.money}
+          </PokerText>
+        </MoneyHolder>
       </View>
-      <PokerText style={{ textAlign: "center" }}>
-        {(player.isTurn && "Current turn") ||
-          player.status ||
-          "Waiting for turn"}
-      </PokerText>
-      {player?.isBigBlind && <BigBlindTag />}
-      {player?.isSmallBlind && <SmallBlindTag />}
+
+      <PokerText>{player?.status}</PokerText>
     </View>
   );
 }
+
+const MoneyHolder = styled.View`
+  background-color: ${lighten(0.05, colors.primary)};
+  padding: 5px 10px;
+  border-radius: 5px;
+`;
