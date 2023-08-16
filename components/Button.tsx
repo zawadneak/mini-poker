@@ -1,10 +1,10 @@
-import { View, Text, TouchableOpacity } from "react-native";
 import React from "react";
 import styled from "styled-components/native";
 import { Link } from "expo-router";
 import Icon, { IconType } from "./Icon";
 import PokerText from "./Text";
 import colors from "../styles/colors";
+import { ButtonProps, Button as TamaguiButton, Text } from "tamagui";
 
 type Props = {
   icon?: IconType;
@@ -12,7 +12,7 @@ type Props = {
   color?: string;
   linkTo?: string;
   disabled?: boolean;
-} & TouchableOpacity["props"];
+} & ButtonProps["props"];
 
 const Button = ({
   backgroundColor,
@@ -23,23 +23,24 @@ const Button = ({
   ...props
 }: Props) => {
   const content = (
-    <ButtonWrapper
-      backgroundColor={backgroundColor}
+    <TamaguiButton
+      bg={"$red10" || colors.highlight}
       color={color}
       disabled={disabled}
+      opacity={disabled ? 0.3 : 1}
+      icon={icon && <Icon name={icon} size={24} color={color} />}
       {...props}
     >
-      {icon && <Icon name={icon} size={24} color={color} />}
-      <PokerText
-        fontWeight="medium"
+      <Text
+        fontWeight="bold"
         style={{
           color: color || "white",
           //  fontFamily: "Ubuntu-Bold"
         }}
       >
         {props.children}
-      </PokerText>
-    </ButtonWrapper>
+      </Text>
+    </TamaguiButton>
   );
 
   if (linkTo) {
@@ -50,25 +51,3 @@ const Button = ({
 };
 
 export default Button;
-
-const ButtonWrapper = styled.TouchableOpacity<{
-  backgroundColor?: string;
-  color?: string;
-  disabled?: boolean;
-}>`
-  background-color: ${({ backgroundColor }) =>
-    backgroundColor || colors.highlight};
-  padding: 10px 30px;
-  border-radius: 5px;
-  color: ${({ color }) => color || "white"};
-  width: auto;
-
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
-  flex-direction: row;
-
-  font-size: 16px;
-
-  opacity: ${({ disabled }) => (disabled ? 0.25 : 1)};
-`;

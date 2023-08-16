@@ -1,5 +1,3 @@
-import "../tamagui.config";
-
 import styled from "styled-components/native";
 import Container from "../components/Container";
 import Button from "../components/Button";
@@ -17,19 +15,11 @@ import Constants from "expo-constants";
 
 import JustPokerLogo from "../assets/branding/just-poker.png";
 import colors from "../styles/colors";
-
-SplashScreen.preventAutoHideAsync();
+import { H1, YStack } from "tamagui";
 
 export default function App() {
   const router = useRouter();
   const actions = useGameActions();
-
-  const [fontsLoaded] = useFonts({
-    "Ubuntu-Bold": require("../assets/fonts/Ubuntu/Ubuntu-Bold.ttf"),
-    "Ubuntu-Light": require("../assets/fonts/Ubuntu/Ubuntu-Light.ttf"),
-    "Ubuntu-Medium": require("../assets/fonts/Ubuntu/Ubuntu-Medium.ttf"),
-    "Ubuntu-Regular": require("../assets/fonts/Ubuntu/Ubuntu-Regular.ttf"),
-  });
 
   const handleInitGame = () => {
     // console.log("init game");
@@ -39,20 +29,15 @@ export default function App() {
     actions.handleAdvanceGameRound();
   };
 
-  const onLayoutRootView = useCallback(async () => {
-    if (fontsLoaded) {
-      await SplashScreen.hideAsync();
-    }
-  }, [fontsLoaded]);
-
   const headerHeight = 60;
 
   return (
-    <Container
-      justifyContent="center"
+    <YStack
+      bg={"$background"}
       alignItems="center"
-      onLayout={onLayoutRootView}
-      style={{ paddingTop: headerHeight, backgroundColor: colors.primary }}
+      flex={1}
+      flexDirection="column"
+      justifyContent="center"
     >
       <Image
         source={JustPokerLogo}
@@ -62,9 +47,9 @@ export default function App() {
           borderRadius: 10,
         }}
       />
-      <PokerText fontWeight="bold" style={{ fontSize: 36, marginTop: 10 }}>
-        JustPoker
-      </PokerText>
+      <H1 fontWeight={"bold"} mt="4">
+        Just Poker
+      </H1>
       <PokerText
         fontWeight="light"
         style={{ fontSize: 18, marginBottom: 30, marginTop: 0 }}
@@ -88,6 +73,6 @@ export default function App() {
       <PokerText fontWeight="light" style={{ fontSize: 12, marginTop: 0 }}>
         v{Constants.manifest.version}
       </PokerText>
-    </Container>
+    </YStack>
   );
 }

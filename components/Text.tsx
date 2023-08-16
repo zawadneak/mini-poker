@@ -1,5 +1,5 @@
-import { View, Text } from "react-native";
 import React, { useMemo } from "react";
+import { Text } from "tamagui";
 
 type Props = {
   fontWeight?: "normal" | "bold" | "medium" | "light";
@@ -8,21 +8,11 @@ type Props = {
 };
 
 const PokerText = ({ fontWeight = "normal", children, ...style }: Props) => {
-  const font = useMemo(() => {
-    const fonts = {
-      normal: "Ubuntu-Regular",
-      bold: "Ubuntu-Bold",
-      medium: "Ubuntu-Medium",
-      light: "Ubuntu-Light",
-    };
-
-    return fonts[fontWeight] || fonts.normal;
-  }, [fontWeight]);
-
   return (
     <Text
+      fontWeight={fontWeight}
+      fontFamily={"$body"}
       style={{
-        fontFamily: font,
         color: "#f0f0f0",
         ...style.style,
       }}

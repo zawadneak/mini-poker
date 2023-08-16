@@ -8,6 +8,11 @@ module.exports = async function (env, argv) {
       babel: {
         dangerouslyAddModulePathsToTranspile: ["nativewind"],
       },
+      resolve: {
+        alias: {
+          "react-native$": "react-native-web",
+        },
+      },
     },
     argv
   );

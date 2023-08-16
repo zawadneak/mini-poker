@@ -76,7 +76,7 @@ export default function GameStatus() {
           }}
         >
           <StyledInfoBar>
-            <H3>round</H3>
+            <PokerText>round</PokerText>
 
             <PokerText fontWeight="bold" style={{ fontSize: 21 }}>
               {roundString}
