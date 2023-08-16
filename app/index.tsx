@@ -1,3 +1,5 @@
+import "../tamagui.config";
+
 import styled from "styled-components/native";
 import Container from "../components/Container";
 import Button from "../components/Button";

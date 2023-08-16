@@ -11,6 +11,7 @@ type Props = {
   backgroundColor?: string;
   color?: string;
   linkTo?: string;
+  disabled?: boolean;
 } & TouchableOpacity["props"];
 
 const Button = ({
@@ -18,10 +19,16 @@ const Button = ({
   color = "white",
   linkTo,
   icon,
+  disabled,
   ...props
 }: Props) => {
   const content = (
-    <ButtonWrapper backgroundColor={backgroundColor} color={color} {...props}>
+    <ButtonWrapper
+      backgroundColor={backgroundColor}
+      color={color}
+      disabled={disabled}
+      {...props}
+    >
       {icon && <Icon name={icon} size={24} color={color} />}
       <PokerText
         fontWeight="medium"
@@ -47,6 +54,7 @@ export default Button;
 const ButtonWrapper = styled.TouchableOpacity<{
   backgroundColor?: string;
   color?: string;
+  disabled?: boolean;
 }>`
   background-color: ${({ backgroundColor }) =>
     backgroundColor || colors.highlight};
@@ -61,4 +69,6 @@ const ButtonWrapper = styled.TouchableOpacity<{
   flex-direction: row;
 
   font-size: 16px;
+
+  opacity: ${({ disabled }) => (disabled ? 0.25 : 1)};
 `;

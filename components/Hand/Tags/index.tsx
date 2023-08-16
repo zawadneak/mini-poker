@@ -26,7 +26,7 @@ const SmallBlindTag: React.FC = () => {
 
 const WaitingStatusTag: React.FC = () => {
   return (
-    <StatusTag background={"#30d0db"}>
+    <StatusTag background={colors.light_blue}>
       <Icon name="hourglass" color="#fff" />
     </StatusTag>
   );
@@ -34,7 +34,7 @@ const WaitingStatusTag: React.FC = () => {
 
 const PlayingStatusTag: React.FC = () => {
   return (
-    <StatusTag background={"#f4a261"}>
+    <StatusTag background={colors.orange}>
       <Icon name="hand-right" color="#fff" />
     </StatusTag>
   );
@@ -42,7 +42,7 @@ const PlayingStatusTag: React.FC = () => {
 
 const DoneStatusTag: React.FC = () => {
   return (
-    <StatusTag background={"#27c434"}>
+    <StatusTag background={colors.green}>
       <Icon name="checkmark-done" color="#fff" />
     </StatusTag>
   );
@@ -81,14 +81,14 @@ const PlayerStatusTag: React.FC = ({
 };
 
 const BigBlindWrapper = styled.View`
-  background-color: #f4a261;
+  background-color: ${colors.orange};
   padding: 5px 10px;
   border-radius: 20px;
   margin-left: 5px;
 `;
 
 const SmallBlindWrapper = styled(BigBlindWrapper)`
-  background-color: #9a17e6;
+  background-color: ${colors.purple};
 `;
 
 const StatusTag = styled.View<{ background: string }>`
@@ -98,7 +98,7 @@ const StatusTag = styled.View<{ background: string }>`
   align-items: center;
   justify-content: center;
 
-  background-color: ${(props) => props.background || "#f4a261"};
+  background-color: ${(props) => props.background || colors.orange};
 `;
 
 export { BigBlindTag, SmallBlindTag, PlayerStatusTag };

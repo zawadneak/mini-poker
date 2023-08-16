@@ -26,11 +26,10 @@ export default function Hand({
     const coordinates = {
       bottom: {
         bottom: 0,
-        marginBottom: -80,
+        marginBottom: -20,
       },
       right: {
         right: 0,
-        // backgroundColor: "red",s
         transform: [{ rotate: "-90deg" }],
         marginRight: isMobileScreen ? 40 : 0,
       },
@@ -40,7 +39,7 @@ export default function Hand({
         transform: [{ rotate: "90deg" }],
       },
       top: {
-        top: isMobileScreen ? 60 : 20,
+        top: isMobileScreen ? 60 : -20,
         marginTop: 0,
       },
     };

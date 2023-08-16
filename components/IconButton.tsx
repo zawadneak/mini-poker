@@ -8,6 +8,7 @@ export default function IconButton({
   icon,
   size,
   linkTo,
+  disabled,
   ...props
 }: {
   icon: IconType;
@@ -15,10 +16,11 @@ export default function IconButton({
   linkTo?: string;
   backgroundColor?: string;
   color?: string;
+  disabled?: boolean;
   [key: string]: any;
 }) {
   const content = (
-    <StyledTO {...props}>
+    <StyledTO {...props} disabled={disabled}>
       <Icon name={icon} size={size} color={props.color || "white"} />
     </StyledTO>
   );
@@ -31,6 +33,7 @@ export default function IconButton({
 const StyledTO = styled.TouchableOpacity<{
   backgroundColor?: string;
   color?: string;
+  disabled?: boolean;
 }>`
   padding: 5px;
   border-radius: 5px;
@@ -39,4 +42,5 @@ const StyledTO = styled.TouchableOpacity<{
   color: ${({ color }) => color || "white"};
   align-items: center;
   justify-content: center;
+  opacity: ${({ disabled }) => (disabled ? 0.5 : 1)};
 `;

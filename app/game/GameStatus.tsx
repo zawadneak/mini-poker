@@ -10,6 +10,7 @@ import { useRouter } from "expo-router";
 
 import JustPokerLogo from "../../assets/branding/just-poker.png";
 import { isMobileScreen } from "../../styles/constants";
+import { H3 } from "tamagui";
 
 export default function GameStatus() {
   const route = useRouter();
@@ -75,7 +76,7 @@ export default function GameStatus() {
           }}
         >
           <StyledInfoBar>
-            <PokerText>round</PokerText>
+            <H3>round</H3>
 
             <PokerText fontWeight="bold" style={{ fontSize: 21 }}>
               {roundString}
