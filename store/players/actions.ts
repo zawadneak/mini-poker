@@ -253,6 +253,13 @@ export default function usePlayerActions() {
     setCpus(newCpus);
   };
 
+  const getPlayer = (playerId: string): Player => {
+    if (playerId === "mainPlayer") {
+      return playerStore.getState().mainPlayer;
+    }
+    return playerStore.getState().cpus[playerId];
+  };
+
   return {
     initPlayers,
     assignCardsToPlayers,
@@ -264,5 +271,6 @@ export default function usePlayerActions() {
     setPlayerTurn,
     resetPlayersStatus,
     addMoneyToPlayer,
+    getPlayer,
   };
 }

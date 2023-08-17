@@ -64,15 +64,26 @@ const RaiseStatusTag: React.FC = () => {
   );
 };
 
+const WinnerTag: React.FC = () => {
+  return (
+    <StatusTag background={"gold"}>
+      <Icon name="trophy" color="#fff" />
+    </StatusTag>
+  );
+};
+
 const PlayerStatusTag: React.FC = ({
   isTurn,
   hasBetted,
   status,
+  isWinner,
 }: {
   isTurn: boolean;
   hasBetted: boolean;
   status: Player["status"];
+  isWinner?: boolean;
 }) => {
+  if (isWinner) return <WinnerTag />;
   if (status === "RAISE") return <RaiseStatusTag />;
   if (status === "FOLD") return <FoldStatusTag />;
   if (isTurn) return <PlayingStatusTag />;

@@ -1,10 +1,13 @@
 import { View, Text } from "react-native";
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 import Button from "../../components/Button";
 import { Modal } from "react-native";
 import useGame from "../../store/game";
 import styled from "styled-components/native";
 import PokerText from "../../components/Text";
+import { AlertDialog, Dialog } from "tamagui";
+import usePlayerActions from "../../store/players/actions";
+import usePlayerStore from "../../store/players/store";
 
 export default function ResultModal({
   visible,
@@ -14,6 +17,7 @@ export default function ResultModal({
   onClose: () => void;
 }) {
   const { store, actions } = useGame();
+  const { getPlayer } = usePlayerActions();
 
   const [seeTable, setSeeTable] = useState(false);
 
@@ -24,42 +28,36 @@ export default function ResultModal({
     onClose();
   };
 
+  const player = useMemo(() => getPlayer(result?.winner), [result?.winner]);
+
   return (
-    <Modal visible={visible} transparent>
-      {seeTable ? (
-        <Button onPress={handleClose}>End round</Button>
-      ) : (
-        <Background>
-          <ModalView>
-            <PokerText>Winner</PokerText>
-            <PokerText
-              style={{
-                fontWeight: "bold",
-                fontSize: 32,
-                margin: 10,
-              }}
-            >
-              {result?.winner} | {result?.play}
-            </PokerText>
-            {result?.winner === "Tie" &&
-              result?.splitBetween?.map((player) => (
-                <PokerText
-                  style={{
-                    fontSize: 16,
-                    margin: 10,
-                  }}
-                >
-                  {player}
-                </PokerText>
-              ))}
+    <AlertDialog open={visible} onOpenChange={() => handleClose()}>
+      <AlertDialog.Portal>
+        <AlertDialog.Content
+          bordered
+          elevate
+          animation={[
+            "quick",
+            {
+              opacity: {
+                overshootClamping: true,
+              },
+            },
+          ]}
+          enterStyle={{ x: 0, y: -20, opacity: 0, scale: 0.9 }}
+          exitStyle={{ x: 0, y: 10, opacity: 0, scale: 0.95 }}
+          y="55%"
+        >
+          <AlertDialog.Title>{player?.name} won!</AlertDialog.Title>
 
-            <Button onPress={handleClose}>End round</Button>
+          <AlertDialog.Description>{result?.play}</AlertDialog.Description>
 
-            {/* <Button onPress={() => setSeeTable(true)}>See table</Button> */}
-          </ModalView>
-        </Background>
-      )}
-    </Modal>
+          <AlertDialog.Action asChild mt="$2">
+            <Button theme="active">End round</Button>
+          </AlertDialog.Action>
+        </AlertDialog.Content>
+      </AlertDialog.Portal>
+    </AlertDialog>
   );
 }
 

@@ -32,6 +32,7 @@ export default function useGameActions() {
   const { handleGetTableStatistics } = useCPUSimulation();
 
   const { mainPlayer, cpus, setPlayer, setCpus } = usePlayerStore();
+  const { setCpu } = usePlayerActions();
 
   const {
     assignCardsToPlayers,
@@ -170,6 +171,10 @@ export default function useGameActions() {
     console.log("GETTING RESULT");
     console.log("W", playerIsWinner, "L", playerIsLoser, "T", playerIsTied);
     if (playerIsWinner) {
+      setPlayer({
+        ...mainPlayer,
+        isWinner: true,
+      });
       setResult({
         winner: "mainPlayer",
         play: playerHandStrength.handStrength.name,
@@ -203,6 +208,11 @@ export default function useGameActions() {
           splitBetween: [...tieCpuIds],
         });
       }
+
+      setCpu({
+        ...cpus[cpuWithHighestPlay.id],
+        isWinner: true,
+      });
 
       setResult({
         winner: cpuWithHighestPlay.id,

@@ -79,7 +79,9 @@ export default function BettingMenu() {
   };
 
   React.useEffect(() => {
-    if (isSmallBlind || isBigBlind) {
+    console.log("oi");
+    if ((isSmallBlind || isBigBlind) && !mainPlayer?.blindCompleted) {
+      console.log("oi", BIG_BLIND_BET);
       setPlayerBet(BIG_BLIND_BET);
     }
   }, [isSmallBlind, isBigBlind]);
@@ -87,8 +89,6 @@ export default function BettingMenu() {
   React.useEffect(() => {
     if (needsToMatch) {
       setPlayerBet(currentBet);
-    } else {
-      setPlayerBet(0);
     }
   }, [needsToMatch]);
 
@@ -193,7 +193,7 @@ export default function BettingMenu() {
           onPress={() => handlePlayerBet(playerBet)}
           disabled={!isPlayerTurn}
         >
-          {needsToMatch ? "Match" : "Bet"}
+          {needsToMatch ? "Match" : playerBet === 0 ? "Check" : "Bet"}
         </Button>
       </View>
     </Container>
