@@ -266,7 +266,11 @@ export default function useGameActions() {
       draft.push(lastBigBlind);
     });
 
-    console.log("newBettingOrderSequence", newBettingOrderSequence);
+    console.log(
+      "newBettingOrderSequence",
+      updatedBettingOrder,
+      newBettingOrderSequence
+    );
 
     setBettingOrderSequence(newBettingOrderSequence);
     setRoundOrderSequence(newBettingOrderSequence);
@@ -292,7 +296,7 @@ export default function useGameActions() {
     }
 
     Object.values(cpus).forEach((c) => {
-      if (c.money <= 0) {
+      if (c.money < 1) {
         // remove cpu from game
         const updatedCpus = produce(cpus, (draft) => {
           delete draft[c.id];
@@ -304,15 +308,15 @@ export default function useGameActions() {
           alert("Game Over - You won");
           return;
         }
+
+        setRoundOrderSequence(
+          roundOrderSequence.filter((playerId) => playerId !== c.id)
+        );
+
+        setBettingOrderSequence(
+          bettingOrderSequence.filter((playerId) => playerId !== c.id)
+        );
       }
-
-      setRoundOrderSequence(
-        roundOrderSequence.filter((playerId) => playerId !== c.id)
-      );
-
-      setBettingOrderSequence(
-        bettingOrderSequence.filter((playerId) => playerId !== c.id)
-      );
     });
 
     if (Object.values(cpus).length === 0) {

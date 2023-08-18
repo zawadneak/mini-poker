@@ -22,9 +22,11 @@ import Button from "../../../components/Button";
 import IconButton from "../../../components/IconButton";
 
 export default function BettingMenu() {
-  const { currentBet, pot } = useGameStore();
   const [playerBet, setPlayerBet] = React.useState(0);
-  const { handlePlayerFold, handlePlayerBet } = useGameActions();
+  const { handlePlayerFold, handlePlayerBet, handleAdvanceGameRound } =
+    useGameActions();
+
+  const { gameRound, pot, currentBet } = useGameStore();
 
   const { mainPlayer, cpus } = usePlayerStore();
 
@@ -46,10 +48,9 @@ export default function BettingMenu() {
   );
 
   const needsToMatch = useMemo(
-    () => isPlayerTurn && didCPURaise,
+    () => (isPlayerTurn && didCPURaise) || !mainPlayer?.blindCompleted,
     [isPlayerTurn, currentBet, mainPlayer.bet]
   );
-
   const buttonsDisabled =
     !isPlayerTurn ||
     ((isSmallBlind || isBigBlind) && !mainPlayer?.blindCompleted);
@@ -60,6 +61,8 @@ export default function BettingMenu() {
   // },[
   //   gameRound,currentBet
   // ])
+
+  console.log("blind completed", mainPlayer?.blindCompleted);
 
   const handlePredefinedBet = (key: "1/4" | "1/2" | "full" | "all") => {
     const options = {
@@ -188,13 +191,20 @@ export default function BettingMenu() {
         >
           Fold
         </Button>
-        <Button
-          icon="arrow-forward"
-          onPress={() => handlePlayerBet(playerBet)}
-          disabled={!isPlayerTurn}
-        >
-          {needsToMatch ? "Match" : playerBet === 0 ? "Check" : "Bet"}
-        </Button>
+
+        {!isSmallBlind && gameRound === 0 && pot === 0 ? (
+          <Button icon="arrow-forward" onPress={() => handleAdvanceGameRound()}>
+            Start new round
+          </Button>
+        ) : (
+          <Button
+            icon="arrow-forward"
+            onPress={() => handlePlayerBet(playerBet)}
+            disabled={!isPlayerTurn}
+          >
+            {needsToMatch ? "Match" : playerBet === 0 ? "Check" : "Bet"}
+          </Button>
+        )}
       </View>
     </Container>
   );
