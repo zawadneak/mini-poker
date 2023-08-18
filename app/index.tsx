@@ -47,7 +47,7 @@ export default function App() {
           borderRadius: 10,
         }}
       />
-      <H1 fontWeight={"bold"} mt="4">
+      <H1 fontWeight={"bold"} mt="$4">
         Just Poker
       </H1>
       <PokerText

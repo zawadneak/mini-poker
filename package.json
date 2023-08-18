@@ -3,10 +3,11 @@
   "version": "0.0.1-alpha.1",
   "main": "index.js",
   "scripts": {
-    "start": "TAMAGUI_TARGET=web expo start",
-    "android": "TAMAGUI_TARGET=native expo start --android",
-    "ios": "TAMAGUI_TARGET=native expo start --ios",
-    "web": "TAMAGUI_TARGET=web expo start --web"
+    "start": "expo start",
+    "android": "TAMAGUI_TARGET=native expo start --android --clear",
+    "ios": "TAMAGUI_TARGET=native expo start --ios --clear",
+    "web": "TAMAGUI_TARGET=web expo start --web --clear",
+    "build-web": "npx expo export -p web"
   },
   "dependencies": {
     "@expo/vector-icons": "^13.0.0",
