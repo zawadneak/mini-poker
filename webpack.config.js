@@ -1,4 +1,3 @@
-// webpack.config.js
 const createExpoWebpackConfigAsync = require("@expo/webpack-config");
 
 module.exports = async function (env, argv) {
@@ -8,14 +7,13 @@ module.exports = async function (env, argv) {
       babel: {
         dangerouslyAddModulePathsToTranspile: ["nativewind"],
       },
-      resolve: {
-        alias: {
-          "react-native$": "react-native-web",
-        },
-      },
     },
     argv
   );
+
+  if (process.env.TAMAGUI_TARGET === "web") {
+    config.resolve.alias["react-native$"] = "react-native-web";
+  }
 
   config.module.rules.push({
     test: /\.css$/i,
