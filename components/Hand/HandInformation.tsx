@@ -27,10 +27,7 @@ type Props = {
 export default function HandInformation({ position, player, isTurn }: Props) {
   const { roundOrderSequence } = useGameStore();
 
-  const avatarUrl = useMemo(
-    () => "https://placebear.com/250/25" + Math.floor(Math.random() * 10),
-    []
-  );
+  const avatarUrl = useMemo(() => "https://robohash.org/" + player.name, []);
 
   const playerName = useMemo(
     () => (player.id === "mainPlayer" ? "You" : player.name),
