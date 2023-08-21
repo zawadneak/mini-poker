@@ -295,29 +295,25 @@ export default function useGameActions() {
       return;
     }
 
-    Object.values(cpus).forEach((c) => {
-      if (c.money < 1) {
-        // remove cpu from game
-        const updatedCpus = produce(cpus, (draft) => {
-          delete draft[c.id];
-        });
-        setCpus(updatedCpus);
+    const activeCPUS = Object.values(cpus).filter((cpu) => cpu.money > 0);
 
-        if (Object.keys(updatedCpus).length === 0) {
-          setGameStarted(false);
-          alert("Game Over - You won");
-          return;
-        }
+    // transform activeCPUS back to object
+    const updatedCPUS = activeCPUS.reduce((acc, cpu) => {
+      acc[cpu.id] = cpu;
+      return acc;
+    }, {});
 
-        setRoundOrderSequence(
-          roundOrderSequence.filter((playerId) => playerId !== c.id)
-        );
+    // filter missing cpus from sequence array
+    const updatedBettingOrderSequence = bettingOrderSequence.filter(
+      (playerId) =>
+        activeCPUS.some((cpu) => cpu.id === playerId) ||
+        playerId === "mainPlayer"
+    );
 
-        setBettingOrderSequence(
-          bettingOrderSequence.filter((playerId) => playerId !== c.id)
-        );
-      }
-    });
+    setBettingOrderSequence(updatedBettingOrderSequence);
+    setRoundOrderSequence(updatedBettingOrderSequence);
+
+    setCpus(updatedCPUS);
 
     if (Object.values(cpus).length === 0) {
       setGameStarted(false);
@@ -437,13 +433,13 @@ export default function useGameActions() {
         // new raise sequence
         // starts with the next player after the raiser
 
-        const raiserIndex = updatedBettingOrderSequence.findIndex(
+        const raiserIndex = updatedRoundSequence.findIndex(
           (playerId) => playerId === bettedCpu.id
         );
 
-        const newRaiseSequence = updatedBettingOrderSequence
+        const newRaiseSequence = updatedRoundSequence
           .slice(raiserIndex)
-          .concat(updatedBettingOrderSequence.slice(0, raiserIndex));
+          .concat(updatedRoundSequence.slice(0, raiserIndex));
         setRoundOrderSequence(newRaiseSequence);
 
         setBettingOrder(0);
@@ -485,19 +481,18 @@ export default function useGameActions() {
   };
 
   const handlePlayerRaise = () => {
-    const updatedBettingOrderSequence =
-      gameStore.getState().bettingOrderSequence;
+    const updatedRoundSequence = gameStore.getState().roundOrderSequence;
 
     // new raise sequence
     // starts with the next player after the raiser
 
-    const raiserIndex = updatedBettingOrderSequence.findIndex(
+    const raiserIndex = updatedRoundSequence.findIndex(
       (playerId) => playerId === "mainPlayer"
     );
 
-    const newRaiseSequence = updatedBettingOrderSequence
+    const newRaiseSequence = updatedRoundSequence
       .slice(raiserIndex)
-      .concat(updatedBettingOrderSequence.slice(0, raiserIndex));
+      .concat(updatedRoundSequence.slice(0, raiserIndex));
     setRoundOrderSequence(newRaiseSequence);
 
     setBettingOrder(0);

@@ -288,35 +288,38 @@ export default function useCPUSimulation() {
     let cpu = cpus[cpuId];
 
     if (cpu.isBigBlind && !cpu.blindCompleted) {
+      const betAmmount = cpu?.money < BIG_BLIND_BET ? cpu.money : BIG_BLIND_BET;
+
       cpu = {
         ...cpu,
-        bet: BIG_BLIND_BET,
-        money: cpu.money - BIG_BLIND_BET,
+        bet: betAmmount,
+        money: cpu.money - betAmmount,
         blindCompleted: true,
         hasBetted: true,
         isTurn: false,
       };
       return {
         cpu,
-        pot: pot + BIG_BLIND_BET,
+        pot: pot + betAmmount,
       };
     }
 
     // TODO: rotate the blinds
     if (cpu.isSmallBlind && !cpu.blindCompleted) {
-      setCurrentBet(BIG_BLIND_BET);
+      const betAmmount = cpu?.money < BIG_BLIND_BET ? cpu.money : BIG_BLIND_BET;
+      setCurrentBet(betAmmount);
 
       cpu = {
         ...cpu,
-        bet: BIG_BLIND_BET,
-        money: cpu.money - BIG_BLIND_BET,
+        bet: betAmmount,
+        money: cpu.money - betAmmount,
         hasBetted: true,
         isTurn: false,
         blindCompleted: true,
       };
       return {
         cpu,
-        pot: pot + BIG_BLIND_BET,
+        pot: pot + betAmmount,
       };
     }
 

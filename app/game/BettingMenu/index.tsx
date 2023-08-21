@@ -90,7 +90,10 @@ export default function BettingMenu() {
   }, [isSmallBlind, isBigBlind]);
 
   React.useEffect(() => {
-    if (needsToMatch) {
+    if (
+      needsToMatch &&
+      !((isSmallBlind || isBigBlind) && !mainPlayer?.blindCompleted)
+    ) {
       setPlayerBet(currentBet);
     }
   }, [needsToMatch]);
