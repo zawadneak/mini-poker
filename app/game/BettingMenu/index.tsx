@@ -220,7 +220,6 @@ const Container = styled.View`
   left: 0;
 
   background-color: transparent;
-  border-top: 1px solid #ccc;
   padding: 5px;
 
   gap: 10px;
