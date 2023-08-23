@@ -8,7 +8,12 @@ module.exports = function (api) {
     presets: ["babel-preset-expo"],
 
     plugins: [
-      require.resolve("expo-router/babel"),
+      [
+        require.resolve("expo-router/babel"),
+        {
+          origin: "https://justpoker.curistudios.com",
+        },
+      ],
       // NOTE: this is required to pass the right environment
 
       [

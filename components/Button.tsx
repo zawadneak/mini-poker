@@ -23,7 +23,7 @@ const Button = ({
 }: Props) => {
   const content = (
     <TamaguiButton
-      bg={"$red10" || bg || colors.highlight}
+      bg={bg || "$red10" || colors.highlight}
       color={color}
       disabled={disabled}
       opacity={disabled ? 0.3 : 1}

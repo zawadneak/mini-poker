@@ -17,6 +17,7 @@ import useGameActions from "../../store/game/actions";
 import useGameStore, { gameStore } from "../../store/game/store";
 import Table from "./Table";
 import GameOverModal from "./GameOverModal";
+import Head from "expo-router/head";
 
 type Props = {};
 
@@ -78,6 +79,9 @@ const Game = (props: Props) => {
 
   return (
     <>
+      <Head>
+        <title>JustPoker</title>
+      </Head>
       <ResultModal visible={showWinner} onClose={handleEndGame} />
       <Container alignItems="center" justifyContent="center">
         <GameStatus />
