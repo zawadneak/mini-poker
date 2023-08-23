@@ -11,13 +11,13 @@ import { useRouter } from "expo-router";
 import JustPokerLogo from "../../assets/branding/just-poker.png";
 import { isMobileScreen } from "../../styles/constants";
 import { H3 } from "tamagui";
+import { gameStore } from "../../store/game/store";
 
 export default function GameStatus() {
   const route = useRouter();
   const { store } = useGame();
 
-  const [time, setTime] = React.useState(0);
-  const { pot, gameRound, currentBet } = store;
+  const { pot, gameRound, currentBet, gameTime, setGameTime, gameOver } = store;
 
   const roundString = useMemo(() => {
     const rounds = {
@@ -32,20 +32,25 @@ export default function GameStatus() {
 
   React.useEffect(() => {
     const interval = setInterval(() => {
-      setTime((time) => time + 1);
+      setGameTime(gameStore.getState().gameTime + 1);
     }, 1000);
+
+    if (gameOver) {
+      clearInterval(interval);
+    }
+
     return () => clearInterval(interval);
-  }, []);
+  }, [gameOver]);
 
   const parsedTime = useMemo(() => {
-    let minutes: string | number = Math.floor(time / 60);
-    let seconds: string | number = time % 60;
+    let minutes: string | number = Math.floor(gameTime / 60);
+    let seconds: string | number = gameTime % 60;
 
     if (minutes < 10) minutes = `0${minutes}`;
     if (seconds < 10) seconds = `0${seconds}`;
 
     return `${minutes}:${seconds}`;
-  }, [time]);
+  }, [gameTime]);
 
   return (
     <Container>

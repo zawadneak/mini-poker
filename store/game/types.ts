@@ -30,6 +30,9 @@ interface GameStore {
 
   setGameStarted: (gameStarted: boolean) => void;
 
+  gameOver: boolean;
+  setGameOver: (gameOver: boolean) => void;
+
   shuffledDeck: Deck;
   table: Deck;
 
@@ -79,6 +82,10 @@ interface GameStore {
    */
   roundOrderSequence: string[];
   setRoundOrderSequence: (roundOrderSequence: string[]) => void;
+
+  // in seconds
+  gameTime: number;
+  setGameTime: (gameTime: number) => void;
 }
 
 type Result = {

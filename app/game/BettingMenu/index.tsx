@@ -26,7 +26,7 @@ export default function BettingMenu() {
   const { handlePlayerFold, handlePlayerBet, handleAdvanceGameRound } =
     useGameActions();
 
-  const { gameRound, pot, currentBet } = useGameStore();
+  const { gameRound, pot, currentBet, bettingOrder } = useGameStore();
 
   const { mainPlayer, cpus } = usePlayerStore();
 
@@ -48,13 +48,24 @@ export default function BettingMenu() {
   );
 
   const needsToMatch = useMemo(
-    () => (isPlayerTurn && didCPURaise) || !mainPlayer?.blindCompleted,
-    [isPlayerTurn, currentBet, mainPlayer.bet]
+    () =>
+      (isPlayerTurn && didCPURaise) ||
+      !mainPlayer?.blindCompleted ||
+      mainPlayer?.bet < currentBet,
+    [
+      isPlayerTurn,
+      currentBet,
+      mainPlayer.bet,
+      currentBet,
+      didCPURaise,
+      mainPlayer?.blindCompleted,
+    ]
   );
   const buttonsDisabled =
     !isPlayerTurn ||
     ((isSmallBlind || isBigBlind) && !mainPlayer?.blindCompleted);
 
+  console.log(" mainPlayer?.bet < currentBet", mainPlayer?.bet < currentBet);
   // React.useEffect
   // (()=>{
   //   if
@@ -81,28 +92,19 @@ export default function BettingMenu() {
     setPlayerBet(bet);
   };
 
+  const playerBetAction = () => {
+    handlePlayerBet(playerBet);
+    setPlayerBet(0);
+  };
+
   React.useEffect(() => {
-    console.log("oi");
     if ((isSmallBlind || isBigBlind) && !mainPlayer?.blindCompleted) {
-      console.log("oi", BIG_BLIND_BET);
       setPlayerBet(BIG_BLIND_BET);
     }
-  }, [isSmallBlind, isBigBlind]);
-
-  React.useEffect(() => {
-    if (
-      needsToMatch &&
-      !((isSmallBlind || isBigBlind) && !mainPlayer?.blindCompleted)
-    ) {
+    if (needsToMatch && bettingOrder !== 0) {
       setPlayerBet(currentBet);
     }
-  }, [needsToMatch]);
-
-  React.useEffect(() => {
-    if (!isPlayerTurn) {
-      setPlayerBet(0);
-    }
-  }, [isPlayerTurn]);
+  }, [isSmallBlind, isBigBlind, needsToMatch, bettingOrder]);
 
   return (
     <Container>
@@ -110,7 +112,7 @@ export default function BettingMenu() {
         style={{
           gap: 5,
           flexDirection: "row",
-          justifyContent: "flex-start",
+          justifyContent: "flex-end",
           flex: 1,
         }}
       >
@@ -181,9 +183,9 @@ export default function BettingMenu() {
         style={{
           flex: 1,
           flexDirection: "row",
-          alignItems: "center",
+          alignItems: "flex-start",
           gap: 5,
-          justifyContent: "flex-end",
+          justifyContent: "flex-start",
         }}
       >
         <Button
@@ -202,7 +204,7 @@ export default function BettingMenu() {
         ) : (
           <Button
             icon="arrow-forward"
-            onPress={() => handlePlayerBet(playerBet)}
+            onPress={() => playerBetAction(playerBet)}
             disabled={!isPlayerTurn}
           >
             {needsToMatch ? "Match" : playerBet === 0 ? "Check" : "Bet"}

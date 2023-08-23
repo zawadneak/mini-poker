@@ -16,6 +16,7 @@ import usePlayers from "../../store/players";
 import useGameActions from "../../store/game/actions";
 import useGameStore, { gameStore } from "../../store/game/store";
 import Table from "./Table";
+import GameOverModal from "./GameOverModal";
 
 type Props = {};
 
@@ -53,22 +54,25 @@ const Game = (props: Props) => {
 
   if (!gameStarted) {
     return (
-      <Container alignItems="center" justifyContent="center">
-        <View
-          style={{
-            position: "absolute",
-            top: 0,
-            left: 0,
-            bottom: 0,
-            right: 0,
+      <>
+        <GameOverModal />
+        <Container alignItems="center" justifyContent="center">
+          <View
+            style={{
+              position: "absolute",
+              top: 0,
+              left: 0,
+              bottom: 0,
+              right: 0,
 
-            justifyContent: "center",
-            alignItems: "center",
-          }}
-        >
-          <Button onPress={handleAdvanceGameRound}>Start Round</Button>
-        </View>
-      </Container>
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          >
+            <Button onPress={handleAdvanceGameRound}>Start Round</Button>
+          </View>
+        </Container>
+      </>
     );
   }
 
@@ -87,20 +91,3 @@ const Game = (props: Props) => {
 };
 
 export default Game;
-
-const CardWrapper = styled.View`
-  width: 100%;
-
-  flex-direction: row;
-  justify-content: center;
-  align-items: center;
-  gap: 10px;
-
-  flex: 1;
-`;
-
-// const Table = styled(CardWrapper)`
-//   width: 100%;
-//   flex-wrap: wrap;
-//   flex: 1;
-// `;

@@ -11,7 +11,6 @@ export default function useGameActions() {
   const {
     gameStarted,
     setGameStarted,
-    shuffledDeck,
     setShuffledDeck,
     setTable,
     setResult,
@@ -22,17 +21,15 @@ export default function useGameActions() {
     setBettingOrderSequence,
     setBettingOrder,
     bettingOrderSequence,
-    bettingOrder,
     setRoundOrderSequence,
-    roundOrderSequence,
     table,
-    result,
+    setGameOver,
   } = useGameStore();
 
   const { handleGetTableStatistics } = useCPUSimulation();
 
   const { mainPlayer, cpus, setPlayer, setCpus } = usePlayerStore();
-  const { setCpu } = usePlayerActions();
+  const { setCpu, clearAllPlayers } = usePlayerActions();
 
   const {
     assignCardsToPlayers,
@@ -84,7 +81,7 @@ export default function useGameActions() {
         ...mainPlayer,
         money: STARTING_MONEY,
       });
-      alert("Game Over");
+      setGameOver(true);
     }
   };
 
@@ -291,7 +288,7 @@ export default function useGameActions() {
 
     if (mainPlayer.money <= 0) {
       setGameStarted(false);
-      alert("Game Over");
+      setGameOver(true);
       return;
     }
 
@@ -317,7 +314,7 @@ export default function useGameActions() {
 
     if (Object.values(cpus).length === 0) {
       setGameStarted(false);
-      alert("Game Over - You won");
+      setGameOver(true);
       return;
     }
 
@@ -557,6 +554,21 @@ export default function useGameActions() {
     handleAdvanceGameRound();
   };
 
+  const gameOverHandler = () => {
+    setCurrentBet(0);
+    setPot(0);
+    setGameRound(0);
+    setBettingOrder(0);
+    setBettingOrderSequence([]);
+    setRoundOrderSequence([]);
+    setTable([]);
+    setResult(null);
+    setGameStarted(false);
+    setGameOver(false);
+
+    clearAllPlayers();
+  };
+
   return {
     handleEndGameRound,
     resetGame,
@@ -570,5 +582,6 @@ export default function useGameActions() {
     handlePlayerRaise,
     handlePlayerFold,
     handlePlayerBet,
+    gameOverHandler,
   };
 }

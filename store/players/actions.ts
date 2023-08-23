@@ -260,6 +260,11 @@ export default function usePlayerActions() {
     return playerStore.getState().cpus[playerId];
   };
 
+  const clearAllPlayers = () => {
+    setPlayer(null);
+    setCpus({});
+  };
+
   return {
     initPlayers,
     assignCardsToPlayers,
@@ -272,5 +277,6 @@ export default function usePlayerActions() {
     resetPlayersStatus,
     addMoneyToPlayer,
     getPlayer,
+    clearAllPlayers,
   };
 }

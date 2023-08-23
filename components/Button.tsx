@@ -8,23 +8,22 @@ import { ButtonProps, Button as TamaguiButton, Text } from "tamagui";
 
 type Props = {
   icon?: IconType;
-  backgroundColor?: string;
   color?: string;
   linkTo?: string;
   disabled?: boolean;
-} & ButtonProps["props"];
+} & ButtonProps;
 
 const Button = ({
-  backgroundColor,
   color = "white",
   linkTo,
   icon,
   disabled,
+  bg,
   ...props
 }: Props) => {
   const content = (
     <TamaguiButton
-      bg={"$red10" || colors.highlight}
+      bg={"$red10" || bg || colors.highlight}
       color={color}
       disabled={disabled}
       opacity={disabled ? 0.3 : 1}

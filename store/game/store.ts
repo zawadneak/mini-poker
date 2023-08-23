@@ -12,6 +12,14 @@ const gameStore = create<GameStore>((set) => ({
       })
     ),
 
+  gameOver: false,
+  setGameOver: (gameOver) =>
+    set(
+      produce((state) => {
+        state.gameOver = gameOver;
+      })
+    ),
+
   shuffledDeck: [],
   table: [],
   setShuffledDeck: (shuffledDeck) =>
@@ -94,6 +102,14 @@ const gameStore = create<GameStore>((set) => ({
     set(
       produce((state) => {
         state.roundOrderSequence = roundOrderSequence;
+      })
+    ),
+
+  gameTime: 0,
+  setGameTime: (gameTime) =>
+    set(
+      produce((state) => {
+        state.gameTime = gameTime;
       })
     ),
 }));
