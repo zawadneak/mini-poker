@@ -52,11 +52,13 @@ export default function Hand({
       style={getStyleByPosition(position)}
       folded={player?.status === "FOLD"}
     >
-      <HandInformation
-        player={player}
-        position={position}
-        isTurn={player?.isTurn}
-      />
+      {player?.id !== "mainPlayer" ? (
+        <HandInformation
+          player={player}
+          position={position}
+          isTurn={player?.isTurn}
+        />
+      ) : null}
       {(!isMobileScreen || player?.id === "mainPlayer") &&
         player.hand?.map((card: Card) => (
           <Card card={card} key={card?.id} hidden={hidden && !result?.winner} />

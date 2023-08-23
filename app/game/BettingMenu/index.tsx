@@ -16,10 +16,16 @@ import BettingOptions from "../../../components/BettingOptions";
 import BetButton from "../../../components/BetButton";
 import { lighten } from "polished";
 import colors from "../../../styles/colors";
-import { BigBlindTag, SmallBlindTag } from "../../../components/Hand/Tags";
+import {
+  BigBlindTag,
+  PlayerStatusTag,
+  SmallBlindTag,
+} from "../../../components/Hand/Tags";
 import Avatar from "../../../components/Avatar";
 import Button from "../../../components/Button";
 import IconButton from "../../../components/IconButton";
+import { MoneyHolder } from "../../../components/Hand/HandInformation";
+import { XStack } from "tamagui";
 
 export default function BettingMenu() {
   const [playerBet, setPlayerBet] = React.useState(0);
@@ -148,12 +154,28 @@ export default function BettingMenu() {
       </View>
       <View
         style={{
-          flexDirection: "row",
+          flexDirection: "column",
           alignItems: "center",
           justifyContent: "center",
           gap: 10,
         }}
       >
+        <XStack alignItems="center" gap={5}>
+          <MoneyHolder>
+            <PokerText
+              fontWeight="bold"
+              style={{
+                fontSize: 14,
+                marginTop: 5,
+              }}
+            >
+              ${mainPlayer.money}
+            </PokerText>
+          </MoneyHolder>
+          <PlayerStatusTag {...mainPlayer} />
+          {mainPlayer?.isBigBlind && <BigBlindTag />}
+          {mainPlayer?.isSmallBlind && <SmallBlindTag />}
+        </XStack>
         <View style={{ flexDirection: "row", flex: 1 }}>
           <IconButton
             icon="remove"
@@ -179,11 +201,12 @@ export default function BettingMenu() {
           />
         </View>
       </View>
+
       <View
         style={{
           flex: 1,
           flexDirection: "row",
-          alignItems: "flex-start",
+          alignItems: "center",
           gap: 5,
           justifyContent: "flex-start",
         }}

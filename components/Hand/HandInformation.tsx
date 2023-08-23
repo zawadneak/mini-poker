@@ -103,7 +103,7 @@ export default function HandInformation({ position, player, isTurn }: Props) {
   );
 }
 
-const MoneyHolder = styled.View`
+export const MoneyHolder = styled.View`
   background-color: ${lighten(0.05, colors.primary)};
   padding: 5px 10px;
   border-radius: 5px;
