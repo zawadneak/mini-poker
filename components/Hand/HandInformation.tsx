@@ -84,7 +84,7 @@ export default function HandInformation({
               marginTop: 5,
             }}
           >
-            {playerName}
+            {playerName} {player?.profile?.name.substring(0, 1)}
           </PokerText>
         </View>
         <MoneyHolder>
