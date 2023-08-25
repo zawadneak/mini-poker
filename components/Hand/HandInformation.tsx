@@ -19,12 +19,16 @@ import useGameStore from "../../store/game/store";
 import { isMobileScreen } from "../../styles/constants";
 
 type Props = {
-  position: "bottom" | "right" | "left" | "top";
+  positionStyle: any;
   player: Player;
   isTurn: boolean;
 };
 
-export default function HandInformation({ position, player, isTurn }: Props) {
+export default function HandInformation({
+  positionStyle,
+  player,
+  isTurn,
+}: Props) {
   const { roundOrderSequence } = useGameStore();
 
   const avatarUrl = useMemo(() => "https://robohash.org/" + player.name, []);
@@ -42,8 +46,6 @@ export default function HandInformation({ position, player, isTurn }: Props) {
   return (
     <View
       style={{
-        position: "absolute",
-        bottom: position === "top" ? 150 : isMobileScreen ? -40 : -100,
         alignItems: "center",
         justifyContent: "center",
         flexDirection: "row",

@@ -26,8 +26,8 @@ export default function App() {
     // console.log("init game");
 
     // expo router push
-    router.push("/game");
-    actions.handleAdvanceGameRound();
+    router.push("/pregame");
+    // actions.handleAdvanceGameRound();
   };
 
   const handleSettings = () => {
@@ -70,7 +70,7 @@ export default function App() {
           icon="play"
           style={{ marginBottom: 10, width: 200 }}
         >
-          Start Match
+          Play
         </Button>
         <Button
           onPress={handleSettings}

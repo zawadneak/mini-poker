@@ -7,16 +7,16 @@ import Container from "../../components/Container";
 
 import styled from "styled-components/native";
 import { useRouter } from "expo-router";
-import BettingMenu from "./BettingMenu";
-import GameStatus from "./GameStatus";
-import ResultModal from "./ResultModal";
+import BettingMenu from "../../components/BettingMenu";
+import GameStatus from "../../components/GameStatus";
+import ResultModal from "../../components/ResultModal";
 import IconButton from "../../components/IconButton";
 import Hand from "../../components/Hand";
 import usePlayers from "../../store/players";
 import useGameActions from "../../store/game/actions";
 import useGameStore, { gameStore } from "../../store/game/store";
-import Table from "./Table";
-import GameOverModal from "./GameOverModal";
+import Table from "../../components/Table";
+import GameOverModal from "../../components/GameOverModal";
 import Head from "expo-router/head";
 
 type Props = {};

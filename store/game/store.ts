@@ -2,6 +2,8 @@ import { produce } from "immer";
 import { create } from "zustand";
 import { subscribeWithSelector } from "zustand/middleware";
 import { PlayerStore } from "../players/types";
+import { CPU_COUNT } from "../players/constants";
+import { STARTING_MONEY } from "../poker/constants";
 
 const gameStore = create<GameStore>((set) => ({
   gameStarted: false,
@@ -110,6 +112,40 @@ const gameStore = create<GameStore>((set) => ({
     set(
       produce((state) => {
         state.gameTime = gameTime;
+      })
+    ),
+
+  // game config
+
+  cpuQuantity: CPU_COUNT,
+  setCpuQuantity: (cpuQuantity) =>
+    set(
+      produce((state) => {
+        state.cpuQuantity = cpuQuantity;
+      })
+    ),
+
+  startingMoney: STARTING_MONEY,
+  setStartingMoney: (startingMoney) =>
+    set(
+      produce((state) => {
+        state.startingMoney = startingMoney;
+      })
+    ),
+
+  differentProfiles: false,
+  setDifferentProfiles: (differentProfiles) =>
+    set(
+      produce((state) => {
+        state.differentProfiles = differentProfiles;
+      })
+    ),
+
+  showBotProfile: false,
+  setShowBotProfile: (showBotProfile) =>
+    set(
+      produce((state) => {
+        state.showBotProfile = showBotProfile;
       })
     ),
 }));

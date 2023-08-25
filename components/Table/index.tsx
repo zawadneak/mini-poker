@@ -1,13 +1,13 @@
 import React from "react";
 import { View } from "react-native";
 import styled from "styled-components/native";
-import PokerText from "../../../components/Text";
-import colors from "../../../styles/colors";
-import useGameStore from "../../../store/game/store";
-import Card from "../../../components/Card";
-import usePlayerStore from "../../../store/players/store";
-import Hand from "../../../components/Hand";
-import { isMobileScreen } from "../../../styles/constants";
+import PokerText from "../Text";
+import colors from "../../styles/colors";
+import useGameStore from "../../store/game/store";
+import Card from "../Card";
+import usePlayerStore from "../../store/players/store";
+import Hand from "../Hand";
+import { isMobileScreen } from "../../styles/constants";
 
 // import { Container } from './styles';
 
@@ -21,8 +21,6 @@ const Table: React.FC = () => {
     if (gameRound === 3) return 5;
     return 0;
   };
-
-  const positions = ["right", "top", "left"];
 
   return (
     <TableContainer>
@@ -51,7 +49,7 @@ const Table: React.FC = () => {
 
           {Object.keys(cpus).map((cpu, i) => (
             <Hand
-              position={positions[i]}
+              positionIndex={i + 1}
               player={cpus[cpu]}
               key={cpus[cpu].id}
               hidden={true}

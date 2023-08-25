@@ -3,6 +3,7 @@ import { BASE_PLAYER_OBJECT, CPU_COUNT, NAMES } from "./constants";
 import usePlayerStore, { playerStore } from "./store";
 import { Player } from "./types";
 import PROFILES from "./cpu/profiles";
+import { gameStore } from "../game/store";
 
 export default function usePlayerActions() {
   const { mainPlayer, cpus, setPlayer, setCpus } = usePlayerStore();
@@ -13,24 +14,38 @@ export default function usePlayerActions() {
       [key: string]: Player;
     };
   }> => {
+    const cpuCount = gameStore.getState().cpuQuantity;
+
+    const differentProfiles = gameStore.getState().differentProfiles;
+
+    const startingMoney = gameStore.getState().startingMoney;
+
     const playerObj = {
       ...BASE_PLAYER_OBJECT,
       id: "mainPlayer",
       name: "Lucas",
       isSmallBlind: true,
       isTurn: true,
+      money: startingMoney,
     };
 
     setPlayer(playerObj);
 
+    console.log(cpuCount);
+
     let newCpus = {};
-    [...Array(CPU_COUNT).fill(null)].forEach((_, i) => {
+    [...Array(cpuCount).fill(null)].forEach((_, i) => {
       // console.log("INIT CPU " + i);
       let cpuBaseObject = {
         ...BASE_PLAYER_OBJECT,
         id: `cpu-${i}`,
         name: NAMES[Math.floor(Math.random() * NAMES.length)],
-        profile: PROFILES.Conservative,
+        money: startingMoney,
+        profile: differentProfiles
+          ? Object.values(PROFILES)[
+              Math.floor(Math.random() * Object.values(PROFILES).length)
+            ]
+          : PROFILES.Conservative,
       };
 
       // IS BIG BLIND?

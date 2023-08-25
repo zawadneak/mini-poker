@@ -1,13 +1,13 @@
 import { View, Text } from "react-native";
 import React, { useMemo, useState } from "react";
-import Button from "../../components/Button";
+import Button from "./Button";
 import { Modal } from "react-native";
-import useGame from "../../store/game";
+import useGame from "../store/game";
 import styled from "styled-components/native";
-import PokerText from "../../components/Text";
+import PokerText from "./Text";
 import { AlertDialog, Dialog } from "tamagui";
-import usePlayerActions from "../../store/players/actions";
-import usePlayerStore from "../../store/players/store";
+import usePlayerActions from "../store/players/actions";
+import usePlayerStore from "../store/players/store";
 
 export default function GameOverModal() {
   const { store, actions } = useGame();

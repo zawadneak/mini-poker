@@ -1,17 +1,17 @@
 import { View, Text, Image } from "react-native";
 import React, { useMemo } from "react";
 import styled from "styled-components/native";
-import useGame from "../../store/game";
-import PokerText from "../../components/Text";
-import colors from "../../styles/colors";
+import useGame from "../store/game";
+import PokerText from "./Text";
+import colors from "../styles/colors";
 import { lighten } from "polished";
-import IconButton from "../../components/IconButton";
+import IconButton from "./IconButton";
 import { useRouter } from "expo-router";
 
-import JustPokerLogo from "../../assets/branding/just-poker.png";
-import { isMobileScreen } from "../../styles/constants";
+import JustPokerLogo from "../assets/branding/just-poker.png";
+import { isMobileScreen } from "../styles/constants";
 import { H3 } from "tamagui";
-import { gameStore } from "../../store/game/store";
+import { gameStore } from "../store/game/store";
 
 export default function GameStatus() {
   const route = useRouter();

@@ -86,6 +86,19 @@ interface GameStore {
   // in seconds
   gameTime: number;
   setGameTime: (gameTime: number) => void;
+
+  // game config
+  cpuQuantity: number;
+  setCpuQuantity: (cpuQuantity: number) => void;
+
+  startingMoney: number;
+  setStartingMoney: (startingMoney: number) => void;
+
+  differentProfiles: boolean;
+  setDifferentProfiles: (differentProfiles: boolean) => void;
+
+  showBotProfile: boolean;
+  setShowBotProfile: (showBotProfile: boolean) => void;
 }
 
 type Result = {

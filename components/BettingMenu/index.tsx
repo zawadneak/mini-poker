@@ -5,26 +5,22 @@ import {
   BIG_BLIND_BET,
   RAISE_AMOUNT,
   SMALL_BLIND_BET,
-} from "../../../store/poker/constants";
-import useGameActions from "../../../store/game/actions";
-import useGameStore from "../../../store/game/store";
-import usePlayerStore from "../../../store/players/store";
-import PokerModal from "../../../components/PokerModal";
+} from "../../store/poker/constants";
+import useGameActions from "../../store/game/actions";
+import useGameStore from "../../store/game/store";
+import usePlayerStore from "../../store/players/store";
+import PokerModal from "../PokerModal";
 import { useRouter } from "expo-router";
-import PokerText from "../../../components/Text";
-import BettingOptions from "../../../components/BettingOptions";
-import BetButton from "../../../components/BetButton";
+import PokerText from "../Text";
+import BettingOptions from "../BettingOptions";
+import BetButton from "../BetButton";
 import { lighten } from "polished";
-import colors from "../../../styles/colors";
-import {
-  BigBlindTag,
-  PlayerStatusTag,
-  SmallBlindTag,
-} from "../../../components/Hand/Tags";
-import Avatar from "../../../components/Avatar";
-import Button from "../../../components/Button";
-import IconButton from "../../../components/IconButton";
-import { MoneyHolder } from "../../../components/Hand/HandInformation";
+import colors from "../../styles/colors";
+import { BigBlindTag, PlayerStatusTag, SmallBlindTag } from "../Hand/Tags";
+import Avatar from "../Avatar";
+import Button from "../Button";
+import IconButton from "../IconButton";
+import { MoneyHolder } from "../Hand/HandInformation";
 import { XStack } from "tamagui";
 
 export default function BettingMenu() {
