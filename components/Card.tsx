@@ -58,8 +58,8 @@ export default Card;
 const CardWrapper = styled.View<{
   hidden?: boolean;
 }>`
-  width: ${isMobileScreen ? "45px" : "50px"};
-  height: ${isMobileScreen ? "65px" : "80px"};
+  width: ${isMobileScreen ? "45px" : "45px"};
+  height: ${isMobileScreen ? "65px" : "65px"};
 
   border-radius: 10px;
 

@@ -17,6 +17,8 @@ import colors from "../../styles/colors";
 import { lighten } from "polished";
 import useGameStore from "../../store/game/store";
 import { isMobileScreen } from "../../styles/constants";
+import { XStack } from "tamagui";
+import Card from "../Card";
 
 type Props = {
   positionStyle: any;
@@ -29,7 +31,7 @@ export default function HandInformation({
   player,
   isTurn,
 }: Props) {
-  const { roundOrderSequence } = useGameStore();
+  const { roundOrderSequence, result } = useGameStore();
 
   const avatarUrl = useMemo(() => "https://robohash.org/" + player.name, []);
 
@@ -43,6 +45,8 @@ export default function HandInformation({
     [roundOrderSequence, player.id]
   );
 
+  console.log(player);
+
   return (
     <View
       style={{
@@ -52,14 +56,16 @@ export default function HandInformation({
         gap: 10,
       }}
     >
-      <View style={{ alignItems: "center", justifyContent: "center", gap: 10 }}>
-        <PlayerStatusTag {...player} />
-
-        {player?.isBigBlind && <BigBlindTag />}
-        {player?.isSmallBlind && <SmallBlindTag />}
-      </View>
       <View style={{ alignItems: "center" }}>
-        <Avatar source={avatarUrl} />
+        {player?.id === "mainPlayer" || !!result?.winner ? (
+          <XStack gap="$2">
+            {player.hand?.map((card: Card) => (
+              <Card card={card} key={card?.id} />
+            ))}
+          </XStack>
+        ) : (
+          <Avatar source={avatarUrl} />
+        )}
         <View
           style={{
             flexDirection: "row",
@@ -98,6 +104,12 @@ export default function HandInformation({
             ${player.money}
           </PokerText>
         </MoneyHolder>
+      </View>
+      <View style={{ alignItems: "center", justifyContent: "center", gap: 10 }}>
+        <PlayerStatusTag {...player} />
+
+        {player?.isBigBlind && <BigBlindTag />}
+        {player?.isSmallBlind && <SmallBlindTag />}
       </View>
 
       {/* <PokerText>{player?.status}</PokerText> */}

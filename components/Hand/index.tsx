@@ -63,7 +63,7 @@ export default function Hand({
       if (positionIndex === 5) return "left";
     }
     if (cpuQuantity === 6) {
-      if (positionIndex === 0) return "bottom";
+      if (positionIndex === 0) return "bottomRight";
       if (positionIndex === 1) return "right";
       if (positionIndex === 2) return "topRight";
       if (positionIndex === 3) return "top";
@@ -91,36 +91,35 @@ export default function Hand({
 
     const coordinates = {
       bottom: {
-        bottom: 0,
-        marginBottom: -20,
+        bottom: "-10%",
       },
       right: {
-        right: "-12%",
+        right: "-8%",
         marginRight: isMobileScreen ? 40 : 0,
       },
       left: {
-        left: "-10%",
+        left: "-8%",
         marginLeft: isMobileScreen ? 40 : 0,
       },
       top: {
-        top: "-20%",
+        top: "-10%",
         marginTop: 0,
       },
       topRight: {
-        top: "-20%",
-        right: "20%",
+        top: "-10%",
+        right: "10%",
       },
       topLeft: {
-        top: "-20%",
-        left: "20%",
+        top: "-10%",
+        left: "10%",
       },
       bottomLeft: {
-        bottom: 0,
-        left: "-10%",
+        bottom: "-10%",
+        left: "10%",
       },
       bottomRight: {
-        bottom: 0,
-        right: "-10%",
+        bottom: "-10%",
+        right: "10%",
       },
     };
 
@@ -150,19 +149,7 @@ export default function Hand({
       folded={player?.status === "FOLD"}
       rowOrColumn={rowOrColumn}
     >
-      {player?.id !== "mainPlayer" ? (
-        <HandInformation player={player} isTurn={player?.isTurn} />
-      ) : null}
-      <XStack gap="$2">
-        {(!isMobileScreen || player?.id === "mainPlayer") &&
-          player.hand?.map((card: Card) => (
-            <Card
-              card={card}
-              key={card?.id}
-              hidden={hidden && !result?.winner}
-            />
-          ))}
-      </XStack>
+      <HandInformation player={player} isTurn={player?.isTurn} />
     </HandWrapper>
   );
 }
@@ -171,7 +158,7 @@ const HandWrapper = styled.View<{ folded?: boolean; rowOrColumn: string }>`
   flex-direction: ${({ rowOrColumn }) => rowOrColumn};
   justify-content: center;
   align-items: center;
-  gap: 20%;
+  gap: 10px;
   position: absolute;
   min-height: 150px;
 

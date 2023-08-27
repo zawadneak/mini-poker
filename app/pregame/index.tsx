@@ -43,7 +43,7 @@ export default function PreGame({}: Props) {
           size="$2"
           width={200}
           defaultValue={[3]}
-          max={8}
+          max={7}
           min={1}
           step={1}
           onValueChange={(v) => {

@@ -156,7 +156,7 @@ export default function BettingMenu() {
           gap: 10,
         }}
       >
-        <XStack alignItems="center" gap={5}>
+        {/* <XStack alignItems="center" gap={5}>
           <MoneyHolder>
             <PokerText
               fontWeight="bold"
@@ -171,7 +171,7 @@ export default function BettingMenu() {
           <PlayerStatusTag {...mainPlayer} />
           {mainPlayer?.isBigBlind && <BigBlindTag />}
           {mainPlayer?.isSmallBlind && <SmallBlindTag />}
-        </XStack>
+        </XStack> */}
         <View style={{ flexDirection: "row", flex: 1 }}>
           <IconButton
             icon="remove"

@@ -76,8 +76,8 @@ const TableContainer = styled.View`
 
 const TableObject = styled.View`
   /* width: ${isMobileScreen ? "60%" : "70%"}; */
-  height: 50vh;
-  width: 120vh;
+  height: 60%;
+  width: 60%;
 
   border-radius: 300px;
 
