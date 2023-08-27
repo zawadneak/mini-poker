@@ -34,8 +34,8 @@ const Table: React.FC = () => {
               height: "100%",
               gap: 10,
               padding: 40,
-              marginTop: isMobileScreen ? "100%" : 0,
               flexWrap: "wrap",
+              width: "100%",
             }}
           >
             {table?.map((card: Card, i: number) => (
@@ -75,9 +75,9 @@ const TableContainer = styled.View`
 `;
 
 const TableObject = styled.View`
-  /* width: ${isMobileScreen ? "60%" : "70%"}; */
-  height: 60%;
-  width: 60%;
+  width: ${isMobileScreen ? "60%" : "60%"};
+  height: 55%;
+  /* width: 80%; */
 
   border-radius: 300px;
 

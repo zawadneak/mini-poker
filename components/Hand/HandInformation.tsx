@@ -24,12 +24,16 @@ type Props = {
   positionStyle: any;
   player: Player;
   isTurn: boolean;
+
+  rowOrColumn: string;
 };
 
 export default function HandInformation({
   positionStyle,
   player,
   isTurn,
+
+  rowOrColumn,
 }: Props) {
   const { roundOrderSequence, result } = useGameStore();
 
@@ -52,8 +56,8 @@ export default function HandInformation({
       style={{
         alignItems: "center",
         justifyContent: "center",
-        flexDirection: "row",
-        gap: 10,
+        flexDirection: rowOrColumn,
+        gap: isMobileScreen ? 0 : 20,
       }}
     >
       <View style={{ alignItems: "center" }}>
@@ -93,23 +97,33 @@ export default function HandInformation({
             {playerName} {player?.profile?.name.substring(0, 1)}
           </PokerText>
         </View>
-        <MoneyHolder>
-          <PokerText
-            fontWeight="bold"
-            style={{
-              fontSize: 14,
-              marginTop: 5,
-            }}
-          >
-            ${player.money}
-          </PokerText>
-        </MoneyHolder>
+        <XStack alignItems="center">
+          <MoneyHolder>
+            <PokerText
+              fontWeight="bold"
+              style={{
+                fontSize: 14,
+                marginTop: 5,
+              }}
+            >
+              ${player.money}
+            </PokerText>
+          </MoneyHolder>
+          {player?.isBigBlind && <BigBlindTag />}
+          {player?.isSmallBlind && <SmallBlindTag />}
+        </XStack>
       </View>
-      <View style={{ alignItems: "center", justifyContent: "center", gap: 10 }}>
+      <View
+        style={{
+          alignItems: "center",
+          justifyContent: "center",
+          gap: 10,
+          position: "absolute",
+          top: player?.id === "mainPlayer" ? -20 : -10,
+          right: player?.id === "mainPlayer" ? -20 : -5,
+        }}
+      >
         <PlayerStatusTag {...player} />
-
-        {player?.isBigBlind && <BigBlindTag />}
-        {player?.isSmallBlind && <SmallBlindTag />}
       </View>
 
       {/* <PokerText>{player?.status}</PokerText> */}
@@ -121,4 +135,7 @@ export const MoneyHolder = styled.View`
   background-color: ${lighten(0.05, colors.primary)};
   padding: 5px 10px;
   border-radius: 5px;
+
+  flex-direction: row;
+  align-items: center;
 `;

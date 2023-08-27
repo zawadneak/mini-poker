@@ -22,6 +22,7 @@ import Button from "../Button";
 import IconButton from "../IconButton";
 import { MoneyHolder } from "../Hand/HandInformation";
 import { XStack } from "tamagui";
+import { isMobileScreen } from "../../styles/constants";
 
 export default function BettingMenu() {
   const [playerBet, setPlayerBet] = React.useState(0);
@@ -113,18 +114,20 @@ export default function BettingMenu() {
       <View
         style={{
           gap: 5,
-          flexDirection: "row",
+          flexDirection: isMobileScreen ? "column" : "row",
           justifyContent: "flex-end",
           flex: 1,
         }}
       >
-        <Button
-          backgroundColor={colors.dark}
-          disabled={buttonsDisabled}
-          onPress={() => handlePredefinedBet("1/4")}
-        >
-          1/4 pot
-        </Button>
+        {!isMobileScreen ? (
+          <Button
+            backgroundColor={colors.dark}
+            disabled={buttonsDisabled}
+            onPress={() => handlePredefinedBet("1/4")}
+          >
+            1/4 pot
+          </Button>
+        ) : null}
         <Button
           backgroundColor={colors.dark}
           disabled={buttonsDisabled}
@@ -156,22 +159,6 @@ export default function BettingMenu() {
           gap: 10,
         }}
       >
-        {/* <XStack alignItems="center" gap={5}>
-          <MoneyHolder>
-            <PokerText
-              fontWeight="bold"
-              style={{
-                fontSize: 14,
-                marginTop: 5,
-              }}
-            >
-              ${mainPlayer.money}
-            </PokerText>
-          </MoneyHolder>
-          <PlayerStatusTag {...mainPlayer} />
-          {mainPlayer?.isBigBlind && <BigBlindTag />}
-          {mainPlayer?.isSmallBlind && <SmallBlindTag />}
-        </XStack> */}
         <View style={{ flexDirection: "row", flex: 1 }}>
           <IconButton
             icon="remove"
@@ -201,7 +188,7 @@ export default function BettingMenu() {
       <View
         style={{
           flex: 1,
-          flexDirection: "row",
+          flexDirection: isMobileScreen ? "column" : "row",
           alignItems: "center",
           gap: 5,
           justifyContent: "flex-start",
@@ -250,5 +237,5 @@ const Container = styled.View`
   justify-content: space-between;
   width: 100%;
   padding: 20px;
-  padding-bottom: 40px;
+  padding-bottom: 20px;
 `;

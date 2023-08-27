@@ -87,8 +87,6 @@ export default function Hand({
   const getStyleByPosition = useCallback(() => {
     const position = getPositionNameByIndexAndPlayersLength();
 
-    console.log(position);
-
     const coordinates = {
       bottom: {
         bottom: "-10%",
@@ -123,7 +121,41 @@ export default function Hand({
       },
     };
 
-    return coordinates[position];
+    const mobileCoordinates = {
+      bottom: {
+        bottom: "-25%",
+      },
+      right: {
+        right: "-30%",
+        top: 0,
+        bottom: 0,
+      },
+      left: {
+        left: "-30%",
+      },
+      top: {
+        top: "-20%",
+        marginTop: 0,
+      },
+      topRight: {
+        top: "-5%",
+        right: "-20%",
+      },
+      topLeft: {
+        top: "-5%",
+        left: "-20%",
+      },
+      bottomLeft: {
+        bottom: "-5%",
+        left: "-20%",
+      },
+      bottomRight: {
+        bottom: "-10%",
+        right: "-25%",
+      },
+    };
+
+    return isMobileScreen ? mobileCoordinates[position] : coordinates[position];
   }, [positionIndex]);
 
   const positionStyle = useMemo(() => {
@@ -132,6 +164,18 @@ export default function Hand({
 
   const rowOrColumn = useMemo(() => {
     const position = getPositionNameByIndexAndPlayersLength();
+    if (isMobileScreen) {
+      const row = ["left", "bottomLeft", "topLeft"];
+      const rowReverse = ["right", "topRight", "bottomRight"];
+      const column = ["top"];
+      const columnReverse = ["bottom"];
+
+      if (row.includes(position)) return "row";
+      if (rowReverse.includes(position)) return "row-reverse";
+      if (column.includes(position)) return "column";
+      if (columnReverse.includes(position)) return "column-reverse";
+    }
+
     const row = ["left"];
     const rowReverse = ["right"];
     const column = ["top", "topRight", "topLeft"];
@@ -144,12 +188,12 @@ export default function Hand({
   }, [positionIndex]);
 
   return (
-    <HandWrapper
-      style={positionStyle}
-      folded={player?.status === "FOLD"}
-      rowOrColumn={rowOrColumn}
-    >
-      <HandInformation player={player} isTurn={player?.isTurn} />
+    <HandWrapper style={positionStyle} folded={player?.status === "FOLD"}>
+      <HandInformation
+        player={player}
+        isTurn={player?.isTurn}
+        rowOrColumn={rowOrColumn}
+      />
     </HandWrapper>
   );
 }

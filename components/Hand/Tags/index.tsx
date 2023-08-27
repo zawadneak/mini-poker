@@ -93,7 +93,7 @@ const PlayerStatusTag: React.FC = ({
 
 const BigBlindWrapper = styled.View`
   background-color: ${colors.orange};
-  padding: 5px 10px;
+  padding: 5px 5px;
   border-radius: 20px;
   margin-left: 5px;
 `;
@@ -103,7 +103,7 @@ const SmallBlindWrapper = styled(BigBlindWrapper)`
 `;
 
 const StatusTag = styled.View<{ background: string }>`
-  padding: 5px 10px;
+  padding: 5px 5px;
   border-radius: 20px;
   margin-left: 5px;
   align-items: center;

@@ -113,8 +113,9 @@ export default function GameStatus() {
         style={{
           flexDirection: isMobileScreen ? "row-reverse" : "column",
           alignItems: "center",
-          justifyContent: "center",
+          justifyContent: isMobileScreen ? "space-between" : "center",
           width: isMobileScreen ? "100%" : "auto",
+          paddingRight: 20,
         }}
       >
         <View
@@ -172,8 +173,8 @@ const StyledInfoBar = styled.View`
   background-color: ${colors.dark};
 
   flex-direction: row;
-  gap: ${isMobileScreen ? "5px" : "20px"};
-  padding: 5px 10px;
+  gap: ${isMobileScreen ? "2px" : "20px"};
+  padding: ${isMobileScreen ? "5px" : "5px 10px"};
 
   align-items: baseline;
   justify-content: space-between;
