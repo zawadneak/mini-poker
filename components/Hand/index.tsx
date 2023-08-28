@@ -185,6 +185,8 @@ export default function Hand({
     if (rowReverse.includes(position)) return "row-reverse";
     if (column.includes(position)) return "column";
     if (columnReverse.includes(position)) return "column-reverse";
+
+    return "row";
   }, [positionIndex]);
 
   return (
@@ -199,7 +201,7 @@ export default function Hand({
 }
 
 const HandWrapper = styled.View<{ folded?: boolean; rowOrColumn: string }>`
-  flex-direction: ${({ rowOrColumn }) => rowOrColumn};
+  flex-direction: ${({ rowOrColumn }) => rowOrColumn || "row"};
   justify-content: center;
   align-items: center;
   gap: 10px;

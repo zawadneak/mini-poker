@@ -17,7 +17,7 @@ export interface Profile {
 const PROFILES = {
   Bluffer: {
     name: "Bluffer",
-    bluffPercentage: 0.7,
+    bluffPercentage: 0.5,
     raisePercentage: 0.3,
     badRandRank: -50,
     goodHandRank: 10,

@@ -56,7 +56,7 @@ export default function HandInformation({
       style={{
         alignItems: "center",
         justifyContent: "center",
-        flexDirection: rowOrColumn,
+        flexDirection: rowOrColumn || "row",
         gap: isMobileScreen ? 0 : 20,
       }}
     >

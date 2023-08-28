@@ -1,6 +1,6 @@
 // Don't forget to specify your TAMAGUI_TARGET here or ideally in the command to run / .env files
 
-process.env.TAMAGUI_TARGET = "web";
+// process.env.TAMAGUI_TARGET = "web";
 module.exports = function (api) {
   api.cache(true);
 

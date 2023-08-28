@@ -248,7 +248,7 @@ export default function useCPUSimulation() {
       if (isGoodHand && betToMatch < 0.5 * pot && gameRound !== 0) {
         return {
           match: false,
-          raise: 10,
+          raise: 0.5 * pot,
         };
       }
 
@@ -264,7 +264,7 @@ export default function useCPUSimulation() {
     if (isGoodHand) {
       return {
         match: true,
-        raise: 0.3 * pot,
+        raise: 0.5 * pot,
       };
     }
 
@@ -304,7 +304,6 @@ export default function useCPUSimulation() {
       };
     }
 
-    // TODO: rotate the blinds
     if (cpu.isSmallBlind && !cpu.blindCompleted) {
       const betAmmount = cpu?.money < BIG_BLIND_BET ? cpu.money : BIG_BLIND_BET;
       setCurrentBet(betAmmount);
@@ -342,7 +341,7 @@ export default function useCPUSimulation() {
       };
     }
 
-    if (cpuResponse.match) {
+    if (cpuResponse.match || betAmmount >= pot / 2) {
       // console.log("MATCH");
       if (cpu.money < betAmmount) {
         // TODO: ajustar para que não seja injusto com quem deu raise
