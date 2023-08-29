@@ -116,7 +116,7 @@ const NAMES = [
 
 const BASE_PLAYER_OBJECT = {
   name: "",
-  hand: [],
+  hand: {},
   money: STARTING_MONEY,
   bet: 0,
   status: null,

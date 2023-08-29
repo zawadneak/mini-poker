@@ -5,6 +5,8 @@ import { PlayerStore } from "../players/types";
 import { CPU_COUNT } from "../players/constants";
 import { STARTING_MONEY } from "../poker/constants";
 
+import GameStore from "./types";
+
 const gameStore = create<GameStore>((set) => ({
   gameStarted: false,
   setGameStarted: (gameStarted) =>
@@ -146,6 +148,15 @@ const gameStore = create<GameStore>((set) => ({
     set(
       produce((state) => {
         state.showBotProfile = showBotProfile;
+      })
+    ),
+
+  setStore: (store) =>
+    set(
+      produce((state) => {
+        Object.keys(store).forEach((key) => {
+          state[key] = store[key];
+        });
       })
     ),
 }));

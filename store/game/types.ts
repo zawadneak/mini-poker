@@ -1,5 +1,7 @@
+import DefaultStore from "../types";
+
 type Suits = "hearts" | "diamonds" | "spades" | "clubs";
-type Card = {
+export type Card = {
   id: string;
   suit: Suits | string;
   rank:
@@ -25,7 +27,7 @@ type Deck = Card[];
 // card example
 // { id: "4H", suit: "hearts", rank: "4", value: 4 },
 
-interface GameStore {
+interface GameStore extends DefaultStore {
   gameStarted: boolean;
 
   setGameStarted: (gameStarted: boolean) => void;
@@ -110,3 +112,5 @@ type Result = {
 };
 
 type Plays = "StraightFlush" | "F";
+
+export default GameStore;

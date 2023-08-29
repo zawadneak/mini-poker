@@ -8,6 +8,7 @@ import PokerText from "./Text";
 import { AlertDialog, Dialog } from "tamagui";
 import usePlayerActions from "../store/players/actions";
 import usePlayerStore from "../store/players/store";
+import GameSaver from "../store/saves";
 
 export default function ResultModal({
   visible,
@@ -25,6 +26,7 @@ export default function ResultModal({
 
   const handleClose = () => {
     actions.handleEndGameRound();
+    GameSaver.saveGame();
     onClose();
   };
 

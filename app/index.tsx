@@ -6,7 +6,7 @@ import useGame from "../store/game";
 
 import { useFonts } from "expo-font";
 import * as SplashScreen from "expo-splash-screen";
-import { useCallback } from "react";
+import { useCallback, useMemo } from "react";
 import useGameActions from "../store/game/actions";
 import PokerText from "../components/Text";
 import { Image } from "react-native";
@@ -17,6 +17,7 @@ import JustPokerLogo from "../assets/branding/just-poker.png";
 import colors from "../styles/colors";
 import { H1, YStack } from "tamagui";
 import Head from "expo-router/head";
+import GameSaver from "../store/saves";
 
 export default function App() {
   const router = useRouter();
@@ -30,9 +31,21 @@ export default function App() {
     // actions.handleAdvanceGameRound();
   };
 
+  const handleLoadGame = async () => {
+    await GameSaver.loadGame().then(() => {
+      // actions.handleAdvanceGameRound();
+      router.push("/game");
+    });
+  };
+
   const handleSettings = () => {
     router.push("/settings");
   };
+
+  const gameStored = useMemo(
+    () => !!localStorage.getItem("game"),
+    [localStorage.getItem("game")]
+  );
 
   const headerHeight = 60;
 
@@ -65,6 +78,15 @@ export default function App() {
         >
           by curi studios
         </PokerText>
+        {gameStored && (
+          <Button
+            onPress={handleLoadGame}
+            icon="play"
+            style={{ marginBottom: 10, width: 200 }}
+          >
+            Continue Game
+          </Button>
+        )}
         <Button
           onPress={handleInitGame}
           icon="play"

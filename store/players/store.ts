@@ -36,6 +36,15 @@ const playerStore = create<PlayerStore>((set) => ({
 
   playStatistics: [],
   setPlayStatistics: (playStatistics) => set({ playStatistics }),
+
+  setStore: (store) =>
+    set(
+      produce((state) => {
+        Object.keys(store).forEach((key) => {
+          state[key] = store[key];
+        });
+      })
+    ),
 }));
 
 export { playerStore };

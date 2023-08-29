@@ -1,3 +1,4 @@
+import DefaultStore from "../types";
 import { Profile } from "./cpu/profiles";
 
 export interface Player {
@@ -23,7 +24,7 @@ export interface Player {
   };
 }
 
-type PlayerStore = {
+interface PlayerStore extends DefaultStore {
   mainPlayer: Player | null;
   setPlayer: (player: Player) => void;
 
@@ -38,7 +39,7 @@ type PlayerStore = {
 
   playStatistics: PlayStatics[];
   setPlayStatistics: (playStatistics: PlayStatics[]) => void;
-};
+}
 
 type PlayStatics = {
   tournouts?: {
