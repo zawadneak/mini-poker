@@ -25,8 +25,8 @@ export default function ResultModal({
   const { result } = store;
 
   const handleClose = () => {
-    actions.handleEndGameRound();
     GameSaver.saveGame();
+    actions.handleEndGameRound();
     onClose();
   };
 

@@ -1,3 +1,4 @@
+import { Card } from "../game/types";
 import DefaultStore from "../types";
 import { Profile } from "./cpu/profiles";
 
@@ -27,9 +28,11 @@ export interface Player {
 interface PlayerStore extends DefaultStore {
   mainPlayer: Player | null;
   setPlayer: (player: Player) => void;
+  updatePlayer: (player: Partial<Player>) => void;
 
   cpus: { [key: string]: Player };
   setCpus: (cpus: { [key: string]: Player }) => void;
+  updateCpu: (id: string, cpu: Partial<Player>) => void;
 
   tableVariance: number;
   setTableVariance: (tableVariance: number) => void;

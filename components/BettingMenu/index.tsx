@@ -119,15 +119,6 @@ export default function BettingMenu() {
           flex: 1,
         }}
       >
-        {!isMobileScreen ? (
-          <Button
-            backgroundColor={colors.dark}
-            disabled={buttonsDisabled}
-            onPress={() => handlePredefinedBet("1/4")}
-          >
-            1/4 pot
-          </Button>
-        ) : null}
         <Button
           backgroundColor={colors.dark}
           disabled={buttonsDisabled}

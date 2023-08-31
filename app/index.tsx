@@ -6,7 +6,7 @@ import useGame from "../store/game";
 
 import { useFonts } from "expo-font";
 import * as SplashScreen from "expo-splash-screen";
-import { useCallback, useMemo } from "react";
+import React, { useCallback, useMemo } from "react";
 import useGameActions from "../store/game/actions";
 import PokerText from "../components/Text";
 import { Image } from "react-native";
@@ -18,12 +18,24 @@ import colors from "../styles/colors";
 import { H1, YStack } from "tamagui";
 import Head from "expo-router/head";
 import GameSaver from "../store/saves";
+import { DeleteStoredGame } from "../components/Alerts/DeleteStoredGame";
 
 export default function App() {
   const router = useRouter();
   const actions = useGameActions();
 
+  const [deleteStoredGame, setDeleteStoredGame] = React.useState(false);
+
+  const gameStored = useMemo(
+    () => !!localStorage.getItem("game"),
+    [localStorage.getItem("game")]
+  );
+
   const handleInitGame = () => {
+    if (gameStored) {
+      setDeleteStoredGame(true);
+      return;
+    }
     // console.log("init game");
 
     // expo router push
@@ -42,10 +54,12 @@ export default function App() {
     router.push("/settings");
   };
 
-  const gameStored = useMemo(
-    () => !!localStorage.getItem("game"),
-    [localStorage.getItem("game")]
-  );
+  const handleDeleteGameAndStartNew = () => {
+    setDeleteStoredGame(false);
+    GameSaver.deleteGame();
+
+    router.push("/pregame");
+  };
 
   const headerHeight = 60;
 
@@ -61,6 +75,12 @@ export default function App() {
         flexDirection="column"
         justifyContent="center"
       >
+        {deleteStoredGame && (
+          <DeleteStoredGame
+            onConfirm={handleDeleteGameAndStartNew}
+            onCancel={() => setDeleteStoredGame(false)}
+          />
+        )}
         <Image
           source={JustPokerLogo}
           style={{
@@ -81,8 +101,9 @@ export default function App() {
         {gameStored && (
           <Button
             onPress={handleLoadGame}
-            icon="play"
+            icon="save"
             style={{ marginBottom: 10, width: 200 }}
+            bg="$purple10"
           >
             Continue Game
           </Button>
@@ -92,7 +113,15 @@ export default function App() {
           icon="play"
           style={{ marginBottom: 10, width: 200 }}
         >
-          Play
+          Quick Play
+        </Button>
+        <Button
+          disabled
+          icon="trophy"
+          style={{ marginBottom: 10, width: 200 }}
+          bg="$yellow10"
+        >
+          Tournament
         </Button>
         <Button
           onPress={handleSettings}

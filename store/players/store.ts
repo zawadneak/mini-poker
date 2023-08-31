@@ -12,6 +12,16 @@ const playerStore = create<PlayerStore>((set) => ({
       })
     ),
 
+  updatePlayer: (player) =>
+    set(
+      produce((state) => {
+        state.mainPlayer = {
+          ...state.mainPlayer,
+          ...player,
+        };
+      })
+    ),
+
   cpus: {},
   setCpus: (cpus) =>
     set(
@@ -19,6 +29,16 @@ const playerStore = create<PlayerStore>((set) => ({
         state.cpus = cpus;
       })
     ),
+  updateCpu: (id, cpu) =>
+    set(
+      produce((state) => {
+        state.cpus[id] = {
+          ...state.cpus[id],
+          ...cpu,
+        };
+      })
+    ),
+
   tableVariance: 0,
   setTableVariance: (tableVariance) =>
     set(

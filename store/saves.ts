@@ -1,5 +1,5 @@
 import { gameStore } from "./game/store";
-import GameStore from "./game/types";
+import GameStore, { Card } from "./game/types";
 import { playerStore } from "./players/store";
 import { PlayerStore } from "./players/types";
 
@@ -9,17 +9,11 @@ export default class GameSaver {
       game: gameStore.getState(),
       players: playerStore.getState(),
     };
-    localStorage.setItem(
-      "game",
-      JSON.stringify(store, function replacer(key, value) {
-        if (key === "hand") {
-          console.log(value);
-          return JSON.stringify(value);
-        }
+    localStorage.setItem("game", JSON.stringify(store));
+  }
 
-        return value;
-      })
-    );
+  static deleteGame() {
+    localStorage.removeItem("game");
   }
 
   static async loadGame() {
@@ -38,8 +32,6 @@ export default class GameSaver {
 
         baseGameStore.setStore(parsedStore.game);
         basePlayerStore.setStore(parsedStore.players);
-
-        console.log(baseGameStore);
       } catch (e) {
         console.log(e);
       }
