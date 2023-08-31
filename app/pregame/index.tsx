@@ -101,23 +101,6 @@ export default function PreGame({}: Props) {
             </Label>
           </Tooltip.Content>
         </Tooltip>
-
-        <Tooltip>
-          <Tooltip.Trigger>
-            <XStack alignItems="center" gap="$2">
-              <Label mt="$2" mb="$2">
-                Show bot profiles on table?
-              </Label>
-              <Icon name="help-circle" color="#ddd" size={18} />
-            </XStack>
-
-            <Checkbox size="$6" onCheckedChange={(c) => setShowBotProfile(c)}>
-              <Checkbox.Indicator>
-                <Icon name="checkmark" />
-              </Checkbox.Indicator>
-            </Checkbox>
-          </Tooltip.Trigger>
-        </Tooltip>
       </YStack>
 
       <Button icon={"play"} mt="$4" onPress={handleStartGame}>

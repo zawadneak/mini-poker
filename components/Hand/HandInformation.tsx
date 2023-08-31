@@ -49,7 +49,7 @@ export default function HandInformation({
     [roundOrderSequence, player.id]
   );
 
-  console.log(player);
+  const shouldShowProfileName = !!localStorage.getItem("showBotProfile");
 
   return (
     <View
@@ -94,7 +94,9 @@ export default function HandInformation({
               marginTop: 5,
             }}
           >
-            {playerName} {player?.profile?.name.substring(0, 1)}
+            {playerName}{" "}
+            {(shouldShowProfileName && player?.profile?.name.substring(0, 1)) ||
+              ""}
           </PokerText>
         </View>
         <XStack alignItems="center">

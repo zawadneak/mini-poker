@@ -123,6 +123,7 @@ export default function App() {
         >
           Tournament
         </Button>
+
         <Button
           onPress={handleSettings}
           bg="$gray10"
@@ -131,6 +132,7 @@ export default function App() {
         >
           Settings
         </Button>
+
         <PokerText fontWeight="light" style={{ fontSize: 12, marginTop: 0 }}>
           v{Constants.manifest.version}
         </PokerText>

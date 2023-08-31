@@ -12,10 +12,16 @@ import JustPokerLogo from "../assets/branding/just-poker.png";
 import { isMobileScreen } from "../styles/constants";
 import { H3 } from "tamagui";
 import { gameStore } from "../store/game/store";
+import useGameActions from "../store/game/actions";
+import usePlayerActions from "../store/players/actions";
+import { ConfirmGameExit } from "./Alerts/ConfirmGameExit";
 
 export default function GameStatus() {
   const route = useRouter();
   const { store } = useGame();
+  const gameActions = useGameActions();
+  const playerActions = usePlayerActions();
+  const [confirmExit, setConfirmExit] = React.useState(false);
 
   const { pot, gameRound, currentBet, gameTime, setGameTime, gameOver } = store;
 
@@ -51,6 +57,15 @@ export default function GameStatus() {
 
     return `${minutes}:${seconds}`;
   }, [gameTime]);
+
+  const handleLeaveGame = () => {
+    // reset players and game state
+    gameActions.resetGame();
+    playerActions.clearAllPlayers();
+    setConfirmExit(false);
+
+    route.replace("/");
+  };
 
   return (
     <Container>
@@ -130,7 +145,14 @@ export default function GameStatus() {
           <IconButton
             icon="settings"
             size={24}
-            onPress={() => route.replace("/")}
+            onPress={() =>
+              route.replace({
+                pathname: "/settings",
+                params: {
+                  returnUrl: "game",
+                },
+              })
+            }
             style={{
               width: 40,
             }}
@@ -138,7 +160,7 @@ export default function GameStatus() {
           <IconButton
             icon="exit"
             size={24}
-            onPress={() => route.replace("/")}
+            onPress={() => setConfirmExit(true)}
             style={{
               width: 40,
             }}
@@ -153,6 +175,12 @@ export default function GameStatus() {
           </PokerText>
         </StyledInfoBar>
       </View>
+      {confirmExit && (
+        <ConfirmGameExit
+          onConfirm={handleLeaveGame}
+          onCancel={() => setConfirmExit(false)}
+        />
+      )}
     </Container>
   );
 }
