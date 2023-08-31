@@ -3,7 +3,7 @@
     "name": "JustPoker",
     "scheme": "JustPoker",
     "slug": "JustPoker",
-    "version": "0.0.5-alpha.1",
+    "version": "0.0.6-alpha.1",
     "orientation": "portrait",
     "icon": "./assets/branding/just-poker.png",
     "userInterfaceStyle": "light",
@@ -12,9 +12,7 @@
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
+    "assetBundlePatterns": ["**/*"],
     "ios": {
       "supportsTablet": true
     },
@@ -28,6 +26,5 @@
       "favicon": "./web/favicon.svg",
       "bundler": "metro"
     }
-    
   }
 }
