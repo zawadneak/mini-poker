@@ -7,7 +7,7 @@
     "android": "TAMAGUI_TARGET=native expo start --android --clear",
     "ios": "TAMAGUI_TARGET=native expo start --ios --clear",
     "web": "TAMAGUI_TARGET=web expo start --web --clear",
-    "build-web": "npx expo export -p web"
+    "build-web": "TAMAGUI_TARGET=web npx expo export -p web"
   },
   "dependencies": {
     "@expo/vector-icons": "^13.0.0",
