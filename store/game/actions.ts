@@ -25,6 +25,7 @@ export default function useGameActions() {
     setRoundOrderSequence,
     table,
     setGameOver,
+    setRaiseCount,
   } = useGameStore();
 
   const { handleGetTableStatistics } = useCPUSimulation();
@@ -284,6 +285,7 @@ export default function useGameActions() {
     });
   };
 
+  // end of game round => rotate players, clear game round, deal cards
   const handleEndGameRound = () => {
     const { mainPlayer, cpus } = playerStore.getState();
 
@@ -324,6 +326,9 @@ export default function useGameActions() {
     dealCards();
   };
 
+  // global function for managing game rounds and betting rounds
+  // game rounds => preflop, flop, turn, river
+  // betting rounds => small blind, big blind, raise, call, check, fold
   const handleAdvanceGameRound = async () => {
     if (!gameStarted) {
       const { cpus: localCPUS, mainPlayer: localPlayer } = await initPlayers();
@@ -379,6 +384,7 @@ export default function useGameActions() {
       setGameRound(updatedGameRound + 1);
 
       setBettingOrder(-1);
+      setRaiseCount(0);
 
       setRoundOrderSequence(
         bettingOrderSequence.filter((playerId) => {

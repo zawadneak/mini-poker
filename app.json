@@ -3,7 +3,7 @@
     "name": "JustPoker",
     "scheme": "JustPoker",
     "slug": "JustPoker",
-    "version": "0.0.6-alpha.1",
+    "version": "0.0.7-alpha.1",
     "orientation": "portrait",
     "icon": "./assets/branding/just-poker.png",
     "userInterfaceStyle": "light",

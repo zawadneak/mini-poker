@@ -9,7 +9,7 @@ import { PlayStatics, Player } from "../types";
 import { Profile } from "./profiles";
 
 export default function useCPUSimulation() {
-  const { setCurrentBet } = useGameStore();
+  const { setCurrentBet, setRaiseCount, raiseCount } = useGameStore();
   const { setTableStandardDeviation, setTableVariance, setPlayStatistics } =
     usePlayerStore();
 
@@ -188,6 +188,7 @@ export default function useCPUSimulation() {
     } = gameStore.getState();
     const tableHandByRound = getTableByGameRound();
     const { tableVariance } = playerStore.getState();
+    const raises = [Math.ceil(0.25 * pot), Math.ceil(0.5 * pot), pot];
 
     const hand = [...cpu.hand, ...tableHandByRound];
 
@@ -197,6 +198,7 @@ export default function useCPUSimulation() {
 
     let isGoodHand = false;
     let isBadHand = false;
+    let raisePercent = 0;
 
     if (gameRound === 0) {
       const handString = hand
@@ -227,6 +229,17 @@ export default function useCPUSimulation() {
 
         isBadHand = cpu.profile.badHandRank >= fromTableDifferencePercentage;
         isGoodHand = cpu.profile.goodHandRank <= fromTableDifferencePercentage;
+
+        const raiseCapIndex =
+          fromTableDifferencePercentage > 10
+            ? 0
+            : fromTableDifferencePercentage > 30
+            ? 2
+            : fromTableDifferencePercentage > 50
+            ? 2
+            : 0;
+
+        raisePercent = cpu.profile.raiseCap[raiseCapIndex];
       } else {
         isBadHand = false;
         isGoodHand = false;
@@ -245,10 +258,15 @@ export default function useCPUSimulation() {
 
       // IF THE HAND IS GOOD = RAISE
       // TODO: adjust raise
-      if (isGoodHand && betToMatch < 0.5 * pot && gameRound !== 0) {
+      if (
+        isGoodHand &&
+        betToMatch < 0.5 * pot &&
+        gameRound !== 0 &&
+        raiseCount < 1
+      ) {
         return {
           match: false,
-          raise: 0.5 * pot,
+          raise: Math.ceil(raisePercent * pot),
         };
       }
 
@@ -261,10 +279,10 @@ export default function useCPUSimulation() {
 
     // IF NO NEED TO MATCH A RAISE
     // IF THE HAND IS GOOD = RAISE
-    if (isGoodHand) {
+    if (isGoodHand && raiseCount < 1) {
       return {
-        match: true,
-        raise: 0.5 * pot,
+        match: false,
+        raise: Math.ceil(raisePercent * pot),
       };
     }
 
@@ -326,8 +344,6 @@ export default function useCPUSimulation() {
 
     const betAmmount = currentBet - cpu.bet;
 
-    console.log("BET AMMOUNT: ", betAmmount, currentBet, cpu.bet);
-
     if (cpu.money < betAmmount) {
       cpu = {
         ...cpu,
@@ -341,7 +357,7 @@ export default function useCPUSimulation() {
       };
     }
 
-    if (cpuResponse.match || betAmmount >= pot / 2) {
+    if (cpuResponse.match || betAmmount >= pot / 2 || raiseCount >= 1) {
       // console.log("MATCH");
       if (cpu.money < betAmmount) {
         // TODO: ajustar para que não seja injusto com quem deu raise
@@ -386,6 +402,7 @@ export default function useCPUSimulation() {
       };
 
       setCurrentBet(currentBet + cpuResponse.raise);
+      setRaiseCount(raiseCount + 1);
       return {
         cpu,
         pot: pot + currentBet + cpuResponse.raise,
@@ -405,7 +422,8 @@ export default function useCPUSimulation() {
 
   const handleGetTableStatistics = () => {
     const bettingRounds = gameStore.getState().bettingOrder;
-    const { cpus, mainPlayer } = playerStore.getState();
+    const { mainPlayer } = playerStore.getState();
+    const { shuffledDeck } = gameStore.getState();
 
     if (bettingRounds >= 0) {
       console.log("BETTING ROUNDS: ", bettingRounds);
@@ -418,9 +436,21 @@ export default function useCPUSimulation() {
 
     const possibleTables = possibleHandsInTable(table);
 
-    const activePlayers = Object.values(playerStore.getState().cpus).filter(
-      (cpu) => cpu.status !== "FOLD"
-    );
+    const activePlayers: Partial<Player>[] = Object.values(
+      playerStore.getState().cpus
+    ).filter((cpu) => cpu.status !== "FOLD");
+
+    Object.values(new Array(50)).forEach((_, i) => {
+      const randomHand = [
+        shuffledDeck[Math.floor(Math.random() * shuffledDeck.length)],
+        shuffledDeck[Math.floor(Math.random() * shuffledDeck.length)],
+      ];
+
+      activePlayers.push({
+        id: `fake-${i}`,
+        hand: randomHand,
+      });
+    });
 
     let playersStatistics = activePlayers.map((cpu) => {
       return {

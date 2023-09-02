@@ -101,6 +101,9 @@ interface GameStore extends DefaultStore {
 
   showBotProfile: boolean;
   setShowBotProfile: (showBotProfile: boolean) => void;
+
+  raiseCount: number;
+  setRaiseCount: (raiseCount: number) => void;
 }
 
 type Result = {

@@ -50,6 +50,12 @@ export default function BettingMenu() {
     [cpus]
   );
 
+  const potPercentage = useMemo(() => {
+    if (pot === 0) return "0%";
+    const percentage = (playerBet / pot) * 100;
+    return percentage.toFixed(0) + "%";
+  }, [playerBet, pot]);
+
   const needsToMatch = useMemo(
     () =>
       (isPlayerTurn && didCPURaise) ||
@@ -66,9 +72,10 @@ export default function BettingMenu() {
   );
   const buttonsDisabled =
     !isPlayerTurn ||
+    mainPlayer.status === "FOLD" ||
     ((isSmallBlind || isBigBlind) && !mainPlayer?.blindCompleted);
 
-  console.log(" mainPlayer?.bet < currentBet", mainPlayer?.bet < currentBet);
+  // console.log(" mainPlayer?.bet < currentBet", mainPlayer?.bet < currentBet);
   // React.useEffect
   // (()=>{
   //   if
@@ -76,7 +83,7 @@ export default function BettingMenu() {
   //   gameRound,currentBet
   // ])
 
-  console.log("blind completed", mainPlayer?.blindCompleted);
+  // console.log("blind completed", mainPlayer?.blindCompleted);
 
   const handlePredefinedBet = (key: "1/4" | "1/2" | "full" | "all") => {
     const options = {
@@ -150,7 +157,7 @@ export default function BettingMenu() {
           gap: 10,
         }}
       >
-        <View style={{ flexDirection: "row", flex: 1 }}>
+        <View style={{ flexDirection: "row", flex: 1, position: "relative" }}>
           <IconButton
             icon="remove"
             size={36}
@@ -162,6 +169,19 @@ export default function BettingMenu() {
           />
           <PokerText fontWeight="bold" style={{ fontSize: 40 }}>
             ${playerBet}
+          </PokerText>
+          <PokerText
+            fontWeight="normal"
+            style={{
+              fontSize: 16,
+              position: "absolute",
+              bottom: -12,
+              left: 0,
+              right: 0,
+              textAlign: "center",
+            }}
+          >
+            {potPercentage} pot
           </PokerText>
 
           <IconButton
@@ -202,7 +222,7 @@ export default function BettingMenu() {
           <Button
             icon="arrow-forward"
             onPress={() => playerBetAction(playerBet)}
-            disabled={!isPlayerTurn}
+            disabled={!isPlayerTurn || mainPlayer.status === "FOLD"}
           >
             {needsToMatch ? "Match" : playerBet === 0 ? "Check" : "Bet"}
           </Button>

@@ -91,6 +91,14 @@ const gameStore = create<GameStore>((set) => ({
       })
     ),
 
+  raiseCount: 0,
+  setRaiseCount: (raiseCount) =>
+    set(
+      produce((state) => {
+        state.raiseCount = raiseCount;
+      })
+    ),
+
   // sequencia que define a rodada de apostas inicial
   // + big e small
   bettingOrderSequence: [],
