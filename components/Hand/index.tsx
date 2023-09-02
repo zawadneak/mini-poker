@@ -92,11 +92,11 @@ export default function Hand({
         bottom: "-10%",
       },
       right: {
-        right: "-8%",
+        right: "-5%",
         marginRight: isMobileScreen ? 40 : 0,
       },
       left: {
-        left: "-8%",
+        left: "-5%",
         marginLeft: isMobileScreen ? 40 : 0,
       },
       top: {
