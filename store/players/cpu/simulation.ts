@@ -302,6 +302,7 @@ export default function useCPUSimulation() {
     const cpus = playerStore.getState().cpus;
     const currentBet = gameStore.getState().currentBet;
     const pot = gameStore.getState().pot;
+    const raiseCount = gameStore.getState().raiseCount;
 
     let cpu = cpus[cpuId];
 
@@ -392,6 +393,8 @@ export default function useCPUSimulation() {
         cpuResponse.raise = cpu.money - betAmmount;
       }
 
+      const updatedRaiseCount = gameStore.getState().raiseCount + 1;
+
       cpu = {
         ...cpu,
         status: "RAISE",
@@ -402,7 +405,7 @@ export default function useCPUSimulation() {
       };
 
       setCurrentBet(currentBet + cpuResponse.raise);
-      setRaiseCount(raiseCount + 1);
+      setRaiseCount(updatedRaiseCount);
       return {
         cpu,
         pot: pot + currentBet + cpuResponse.raise,

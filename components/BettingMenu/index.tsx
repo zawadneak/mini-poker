@@ -1,27 +1,14 @@
-import { View, Text } from "react-native";
+import { View } from "react-native";
 import React, { useMemo } from "react";
 import styled from "styled-components/native";
-import {
-  BIG_BLIND_BET,
-  RAISE_AMOUNT,
-  SMALL_BLIND_BET,
-} from "../../store/poker/constants";
+import { BIG_BLIND_BET } from "../../store/poker/constants";
 import useGameActions from "../../store/game/actions";
 import useGameStore from "../../store/game/store";
 import usePlayerStore from "../../store/players/store";
-import PokerModal from "../PokerModal";
-import { useRouter } from "expo-router";
 import PokerText from "../Text";
-import BettingOptions from "../BettingOptions";
-import BetButton from "../BetButton";
-import { lighten } from "polished";
 import colors from "../../styles/colors";
-import { BigBlindTag, PlayerStatusTag, SmallBlindTag } from "../Hand/Tags";
-import Avatar from "../Avatar";
 import Button from "../Button";
 import IconButton from "../IconButton";
-import { MoneyHolder } from "../Hand/HandInformation";
-import { XStack } from "tamagui";
 import { isMobileScreen } from "../../styles/constants";
 
 export default function BettingMenu() {
