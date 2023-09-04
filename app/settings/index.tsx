@@ -5,23 +5,25 @@ import Icon from "../../components/Icon";
 import Button from "../../components/Button";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { Linking } from "react-native";
+import useLocalStorage from "../../utils/localStorage";
 
 // import { Container } from './styles';
 
 const Settings: React.FC = () => {
   const router = useRouter();
   const params = useLocalSearchParams();
+  const ls = useLocalStorage();
 
   const [showBotProfile, setShowBotProfile] = useState<boolean>(
-    !!localStorage.getItem("showBotProfile")
+    !!ls.getItem("showBotProfile")
   );
 
   const handleToggleShowBotProfile = (v: boolean) => {
     setShowBotProfile(!v);
     if (v) {
-      localStorage.setItem("showBotProfile", "true");
+      ls.setItem("showBotProfile", "true");
     } else {
-      localStorage.removeItem("showBotProfile");
+      ls.removeItem("showBotProfile");
     }
   };
 
@@ -45,7 +47,7 @@ const Settings: React.FC = () => {
 
             <Checkbox
               size="$6"
-              defaultChecked={!!localStorage.getItem("showBotProfile")}
+              defaultChecked={!!ls.getItem("showBotProfile")}
               onCheckedChange={(c) => handleToggleShowBotProfile(c)}
             >
               <Checkbox.Indicator>
@@ -54,6 +56,18 @@ const Settings: React.FC = () => {
             </Checkbox>
           </Tooltip.Trigger>
         </Tooltip>
+
+        <Label
+          mt="$4"
+          mb="$2"
+          cur="pointer"
+          style={{ textDecoration: "underline" }}
+          onPress={() => {
+            Linking.openURL("https://www.vecteezy.com/free-vector/avatar");
+          }}
+        >
+          Character art by by Vecteezy
+        </Label>
 
         <Button
           icon={"link"}

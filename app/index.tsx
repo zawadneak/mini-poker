@@ -19,17 +19,16 @@ import { H1, YStack } from "tamagui";
 import Head from "expo-router/head";
 import GameSaver from "../store/saves";
 import { DeleteStoredGame } from "../components/Alerts/DeleteStoredGame";
+import useLocalStorage from "../utils/localStorage";
 
 export default function App() {
   const router = useRouter();
   const actions = useGameActions();
 
   const [deleteStoredGame, setDeleteStoredGame] = React.useState(false);
+  const ls = useLocalStorage();
 
-  const gameStored = useMemo(
-    () => !!localStorage.getItem("game"),
-    [localStorage.getItem("game")]
-  );
+  const gameStored = useMemo(() => !!ls.getItem("game"), [ls.getItem("game")]);
 
   const handleInitGame = () => {
     if (gameStored) {

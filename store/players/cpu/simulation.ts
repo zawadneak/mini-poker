@@ -305,9 +305,10 @@ export default function useCPUSimulation() {
     const raiseCount = gameStore.getState().raiseCount;
 
     let cpu = cpus[cpuId];
+    const startingBlind = gameStore.getState().startingBlind;
 
     if (cpu.isBigBlind && !cpu.blindCompleted) {
-      const betAmmount = cpu?.money < BIG_BLIND_BET ? cpu.money : BIG_BLIND_BET;
+      const betAmmount = cpu?.money < startingBlind ? cpu.money : startingBlind;
 
       cpu = {
         ...cpu,
@@ -324,7 +325,7 @@ export default function useCPUSimulation() {
     }
 
     if (cpu.isSmallBlind && !cpu.blindCompleted) {
-      const betAmmount = cpu?.money < BIG_BLIND_BET ? cpu.money : BIG_BLIND_BET;
+      const betAmmount = cpu?.money < startingBlind ? cpu.money : startingBlind;
       setCurrentBet(betAmmount);
 
       cpu = {

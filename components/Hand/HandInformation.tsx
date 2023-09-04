@@ -19,6 +19,8 @@ import useGameStore from "../../store/game/store";
 import { isMobileScreen } from "../../styles/constants";
 import { XStack } from "tamagui";
 import Card from "../Card";
+import { parseMoneyExact } from "../../utils/parseMoney";
+import useLocalStorage from "../../utils/localStorage";
 
 type Props = {
   positionStyle: any;
@@ -36,6 +38,7 @@ export default function HandInformation({
   rowOrColumn,
 }: Props) {
   const { roundOrderSequence, result } = useGameStore();
+  const ls = useLocalStorage();
 
   const avatarUrl = useMemo(() => "https://robohash.org/" + player.name, []);
 
@@ -49,7 +52,13 @@ export default function HandInformation({
     [roundOrderSequence, player.id]
   );
 
-  const shouldShowProfileName = !!localStorage.getItem("showBotProfile");
+  const shouldShowProfileName = !!ls.getItem("showBotProfile");
+
+  const getPlayerAvatar = (avatarKey) => {
+    const imageSource = `../../assets/characters/${avatarKey}.jpg`;
+
+    return imageSource || avatarUrl;
+  };
 
   return (
     <View
@@ -68,7 +77,7 @@ export default function HandInformation({
             ))}
           </XStack>
         ) : (
-          <Avatar source={avatarUrl} />
+          <Avatar source={getPlayerAvatar(player?.avatar)} />
         )}
         <View
           style={{
@@ -108,7 +117,7 @@ export default function HandInformation({
                 marginTop: 5,
               }}
             >
-              ${player.money}
+              ${parseMoneyExact(player.money)}
             </PokerText>
           </MoneyHolder>
           {player?.isBigBlind && <BigBlindTag />}

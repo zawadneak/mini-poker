@@ -3,7 +3,7 @@ import { create } from "zustand";
 import { subscribeWithSelector } from "zustand/middleware";
 import { PlayerStore } from "../players/types";
 import { CPU_COUNT } from "../players/constants";
-import { STARTING_MONEY } from "../poker/constants";
+import { BIG_BLIND_BET, STARTING_MONEY } from "../poker/constants";
 
 import GameStore from "./types";
 
@@ -143,6 +143,13 @@ const gameStore = create<GameStore>((set) => ({
       })
     ),
 
+  startingBlind: BIG_BLIND_BET,
+  setStartingBlind: (startingBlind) =>
+    set(
+      produce((state) => {
+        state.startingBlind = startingBlind;
+      })
+    ),
   differentProfiles: false,
   setDifferentProfiles: (differentProfiles) =>
     set(

@@ -3,7 +3,7 @@ import React, { useMemo } from "react";
 import styled from "styled-components/native";
 import { BIG_BLIND_BET } from "../../store/poker/constants";
 import useGameActions from "../../store/game/actions";
-import useGameStore from "../../store/game/store";
+import useGameStore, { gameStore } from "../../store/game/store";
 import usePlayerStore from "../../store/players/store";
 import PokerText from "../Text";
 import colors from "../../styles/colors";
@@ -96,7 +96,8 @@ export default function BettingMenu() {
 
   React.useEffect(() => {
     if ((isSmallBlind || isBigBlind) && !mainPlayer?.blindCompleted) {
-      setPlayerBet(BIG_BLIND_BET);
+      const startingBlind = gameStore.getState().startingBlind;
+      setPlayerBet(startingBlind);
     }
     if (needsToMatch && bettingOrder !== 0) {
       setPlayerBet(currentBet);

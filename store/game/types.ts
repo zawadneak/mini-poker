@@ -104,6 +104,9 @@ interface GameStore extends DefaultStore {
 
   raiseCount: number;
   setRaiseCount: (raiseCount: number) => void;
+
+  startingBlind: number;
+  setStartingBlind: (startingBlind: number) => void;
 }
 
 type Result = {

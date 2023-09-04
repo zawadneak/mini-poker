@@ -1,3 +1,4 @@
+import useLocalStorage from "../utils/localStorage";
 import { gameStore } from "./game/store";
 import GameStore, { Card } from "./game/types";
 import { playerStore } from "./players/store";
@@ -9,15 +10,15 @@ export default class GameSaver {
       game: gameStore.getState(),
       players: playerStore.getState(),
     };
-    localStorage.setItem("game", JSON.stringify(store));
+    useLocalStorage().setItem("game", JSON.stringify(store));
   }
 
   static deleteGame() {
-    localStorage.removeItem("game");
+    useLocalStorage().removeItem("game");
   }
 
   static async loadGame() {
-    const store = await localStorage.getItem("game");
+    const store = await useLocalStorage().getItem("game");
     if (store) {
       try {
         const baseGameStore = gameStore.getState();

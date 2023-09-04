@@ -5,6 +5,20 @@ import { Player } from "./types";
 import PROFILES from "./cpu/profiles";
 import { gameStore } from "../game/store";
 
+const avatars = [
+  "man1",
+  "man2",
+  "man3",
+  "man4",
+  "man5",
+  "woman1",
+  "woman2",
+  "woman3",
+  "woman4",
+  "woman4",
+  "woman5",
+];
+
 export default function usePlayerActions() {
   const { mainPlayer, cpus, setPlayer, setCpus } = usePlayerStore();
 
@@ -27,11 +41,10 @@ export default function usePlayerActions() {
       isSmallBlind: true,
       isTurn: true,
       money: startingMoney,
+      avatar: avatars[Math.floor(Math.random() * avatars.length)],
     };
 
     setPlayer(playerObj);
-
-    console.log(cpuCount);
 
     let newCpus = {};
     [...Array(cpuCount).fill(null)].forEach((_, i) => {
@@ -46,6 +59,8 @@ export default function usePlayerActions() {
               Math.floor(Math.random() * Object.values(PROFILES).length)
             ]
           : PROFILES.Conservative,
+
+        avatar: avatars[Math.floor(Math.random() * avatars.length)],
       };
 
       // IS BIG BLIND?
