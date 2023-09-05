@@ -53,6 +53,10 @@ export default function App() {
     router.push("/settings");
   };
 
+  const handleThemes = () => {
+    router.push("/themes");
+  };
+
   const handleDeleteGameAndStartNew = () => {
     setDeleteStoredGame(false);
     GameSaver.deleteGame();
@@ -121,6 +125,15 @@ export default function App() {
           bg="$yellow10"
         >
           Tournament
+        </Button>
+
+        <Button
+          onPress={handleThemes}
+          bg="$gray10"
+          icon="color-palette"
+          style={{ marginBottom: 10, width: 200 }}
+        >
+          Themes
         </Button>
 
         <Button

@@ -69,16 +69,16 @@ export default function PreGame({}: Props) {
           <Slider.Thumb circular index={0} />
         </Slider>
 
-        <Label>Starting money ${parsedStartingMoney}</Label>
+        <Label>Starting money ${startingMoney}</Label>
 
-        {/* max => 1m */}
+        {/* max => 500k */}
         <Slider
           size="$2"
           width={200}
           defaultValue={[startingMoney || 1000]}
-          max={1000000}
-          min={1000}
-          step={1000}
+          max={10000}
+          min={200}
+          step={100}
           onValueChange={(v) => {
             setStartingMoney(v[0]);
           }}
@@ -95,9 +95,9 @@ export default function PreGame({}: Props) {
           size="$2"
           width={200}
           defaultValue={[startingBlind || 50]}
-          max={1000}
-          min={50}
-          step={50}
+          max={100}
+          min={2}
+          step={2}
           onValueChange={(v) => {
             setStartingBlind(v[0]);
           }}
