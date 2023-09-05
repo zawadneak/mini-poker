@@ -243,7 +243,7 @@ const DIFFICULTY = 3;
 
 const RAISE_AMOUNT = [5, 10, 20, 50];
 
-const STARTING_MONEY = 20;
+const STARTING_MONEY = 200;
 
 const BIG_BLIND_BET = 2;
 

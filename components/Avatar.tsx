@@ -27,10 +27,9 @@ export default function Avatar({ source }: { source: string }) {
     <Image
       source={{ uri: source }}
       style={{
-        width: 50,
-        height: 50,
-        borderRadius: 25,
-        backgroundColor,
+        width: 60,
+        height: 60,
+        borderRadius: 100,
       }}
     />
   );

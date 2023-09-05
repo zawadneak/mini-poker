@@ -40,7 +40,7 @@ const Settings: React.FC = () => {
           <Tooltip.Trigger>
             <XStack alignItems="center" gap="$2">
               <Label mt="$2" mb="$2">
-                Show player profile on table?
+                Show player personality on table?
               </Label>
               <Icon name="help-circle" color="#ddd" size={18} />
             </XStack>

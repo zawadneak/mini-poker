@@ -107,33 +107,6 @@ export default function PreGame({}: Props) {
           </Slider.Track>
           <Slider.Thumb circular index={0} />
         </Slider>
-
-        <Tooltip>
-          <Tooltip.Trigger>
-            <XStack alignItems="center" gap="$2">
-              <Label mt="$2" mb="$2">
-                Different bot profiles?
-              </Label>
-              <Icon name="help-circle" color="#ddd" size={18} />
-            </XStack>
-
-            <Checkbox
-              size="$6"
-              onCheckedChange={(c) => setDifferentProfiles(c)}
-            >
-              <Checkbox.Indicator>
-                <Icon name="checkmark" />
-              </Checkbox.Indicator>
-            </Checkbox>
-          </Tooltip.Trigger>
-
-          <Tooltip.Content>
-            <Label>
-              Uses a mix of agressive and conservative styles of play for the
-              bots
-            </Label>
-          </Tooltip.Content>
-        </Tooltip>
       </YStack>
 
       <Button icon={"play"} mt="$4" onPress={handleStartGame}>

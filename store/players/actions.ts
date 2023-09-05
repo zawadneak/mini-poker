@@ -2,22 +2,8 @@ import { produce } from "immer";
 import { BASE_PLAYER_OBJECT, CPU_COUNT, NAMES } from "./constants";
 import usePlayerStore, { playerStore } from "./store";
 import { Player } from "./types";
-import PROFILES from "./cpu/profiles";
+import PROFILES, { CHARACTERS } from "./cpu/profiles";
 import { gameStore } from "../game/store";
-
-const avatars = [
-  "man1",
-  "man2",
-  "man3",
-  "man4",
-  "man5",
-  "woman1",
-  "woman2",
-  "woman3",
-  "woman4",
-  "woman4",
-  "woman5",
-];
 
 export default function usePlayerActions() {
   const { mainPlayer, cpus, setPlayer, setCpus } = usePlayerStore();
@@ -30,8 +16,6 @@ export default function usePlayerActions() {
   }> => {
     const cpuCount = gameStore.getState().cpuQuantity;
 
-    const differentProfiles = gameStore.getState().differentProfiles;
-
     const startingMoney = gameStore.getState().startingMoney;
 
     const playerObj = {
@@ -41,26 +25,30 @@ export default function usePlayerActions() {
       isSmallBlind: true,
       isTurn: true,
       money: startingMoney,
-      avatar: avatars[Math.floor(Math.random() * avatars.length)],
+      avatar: "",
     };
 
     setPlayer(playerObj);
 
+    let characters = [...CHARACTERS];
+
     let newCpus = {};
     [...Array(cpuCount).fill(null)].forEach((_, i) => {
       // console.log("INIT CPU " + i);
+      const character =
+        Object.values(characters)[
+          Math.floor(Math.random() * Object.values(characters).length)
+        ];
+
+      characters = characters.filter((char) => char.name !== character.name);
+
       let cpuBaseObject = {
         ...BASE_PLAYER_OBJECT,
         id: `cpu-${i}`,
-        name: NAMES[Math.floor(Math.random() * NAMES.length)],
+        name: character.name,
         money: startingMoney,
-        profile: differentProfiles
-          ? Object.values(PROFILES)[
-              Math.floor(Math.random() * Object.values(PROFILES).length)
-            ]
-          : PROFILES.Conservative,
-
-        avatar: avatars[Math.floor(Math.random() * avatars.length)],
+        profile: character.profile,
+        avatar: character.avatar,
       };
 
       // IS BIG BLIND?

@@ -20,6 +20,19 @@ export interface Profile {
   raiseCap?: number[];
 }
 
+const avatars = [
+  "man1",
+  "man2",
+  "man3",
+  "man4",
+  "man5",
+  "woman1",
+  "woman2",
+  "woman3",
+  "woman4",
+  "woman4",
+  "woman5",
+];
 const PROFILES = {
   Bluffer: {
     name: "Bluffer",
@@ -55,15 +68,61 @@ const PROFILES = {
     goodHandPreFlop: 30,
     badHandPreFlop: 120,
   },
-  // Random: {
-  //   name: "Random",
-  //   bluffPercentage: 0.5,
-  //   raisePercentage: 0.5,
-  //   badHandRank: 5,
-  //   goodHandRank: 5,
-  //   goodHandPreFlop: Math.random() * 100 + 1,
-  //   badHandPreFlop: Math.random() * 100 + 1,
-  // },
 };
 
+const CHARACTERS = [
+  {
+    name: "Carlos",
+    avatar: "man1",
+    profile: PROFILES.Conservative,
+  },
+  {
+    name: "Miguel",
+    avatar: "man2",
+    profile: PROFILES.Aggressive,
+  },
+  {
+    name: "Nick",
+    avatar: "man3",
+    profile: PROFILES.Bluffer,
+  },
+  {
+    name: "John",
+    avatar: "man4",
+    profile: PROFILES.Aggressive,
+  },
+  {
+    name: "Peter",
+    avatar: "man5",
+    profile: PROFILES.Conservative,
+  },
+  {
+    name: "Sara",
+    avatar: "woman1",
+    profile: PROFILES.Conservative,
+  },
+  {
+    name: "Maria",
+    avatar: "woman2",
+    profile: PROFILES.Conservative,
+  },
+  {
+    name: "Linda",
+    avatar: "woman3",
+    profile: PROFILES.Bluffer,
+  },
+  {
+    name: "Sofia",
+    avatar: "woman4",
+    profile: PROFILES.Aggressive,
+  },
+  {
+    name: "Anna",
+    avatar: "woman5",
+    profile: PROFILES.Conservative,
+  },
+];
+
 export default PROFILES;
+
+export { CHARACTERS };
