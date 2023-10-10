@@ -552,6 +552,8 @@ export default function useGameActions() {
       status: isRaise ? "RAISE" : "MATCH",
     });
 
+    console.log("IS PLAYER RAISE", isRaise);
+
     if (isRaise) {
       handlePlayerRaise();
     }

@@ -55,7 +55,7 @@ export default function HandInformation({
   const shouldShowProfileName = !!ls.getItem("showBotProfile");
 
   const getPlayerAvatar = (avatarKey) => {
-    const imageSource = `assets/characters/${avatarKey}.jpg`;
+    const imageSource = `../../assets/characters/${avatarKey}.jpg`;
 
     return imageSource || avatarUrl;
   };
